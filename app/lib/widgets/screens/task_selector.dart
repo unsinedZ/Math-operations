@@ -1,13 +1,11 @@
+import 'package:app/widgets/layout/app_layout.dart';
 import 'package:flutter/material.dart';
 
 class TaskSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MMDO-ZLP'),
-      ),
-      body: ListView(
+    return AppLayout(
+      ListView(
         children: ListTile.divideTiles(
           context: context,
           tiles: [
