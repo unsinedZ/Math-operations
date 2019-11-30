@@ -11,11 +11,14 @@ class FunctionLetter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String text = '$functionLetter($variableLetter)';
     return Row(
       children: <Widget>[
-        Text(functionLetter),
-        Text('($variableLetter)'),
-        Text(' = '),
+        FlatButton(
+          child: Text(text),
+          onPressed: () {},
+        ),
+        Text('=')
       ],
     );
   }

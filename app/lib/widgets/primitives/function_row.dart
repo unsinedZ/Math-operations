@@ -42,21 +42,16 @@ class FunctionRow extends StatelessWidget {
   List<Widget> _createRowContent() {
     int index = 0;
     return <Widget>[
-      Container(
-        child: FunctionLetter(
-          functionLetter: 'f',
-          variableLetter: 'x',
-        ),
-        margin: EdgeInsets.only(
-          left: 16,
-        ),
+      FunctionLetter(
+        functionLetter: 'f',
+        variableLetter: 'x',
       ),
       ..._variables
-        .map((x) => _createVariable(
-              variable: x,
-              showSignForPositive: index++ > 0,
-            ))
-        .reduce((x, y) => x..addAll(y))
+          .map((x) => _createVariable(
+                variable: x,
+                showSignForPositive: index++ > 0,
+              ))
+          .reduce((x, y) => x..addAll(y))
     ];
   }
 
