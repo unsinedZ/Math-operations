@@ -15,4 +15,13 @@ class TargetFunction {
     this.coefficients,
     this.freeMember = const Fraction.fromNumber(0),
   });
+
+  TargetFunction changeCoefficients(List<Fraction> newCoefficients) {
+    return TargetFunction(
+      functionLetter: functionLetter,
+      variableLetter: variableLetter,
+      coefficients: newCoefficients,
+      freeMember: freeMember,
+    );
+  }
 }

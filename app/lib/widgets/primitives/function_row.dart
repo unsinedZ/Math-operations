@@ -1,4 +1,5 @@
 import 'package:app/business/operations/fraction.dart';
+import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/primitives/function_letter.dart';
 import 'package:app/widgets/primitives/function_letter_form.dart';
@@ -7,29 +8,23 @@ import 'package:flutter/material.dart';
 import 'function_text.dart';
 import 'function_variable.dart';
 
-class FunctionRow extends StatelessWidget {
-  final List<Variable> _variables = [
-    Variable(
-      name: 'x1',
-      value: Fraction.fromNumber(4),
-    ),
-    Variable(
-      name: 'x2',
-      value: Fraction.fromNumber(1),
-    ),
-    Variable(
-      name: 'x3',
-      value: Fraction.fromNumber(-1),
-    ),
-    Variable(
-      name: 'x4',
-      value: Fraction.fromNumber(-3),
-    ),
-    Variable(
-      name: 'x5',
-      value: Fraction.fromNumber(5),
-    ),
-  ];
+class FunctionRow extends StatefulWidget {
+  final TargetFunction _targetFunction;
+
+  const FunctionRow({
+    Key key,
+    @required TargetFunction targetFunction,
+  })  : this._targetFunction = targetFunction,
+        super(key: key);
+
+  @override
+  _FunctionRowState createState() => _FunctionRowState(_targetFunction);
+}
+
+class _FunctionRowState extends State<FunctionRow> {
+  TargetFunction _targetFunction;
+
+  _FunctionRowState(this._targetFunction);
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +41,17 @@ class FunctionRow extends StatelessWidget {
     int index = 0;
     return <Widget>[
       FunctionLetter(
-        functionLetter: 'f',
-        variableLetter: 'x',
+        functionLetter: _targetFunction.functionLetter,
+        variableLetter: _targetFunction.variableLetter,
         onPressed: () => _onFunctionLetterPressed(context),
       ),
       FunctionText('='),
-      ..._variables
+      ..._targetFunction.coefficients
           .map((x) => _createVariable(
-                variable: x,
+                variable: Variable(
+                  name: _targetFunction.variableLetter,
+                  value: x,
+                ),
                 showSignForPositive: index++ > 0,
               ))
           .reduce((x, y) => x..addAll(y))
@@ -82,8 +80,29 @@ class FunctionRow extends StatelessWidget {
       context: context,
       builder: (x) => Container(
         child: FunctionLetterForm(
-          onValueChanged: (num newValue) {},
-        ).build(x),
+          initialValue: _targetFunction.coefficients.length,
+          onValueChanged: (num newValue) {
+            setState(() {
+              if (newValue == _targetFunction.coefficients.length) {
+                return;
+              }
+
+              List<Fraction> newCoefficients;
+              if (newValue < _targetFunction.coefficients.length) {
+                newCoefficients = _targetFunction.coefficients.take(newValue);
+              } else {
+                int expandSize = newValue - _targetFunction.coefficients.length;
+                newCoefficients = _targetFunction.coefficients
+                  ..addAll(
+                    List.filled(expandSize, Fraction.fromNumber(1)),
+                  );
+              }
+
+              _targetFunction =
+                  _targetFunction.changeCoefficients(newCoefficients);
+            });
+          },
+        ),
       ),
       useRootNavigator: true,
     );
