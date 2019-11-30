@@ -4,7 +4,7 @@ class Fraction {
   final int numerator;
   final int denominator;
 
-  Fraction._({
+  const Fraction._({
     @required int numerator,
     @required int denominator,
   })
@@ -27,10 +27,24 @@ class Fraction {
       numerator *= -1;
     }
 
+    denominator = denominator.abs();
+
     int gcd = _greatestCommonDivisor(numerator, denominator);
     return Fraction._(
       numerator: numerator ~/ gcd,
       denominator: denominator ~/ gcd,
+    );
+  }
+
+  bool isNegative() {
+    return numerator < 0 && denominator > 0
+      || numerator > 0 && denominator < 0;
+  }
+
+  Fraction abs() {
+    return Fraction._(
+      numerator: numerator.abs(),
+      denominator: denominator.abs(),
     );
   }
 
@@ -120,5 +134,16 @@ class Fraction {
     if (number2 == 0) return number1;
 
     return _greatestCommonDivisor(number2, number1 % number2);
+  }
+
+  @override
+  String toString() {
+    if (numerator == 0)
+      return '0';
+    
+    if (denominator == 1)
+      return numerator.toString();
+    
+    return '($numerator/$denominator)';
   }
 }
