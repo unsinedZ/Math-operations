@@ -1,4 +1,5 @@
 import 'package:app/business/operations/fraction.dart';
+import 'package:app/widgets/primitives/function_button.dart';
 import 'package:flutter/material.dart';
 
 class FunctionVariable extends StatelessWidget {
@@ -19,13 +20,15 @@ class FunctionVariable extends StatelessWidget {
   final String _name;
   final VoidCallback _onPressed;
 
-  FunctionVariable(
-      {@required Fraction value,
-      @required String name,
-      @required VoidCallback onPressed})
-      : this._value = value,
+  FunctionVariable({
+    Key key,
+    String name = 'x',
+    @required Fraction value,
+    @required VoidCallback onPressed,
+  })  : this._value = value,
         this._name = _transformName(name),
-        this._onPressed = onPressed;
+        this._onPressed = onPressed,
+        super(key: key);
 
   static String _transformName(String name) {
     StringBuffer sb = new StringBuffer();
@@ -43,8 +46,8 @@ class FunctionVariable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String valueText = _value == Fraction.fromNumber(1) ? '' : '$_value*';
-    return FlatButton(
-      child: Text(valueText + _name),
+    return FunctionButton(
+      text: valueText + _name,
       onPressed: _onPressed,
     );
   }

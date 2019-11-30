@@ -1,8 +1,10 @@
 import 'package:app/business/entities/variable.dart';
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/widgets/primitives/function_letter.dart';
+import 'package:app/widgets/primitives/function_letter_form.dart';
 import 'package:flutter/material.dart';
 
+import 'function_text.dart';
 import 'function_variable.dart';
 
 class FunctionRow extends StatelessWidget {
@@ -32,20 +34,23 @@ class FunctionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      padding: EdgeInsets.all(8),
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: _createRowContent(),
+        children: _createRowContent(context),
       ),
     );
   }
 
-  List<Widget> _createRowContent() {
+  List<Widget> _createRowContent(BuildContext context) {
     int index = 0;
     return <Widget>[
       FunctionLetter(
         functionLetter: 'f',
         variableLetter: 'x',
+        onPressed: () => _onFunctionLetterPressed(context),
       ),
+      FunctionText('='),
       ..._variables
           .map((x) => _createVariable(
                 variable: x,
@@ -61,7 +66,7 @@ class FunctionRow extends StatelessWidget {
   }) {
     var result = <Widget>[];
     if (showSignForPositive || variable.value.isNegative()) {
-      result.add(Text(variable.value.isNegative() ? '-' : '+'));
+      result.add(FunctionText(variable.value.isNegative() ? '-' : '+'));
     }
 
     result.add(FunctionVariable(
@@ -70,5 +75,17 @@ class FunctionRow extends StatelessWidget {
       onPressed: () {},
     ));
     return result;
+  }
+
+  void _onFunctionLetterPressed(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (x) => Container(
+        child: FunctionLetterForm(
+          onValueChanged: (num newValue) {},
+        ).build(x),
+      ),
+      useRootNavigator: true,
+    );
   }
 }
