@@ -26,6 +26,7 @@ class _DualSimplexState extends State<DualSimplexMethod> {
     return TargetFunction(
       coefficients: [
         Fraction.fromNumber(1),
+        Fraction.fromNumber(1),
       ],
     );
   }

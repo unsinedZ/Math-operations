@@ -89,7 +89,7 @@ class _FunctionRowState extends State<FunctionRow> {
 
               List<Fraction> newCoefficients;
               if (newValue < _targetFunction.coefficients.length) {
-                newCoefficients = _targetFunction.coefficients.take(newValue);
+                newCoefficients = _targetFunction.coefficients.take(newValue).toList();
               } else {
                 int expandSize = newValue - _targetFunction.coefficients.length;
                 newCoefficients = _targetFunction.coefficients

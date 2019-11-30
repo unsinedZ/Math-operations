@@ -36,7 +36,7 @@ class _FunctionLetterFormState extends State<FunctionLetterForm> {
             ),
             NumberPicker.integer(
               initialValue: _argumentsCount ?? 1,
-              minValue: 1,
+              minValue: 2,
               maxValue: 10,
               onChanged: (num newValue) {
                 setState(() {
