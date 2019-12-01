@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'function_text.dart';
+import 'base_text.dart';
 
-class FunctionButton extends StatelessWidget {
+class BaseButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
 
-  const FunctionButton({
+  const BaseButton({
     Key key,
     @required this.onPressed,
     @required this.text,
@@ -18,7 +18,7 @@ class FunctionButton extends StatelessWidget {
       child: Material(
         child: InkWell(
           child: Container(
-            child: FunctionText(text),
+            child: BaseText(text),
             margin: EdgeInsets.all(6),
             padding: EdgeInsets.all(6),
           ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class FunctionText extends StatelessWidget {
+class BaseText extends StatelessWidget {
   final String text;
 
-  const FunctionText(
+  const BaseText(
     this.text, {
     Key key,
   }) : super(key: key);

@@ -1,4 +1,4 @@
-import 'function_button.dart';
+import 'package:app/widgets/primitives/common/base_button.dart';
 import 'package:flutter/material.dart';
 
 class FunctionLetter extends StatelessWidget {
@@ -18,7 +18,7 @@ class FunctionLetter extends StatelessWidget {
     String text = '$functionLetter($variableLetter)';
     return Row(
       children: <Widget>[
-        FunctionButton(
+        BaseButton(
           text: text,
           onPressed: onPressed,
         ),

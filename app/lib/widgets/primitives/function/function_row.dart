@@ -1,14 +1,13 @@
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
+import 'package:app/widgets/primitives/common/base_text.dart';
+import 'package:app/widgets/primitives/common/variable.dart' as primitive;
 import 'function_letter.dart';
 import 'function_letter_form.dart';
 import 'function_variable_form.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart' as quiver;
-
-import 'function_text.dart';
-import 'function_variable.dart';
 
 class FunctionRow extends StatefulWidget {
   final TargetFunction _targetFunction;
@@ -59,7 +58,7 @@ class _FunctionRowState extends State<FunctionRow> {
         variableLetter: variableLetter,
         onPressed: () => _onFunctionLetterPressed(context),
       ),
-      FunctionText('='),
+      BaseText('='),
       ..._variables
           .map((x) => _createVariable(
                 context: context,
@@ -77,10 +76,10 @@ class _FunctionRowState extends State<FunctionRow> {
   }) {
     var result = <Widget>[];
     if (showSignForPositive || variable.value.isNegative()) {
-      result.add(FunctionText(variable.value.isNegative() ? '-' : '+'));
+      result.add(BaseText(variable.value.isNegative() ? '-' : '+'));
     }
 
-    result.add(FunctionVariable(
+    result.add(primitive.Variable(
       name: variable.name,
       value: variable.value.abs(),
       onPressed: () => _onFunctionVariablePressed(context, variable),

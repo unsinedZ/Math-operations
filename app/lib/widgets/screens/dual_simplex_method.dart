@@ -1,7 +1,9 @@
 import 'package:app/business/operations/fraction.dart';
+import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/target_function.dart';
 import 'package:app/widgets/layout/app_layout.dart';
-import 'package:app/widgets/primitives/function_row.dart';
+import 'package:app/widgets/primitives/function/function_row.dart';
+import 'package:app/widgets/primitives/restriction/restriction_row.dart';
 import 'package:flutter/material.dart';
 
 class DualSimplexMethod extends StatefulWidget {
@@ -23,6 +25,15 @@ class _DualSimplexState extends State<DualSimplexMethod> {
               targetFunction: _createDefaultFunction(),
             ),
           ),
+          _CardWrapper(
+            child: Column(
+              children: _createDefaultRestrictions()
+                  .map((x) => RestrictionRow(
+                        restriction: x,
+                      ))
+                  .toList(),
+            ),
+          ),
         ],
       ),
     );
@@ -35,6 +46,27 @@ class _DualSimplexState extends State<DualSimplexMethod> {
         Fraction.fromNumber(1),
       ],
     );
+  }
+
+  List<Restriction> _createDefaultRestrictions() {
+    return [
+      Restriction(
+        coefficients: [
+          Fraction.fromNumber(1),
+          Fraction.fromNumber(-2),
+        ],
+        comparison: ExpressionComparison.LowerOrEqual,
+        freeMember: Fraction.fromNumber(4),
+      ),
+      Restriction(
+        coefficients: [
+          Fraction.fromNumber(3),
+          Fraction.fromNumber(-1),
+        ],
+        comparison: ExpressionComparison.LowerOrEqual,
+        freeMember: Fraction.fromNumber(-1),
+      ),
+    ];
   }
 }
 
