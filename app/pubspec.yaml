@@ -11,7 +11,7 @@ dependencies:
     sdk: flutter
 
   numberpicker: 1.1.0
-  quiver: 2.1.2
+  quiver: 2.0.5
 
   cupertino_icons: ^0.1.2
 
