@@ -3,9 +3,7 @@ import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/primitives/common/arguments_count_form.dart';
 import 'package:app/widgets/primitives/common/base_text.dart';
-import 'package:app/widgets/primitives/common/variable.dart' as primitive;
 import 'package:app/widgets/primitives/common/variable_editor.dart';
-import 'package:app/widgets/primitives/common/variable_form.dart';
 import 'function_letter.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart' as quiver;
@@ -82,7 +80,7 @@ class _FunctionRowState extends State<FunctionRow> {
 
     result.add(VariableEditor(
       variable: variable,
-      onVariableChanged: (x) => _onFunctionVariableChange(context, variable, x),
+      onVariableChanged: (x) => _onFunctionVariableChange(variable, x),
     ));
     return result;
   }
@@ -125,11 +123,7 @@ class _FunctionRowState extends State<FunctionRow> {
     });
   }
 
-  void _onFunctionVariableChange(
-    BuildContext context,
-    Variable variable,
-    Variable newValue,
-  ) {
+  void _onFunctionVariableChange(Variable variable, Variable newValue) {
     setState(() {
       _variables = _variables.map((v) {
         if (v == variable) return newValue;

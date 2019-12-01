@@ -3,7 +3,7 @@ import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/primitives/common/base_button.dart';
 import 'package:app/widgets/primitives/common/base_text.dart';
-import 'package:app/widgets/primitives/common/variable.dart' as primitive;
+import 'package:app/widgets/primitives/common/variable_editor.dart';
 import 'package:flutter/material.dart';
 
 class RestrictionRow extends StatefulWidget {
@@ -77,13 +77,14 @@ class _RestrictionRowState extends State<RestrictionRow> {
       result.add(BaseText(variable.value.isNegative() ? '-' : '+'));
     }
 
-    result.add(primitive.Variable(
-      name: variable.name,
-      value: variable.value.abs(),
-      onPressed: () => _onVariablePressed(context, variable),
+    result.add(VariableEditor(
+      variable: variable,
+      onVariableChanged: (x) => _onVariableChanged(variable, x),
     ));
     return result;
   }
+
+  void _onVariableChanged(Variable variable, Variable newValue) {}
 
   Widget _createComparisonSign() {
     return Container(
@@ -119,6 +120,4 @@ class _RestrictionRowState extends State<RestrictionRow> {
       onPressed: () {},
     );
   }
-
-  void _onVariablePressed(BuildContext context, Variable variable) {}
 }
