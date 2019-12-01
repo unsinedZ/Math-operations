@@ -96,6 +96,8 @@ class _CardWrapper extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Card(
+            margin: EdgeInsets.all(12),
+            elevation: 12,
             child: _child,
           ),
         ),
