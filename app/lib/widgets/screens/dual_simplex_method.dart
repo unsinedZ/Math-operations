@@ -28,6 +28,9 @@ class _DualSimplexState extends State<DualSimplexMethod> {
     return AppLayout(
       title: 'Dual simplex method',
       content: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: 12,
+        ),
         scrollDirection: Axis.vertical,
         child: _CardWrapper(
           child: Column(
