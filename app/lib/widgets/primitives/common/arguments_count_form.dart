@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-class FunctionLetterForm extends StatefulWidget {
+class ArgumentsCountForm extends StatefulWidget {
   final ValueChanged<int> onValueChanged;
   final int initialValue;
 
-  FunctionLetterForm({
+  ArgumentsCountForm({
     Key key,
     @required this.initialValue,
     @required this.onValueChanged,
   }) : super(key: key);
 
   @override
-  _FunctionLetterFormState createState() =>
-      _FunctionLetterFormState(initialValue);
+  _ArgumentsCountFormState createState() =>
+      _ArgumentsCountFormState(initialValue);
 }
 
-class _FunctionLetterFormState extends State<FunctionLetterForm> {
+class _ArgumentsCountFormState extends State<ArgumentsCountForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   int _argumentsCount;
 
-  _FunctionLetterFormState(int initialValue)
+  _ArgumentsCountFormState(int initialValue)
       : this._argumentsCount = initialValue;
 
   @override

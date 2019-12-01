@@ -3,11 +3,11 @@ import 'package:app/business/operations/variable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class FunctionVariableForm extends StatefulWidget {
+class VariableForm extends StatefulWidget {
   final Variable _variable;
   final ValueChanged<Fraction> onValueChanged;
 
-  const FunctionVariableForm({
+  const VariableForm({
     Key key,
     @required Variable variable,
     @required ValueChanged<Fraction> onValueChanged,
@@ -19,7 +19,7 @@ class FunctionVariableForm extends StatefulWidget {
   _State createState() => _State(_variable);
 }
 
-class _State extends State<FunctionVariableForm> {
+class _State extends State<VariableForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Variable _variable;
 

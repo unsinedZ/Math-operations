@@ -1,11 +1,12 @@
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
+import 'package:app/widgets/primitives/common/arguments_count_form.dart';
 import 'package:app/widgets/primitives/common/base_text.dart';
 import 'package:app/widgets/primitives/common/variable.dart' as primitive;
+import 'package:app/widgets/primitives/common/variable_editor.dart';
+import 'package:app/widgets/primitives/common/variable_form.dart';
 import 'function_letter.dart';
-import 'function_letter_form.dart';
-import 'function_variable_form.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart' as quiver;
 
@@ -79,10 +80,9 @@ class _FunctionRowState extends State<FunctionRow> {
       result.add(BaseText(variable.value.isNegative() ? '-' : '+'));
     }
 
-    result.add(primitive.Variable(
-      name: variable.name,
-      value: variable.value.abs(),
-      onPressed: () => _onFunctionVariablePressed(context, variable),
+    result.add(VariableEditor(
+      variable: variable,
+      onVariableChanged: (x) => _onFunctionVariableChange(context, variable, x),
     ));
     return result;
   }
@@ -90,7 +90,7 @@ class _FunctionRowState extends State<FunctionRow> {
   void _onFunctionLetterPressed(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (x) => FunctionLetterForm(
+      builder: (x) => ArgumentsCountForm(
         initialValue: _variables.length,
         onValueChanged: _onFunctionVariablesCountChange,
       ),
@@ -125,23 +125,17 @@ class _FunctionRowState extends State<FunctionRow> {
     });
   }
 
-  void _onFunctionVariablePressed(BuildContext context, Variable variable) {
-    showModalBottomSheet(
-      context: context,
-      builder: (x) => FunctionVariableForm(
-        variable: variable,
-        onValueChanged: (x) {
-          setState(() {
-            setState(() {
-              _variables = _variables.map((v) {
-                if (v == variable) return v.changeValue(x);
+  void _onFunctionVariableChange(
+    BuildContext context,
+    Variable variable,
+    Variable newValue,
+  ) {
+    setState(() {
+      _variables = _variables.map((v) {
+        if (v == variable) return newValue;
 
-                return v;
-              }).toList();
-            });
-          });
-        },
-      ),
-    );
+        return v;
+      }).toList();
+    });
   }
 }
