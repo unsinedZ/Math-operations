@@ -6,12 +6,12 @@ class AppLayout extends StatelessWidget {
   final Widget _body;
   final String title;
 
-  const AppLayout(
-    this._body, {
-    this.title,
+  const AppLayout({
+    @required Widget content,
     Key key,
-    Widget body,
-  }) : super(key: key);
+    this.title,
+  })  : this._body = content,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

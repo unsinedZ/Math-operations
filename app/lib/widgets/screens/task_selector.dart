@@ -5,7 +5,7 @@ class TaskSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppLayout(
-      ListView(
+      content: ListView(
         children: ListTile.divideTiles(
           context: context,
           tiles: [

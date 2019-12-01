@@ -15,10 +15,18 @@ class _DualSimplexState extends State<DualSimplexMethod> {
   @override
   Widget build(BuildContext context) {
     return AppLayout(
-      FunctionRow(
-        targetFunction: _createDefaultFunction(),
-      ),
       title: 'Dual simplex method',
+      content: Row(
+        children: <Widget>[
+          Expanded(
+            child: Card(
+              child: FunctionRow(
+                targetFunction: _createDefaultFunction(),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
