@@ -3,7 +3,9 @@ import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/primitives/function_letter.dart';
 import 'package:app/widgets/primitives/function_letter_form.dart';
+import 'package:app/widgets/primitives/function_variable_form.dart';
 import 'package:flutter/material.dart';
+import 'package:quiver/iterables.dart' as quiver;
 
 import 'function_text.dart';
 import 'function_variable.dart';
@@ -22,9 +24,21 @@ class FunctionRow extends StatefulWidget {
 }
 
 class _FunctionRowState extends State<FunctionRow> {
-  TargetFunction _targetFunction;
+  final String functionLetter;
+  final String variableLetter;
+  List<Variable> _variables;
 
-  _FunctionRowState(this._targetFunction);
+  _FunctionRowState(TargetFunction targetFunction)
+      : this.functionLetter = targetFunction.functionLetter,
+        this.variableLetter = targetFunction.variableLetter {
+    int index = 0;
+    _variables = targetFunction.coefficients
+        .map((x) => Variable(
+              name: '$variableLetter${++index}',
+              value: x,
+            ))
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +55,15 @@ class _FunctionRowState extends State<FunctionRow> {
     int index = 0;
     return <Widget>[
       FunctionLetter(
-        functionLetter: _targetFunction.functionLetter,
-        variableLetter: _targetFunction.variableLetter,
+        functionLetter: functionLetter,
+        variableLetter: variableLetter,
         onPressed: () => _onFunctionLetterPressed(context),
       ),
       FunctionText('='),
-      ..._targetFunction.coefficients
+      ..._variables
           .map((x) => _createVariable(
-                variable: Variable(
-                  name: _targetFunction.variableLetter,
-                  value: x,
-                ),
+                context: context,
+                variable: x,
                 showSignForPositive: index++ > 0,
               ))
           .reduce((x, y) => x..addAll(y))
@@ -59,6 +71,7 @@ class _FunctionRowState extends State<FunctionRow> {
   }
 
   List<Widget> _createVariable({
+    BuildContext context,
     Variable variable,
     bool showSignForPositive = false,
   }) {
@@ -70,7 +83,7 @@ class _FunctionRowState extends State<FunctionRow> {
     result.add(FunctionVariable(
       name: variable.name,
       value: variable.value.abs(),
-      onPressed: () {},
+      onPressed: () => _onFunctionVariablePressed(context, variable),
     ));
     return result;
   }
@@ -78,33 +91,58 @@ class _FunctionRowState extends State<FunctionRow> {
   void _onFunctionLetterPressed(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (x) => Container(
-        child: FunctionLetterForm(
-          initialValue: _targetFunction.coefficients.length,
-          onValueChanged: (num newValue) {
-            setState(() {
-              if (newValue == _targetFunction.coefficients.length) {
-                return;
-              }
-
-              List<Fraction> newCoefficients;
-              if (newValue < _targetFunction.coefficients.length) {
-                newCoefficients = _targetFunction.coefficients.take(newValue).toList();
-              } else {
-                int expandSize = newValue - _targetFunction.coefficients.length;
-                newCoefficients = _targetFunction.coefficients
-                  ..addAll(
-                    List.filled(expandSize, Fraction.fromNumber(1)),
-                  );
-              }
-
-              _targetFunction =
-                  _targetFunction.changeCoefficients(newCoefficients);
-            });
-          },
-        ),
+      builder: (x) => FunctionLetterForm(
+        initialValue: _variables.length,
+        onValueChanged: _onFunctionVariablesCountChange,
       ),
-      useRootNavigator: true,
+    );
+  }
+
+  void _onFunctionVariablesCountChange(int newValue) {
+    if (newValue == _variables.length) {
+      return;
+    }
+
+    setState(() {
+      if (newValue < _variables.length) {
+        _variables = _variables.take(newValue).toList();
+      } else {
+        int expandSize = newValue - _variables.length;
+        _variables = quiver.concat(
+          [
+            _variables,
+            List.generate(
+              expandSize,
+              (index) {
+                return Variable(
+                  name: '$variableLetter${_variables.length + index + 1}',
+                  value: Fraction.fromNumber(1),
+                );
+              },
+            ),
+          ],
+        ).toList();
+      }
+    });
+  }
+
+  void _onFunctionVariablePressed(BuildContext context, Variable variable) {
+    showModalBottomSheet(
+      context: context,
+      builder: (x) => FunctionVariableForm(
+        variable: variable,
+        onValueChanged: (x) {
+          setState(() {
+            setState(() {
+              _variables = _variables.map((v) {
+                if (v == variable) return v.changeValue(x);
+
+                return v;
+              }).toList();
+            });
+          });
+        },
+      ),
     );
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 class FunctionLetterForm extends StatefulWidget {
-  final ValueChanged<num> onValueChanged;
-  final num initialValue;
+  final ValueChanged<int> onValueChanged;
+  final int initialValue;
 
   FunctionLetterForm({
     Key key,
@@ -12,15 +12,17 @@ class FunctionLetterForm extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _FunctionLetterFormState createState() => _FunctionLetterFormState(initialValue);
+  _FunctionLetterFormState createState() =>
+      _FunctionLetterFormState(initialValue);
 }
 
 class _FunctionLetterFormState extends State<FunctionLetterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  num _argumentsCount;
+  int _argumentsCount;
 
-  _FunctionLetterFormState(int initialValue) : this._argumentsCount = initialValue;
+  _FunctionLetterFormState(int initialValue)
+      : this._argumentsCount = initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +30,7 @@ class _FunctionLetterFormState extends State<FunctionLetterForm> {
     return Form(
       key: _formKey,
       child: Container(
+        margin: EdgeInsets.all(16),
         child: Column(
           children: <Widget>[
             Text(
@@ -45,13 +48,7 @@ class _FunctionLetterFormState extends State<FunctionLetterForm> {
               },
             ),
             RaisedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                  widget.onValueChanged(_argumentsCount);
-                  Navigator.of(context).pop();
-                }
-              },
+              onPressed: _onSave,
               child: Text(
                 'Save',
                 style: theme.accentTextTheme.button,
@@ -60,8 +57,15 @@ class _FunctionLetterFormState extends State<FunctionLetterForm> {
             ),
           ],
         ),
-        margin: EdgeInsets.all(16),
       ),
     );
+  }
+
+  void _onSave() {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      widget.onValueChanged(_argumentsCount);
+      Navigator.of(context).pop();
+    }
   }
 }
