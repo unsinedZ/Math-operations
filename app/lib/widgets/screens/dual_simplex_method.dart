@@ -16,13 +16,11 @@ class _DualSimplexState extends State<DualSimplexMethod> {
   Widget build(BuildContext context) {
     return AppLayout(
       title: 'Dual simplex method',
-      content: Row(
+      content: Column(
         children: <Widget>[
-          Expanded(
-            child: Card(
-              child: FunctionRow(
-                targetFunction: _createDefaultFunction(),
-              ),
+          _CardWrapper(
+            child: FunctionRow(
+              targetFunction: _createDefaultFunction(),
             ),
           ),
         ],
@@ -35,6 +33,29 @@ class _DualSimplexState extends State<DualSimplexMethod> {
       coefficients: [
         Fraction.fromNumber(1),
         Fraction.fromNumber(1),
+      ],
+    );
+  }
+}
+
+class _CardWrapper extends StatelessWidget {
+  final Widget _child;
+
+  const _CardWrapper({
+    Key key,
+    @required Widget child,
+  })  : this._child = child,
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Card(
+            child: _child,
+          ),
+        ),
       ],
     );
   }
