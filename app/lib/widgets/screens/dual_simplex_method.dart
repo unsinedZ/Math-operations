@@ -29,19 +29,20 @@ class _DualSimplexState extends State<DualSimplexMethod> {
       content: Column(
         children: <Widget>[
           _CardWrapper(
-            child: FunctionRow(
-              targetFunction: _targetFunction,
-            ),
-          ),
-          _CardWrapper(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: _restrictions
-                  .map((x) => RestrictionRow(
-                        restriction: x,
-                        variableLetter: _targetFunction.variableLetter,
-                      ))
-                  .toList(),
+              children: [
+                FunctionRow(
+                  targetFunction: _targetFunction,
+                ),
+                Divider(),
+                ..._restrictions
+                    .map((x) => RestrictionRow(
+                          restriction: x,
+                          variableLetter: _targetFunction.variableLetter,
+                        ))
+                    .toList(),
+              ],
             ),
           ),
         ],
