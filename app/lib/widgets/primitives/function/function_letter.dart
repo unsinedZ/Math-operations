@@ -16,13 +16,9 @@ class FunctionLetter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String text = '$functionLetter($variableLetter)';
-    return Row(
-      children: <Widget>[
-        BaseButton(
-          text: text,
-          onPressed: onPressed,
-        ),
-      ],
+    return BaseButton(
+      text: text,
+      onPressed: onPressed,
     );
   }
 }

@@ -14,6 +14,14 @@ class DualSimplexMethod extends StatefulWidget {
 }
 
 class _DualSimplexState extends State<DualSimplexMethod> {
+  TargetFunction _targetFunction;
+  List<Restriction> _restrictions;
+
+  _DualSimplexState() {
+    this._targetFunction = _createDefaultFunction();
+    this._restrictions = _createDefaultRestrictions();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppLayout(
@@ -22,14 +30,16 @@ class _DualSimplexState extends State<DualSimplexMethod> {
         children: <Widget>[
           _CardWrapper(
             child: FunctionRow(
-              targetFunction: _createDefaultFunction(),
+              targetFunction: _targetFunction,
             ),
           ),
           _CardWrapper(
             child: Column(
-              children: _createDefaultRestrictions()
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: _restrictions
                   .map((x) => RestrictionRow(
                         restriction: x,
+                        variableLetter: _targetFunction.variableLetter,
                       ))
                   .toList(),
             ),
@@ -49,7 +59,7 @@ class _DualSimplexState extends State<DualSimplexMethod> {
   }
 
   List<Restriction> _createDefaultRestrictions() {
-    return [
+    return <Restriction>[
       Restriction(
         coefficients: [
           Fraction.fromNumber(1),

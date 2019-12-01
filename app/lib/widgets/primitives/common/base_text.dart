@@ -10,10 +10,15 @@ class BaseText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontSize: 18,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0,
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 18,
+        ),
       ),
     );
   }
