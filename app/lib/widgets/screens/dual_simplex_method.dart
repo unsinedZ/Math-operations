@@ -27,37 +27,36 @@ class _DualSimplexState extends State<DualSimplexMethod> {
     ThemeData theme = Theme.of(context);
     return AppLayout(
       title: 'Dual simplex method',
-      content: Column(
-        children: <Widget>[
-          _CardWrapper(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                FunctionRow(
-                  targetFunction: _targetFunction,
-                ),
-                Divider(),
-                ..._restrictions
-                    .map((x) => RestrictionRow(
-                          restriction: x,
-                          variableLetter: _targetFunction.variableLetter,
-                        ))
-                    .toList(),
-                Divider(),
-                Center(
-                  child: RaisedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Solve',
-                      style: theme.accentTextTheme.button,
-                    ),
-                    color: theme.accentColor,
+      content: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: _CardWrapper(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FunctionRow(
+                targetFunction: _targetFunction,
+              ),
+              Divider(),
+              ..._restrictions
+                  .map((x) => RestrictionRow(
+                        restriction: x,
+                        variableLetter: _targetFunction.variableLetter,
+                      ))
+                  .toList(),
+              Divider(),
+              Center(
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Solve',
+                    style: theme.accentTextTheme.button,
                   ),
+                  color: theme.accentColor,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

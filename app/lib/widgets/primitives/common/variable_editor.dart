@@ -2,6 +2,7 @@ import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/primitives/common/variable.dart' as primitive;
 import 'package:flutter/material.dart';
 
+import 'overflow_safe_bottom_sheet_modal.dart';
 import 'variable_form.dart';
 
 class VariableEditor extends StatefulWidget {
@@ -32,39 +33,16 @@ class _VariableEditorState extends State<VariableEditor> {
   }
 
   void _onFunctionVariablePressed(BuildContext context) {
-    MediaQueryData query = MediaQuery.of(context);
-    bool isScrollControlled = query.orientation == Orientation.landscape;
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: isScrollControlled,
-      builder: (x) => _makeConstrainted(
-        shouldMake: isScrollControlled,
-        widget: VariableForm(
-          variable: _variable,
-          onValueChanged: (x) {
-            setState(() {
-              _changeVariable(_variable.changeValue(x));
-            });
-          },
-        ),
+    OverflowSafeBottomSheetModal(
+      (_) => VariableForm(
+        variable: _variable,
+        onValueChanged: (x) {
+          setState(() {
+            _changeVariable(_variable.changeValue(x));
+          });
+        },
       ),
-    );
-  }
-
-  Widget _makeConstrainted({
-    Widget widget,
-    bool shouldMake,
-  }) {
-    if (!shouldMake) return widget;
-
-    MediaQueryData query = MediaQuery.of(context);
-    BoxConstraints boxConstraints = BoxConstraints(
-      maxHeight: query.size.height * .9,
-    );
-    return ConstrainedBox(
-      constraints: boxConstraints,
-      child: widget,
-    );
+    ).show(context);
   }
 
   void _changeVariable(Variable newVariable) {

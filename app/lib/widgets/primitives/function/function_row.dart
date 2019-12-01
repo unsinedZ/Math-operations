@@ -3,6 +3,8 @@ import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/primitives/common/arguments_count_form.dart';
 import 'package:app/widgets/primitives/common/base_text.dart';
+import 'package:app/widgets/primitives/common/overflow_safe_bottom_sheet_modal.dart';
+import 'package:app/widgets/primitives/common/spaced.dart';
 import 'package:app/widgets/primitives/common/variable_editor.dart';
 import 'function_letter.dart';
 import 'package:flutter/material.dart';
@@ -57,18 +59,22 @@ class _FunctionRowState extends State<FunctionRow> {
           flex: 0,
           child: Row(
             children: <Widget>[
-              BaseText('→'),
-              DropdownButton(
-                value: _extremum,
-                items: Extremum.values
-                    .map(
-                      (x) => DropdownMenuItem(
-                        value: x,
-                        child: BaseText(x.toString().split('.').last),
-                      ),
-                    )
-                    .toList(),
-                onChanged: _onExtremumChange,
+              Spaced(
+                child: Icon(Icons.arrow_forward),
+              ),
+              Spaced(
+                child: DropdownButton(
+                  value: _extremum,
+                  items: Extremum.values
+                      .map(
+                        (x) => DropdownMenuItem(
+                          value: x,
+                          child: BaseText(x.toString().split('.').last),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: _onExtremumChange,
+                ),
               ),
             ],
           ),
@@ -122,13 +128,12 @@ class _FunctionRowState extends State<FunctionRow> {
   }
 
   void _onFunctionLetterPressed(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (x) => ArgumentsCountForm(
+    OverflowSafeBottomSheetModal(
+      (x) => ArgumentsCountForm(
         initialValue: _variables.length,
         onValueChanged: _onFunctionVariablesCountChange,
       ),
-    );
+    ).show(context);
   }
 
   void _onFunctionVariablesCountChange(int newValue) {

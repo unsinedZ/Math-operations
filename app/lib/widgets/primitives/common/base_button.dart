@@ -1,3 +1,4 @@
+import 'package:app/widgets/primitives/common/spaced.dart';
 import 'package:flutter/material.dart';
 
 import 'base_text.dart';
@@ -22,10 +23,8 @@ class BaseButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          child: Container(
+          child: Spaced(
             child: BaseText(text),
-            margin: EdgeInsets.all(6),
-            padding: EdgeInsets.all(6),
           ),
           onTap: onPressed,
         ),
