@@ -59,22 +59,23 @@ class _FunctionRowState extends State<FunctionRow> {
           flex: 0,
           child: Row(
             children: <Widget>[
-              Spaced(
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 4,
+                ),
                 child: Icon(Icons.arrow_forward),
               ),
-              Spaced(
-                child: DropdownButton(
-                  value: _extremum,
-                  items: Extremum.values
-                      .map(
-                        (x) => DropdownMenuItem(
-                          value: x,
-                          child: BaseText(x.toString().split('.').last),
-                        ),
-                      )
-                      .toList(),
-                  onChanged: _onExtremumChange,
-                ),
+              DropdownButton(
+                value: _extremum,
+                items: Extremum.values
+                    .map(
+                      (x) => DropdownMenuItem(
+                        value: x,
+                        child: BaseText(x.toString().split('.').last),
+                      ),
+                    )
+                    .toList(),
+                onChanged: _onExtremumChange,
               ),
             ],
           ),
