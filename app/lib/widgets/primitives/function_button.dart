@@ -14,17 +14,19 @@ class FunctionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        child: FunctionText(text),
-        padding: EdgeInsets.symmetric(
-          horizontal: 12,
+    return Container(
+      child: Material(
+        child: InkWell(
+          child: Container(
+            child: FunctionText(text),
+            margin: EdgeInsets.all(6),
+            padding: EdgeInsets.all(6),
+          ),
+          onTap: onPressed,
         ),
-        margin: EdgeInsets.symmetric(
-          vertical: 12,
-        ),
+        color: Colors.transparent,
       ),
-      onTap: onPressed,
+      color: Colors.blueGrey.shade50,
     );
   }
 }
