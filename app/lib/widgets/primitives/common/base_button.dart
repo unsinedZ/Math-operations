@@ -15,7 +15,12 @@ class BaseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 4,
+      ),
+      color: Colors.blueGrey.shade50,
       child: Material(
+        color: Colors.transparent,
         child: InkWell(
           child: Container(
             child: BaseText(text),
@@ -24,9 +29,7 @@ class BaseButton extends StatelessWidget {
           ),
           onTap: onPressed,
         ),
-        color: Colors.transparent,
       ),
-      color: Colors.blueGrey.shade50,
     );
   }
 }

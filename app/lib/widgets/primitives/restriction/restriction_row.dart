@@ -86,17 +86,23 @@ class _RestrictionRowState extends State<RestrictionRow> {
   }
 
   Widget _createComparisonSign() {
-    return ButtonTheme(
-      alignedDropdown: true,
-      child: DropdownButton(
-        value: _restriction.comparison,
-        items: ExpressionComparison.values
-            .map((x) => DropdownMenuItem(
-                  value: x,
-                  child: BaseText(ExpressionComparisonStringifier.stringify(x)),
-                ))
-            .toList(),
-        onChanged: _onComparisonChanged,
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 4,
+      ),
+      child: ButtonTheme(
+        alignedDropdown: true,
+        child: DropdownButton(
+          value: _restriction.comparison,
+          items: ExpressionComparison.values
+              .map((x) => DropdownMenuItem(
+                    value: x,
+                    child:
+                        BaseText(ExpressionComparisonStringifier.stringify(x)),
+                  ))
+              .toList(),
+          onChanged: _onComparisonChanged,
+        ),
       ),
     );
   }
