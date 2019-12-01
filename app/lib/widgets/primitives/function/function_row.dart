@@ -1,44 +1,86 @@
+import 'dart:async';
+
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/primitives/common/arguments_count_form.dart';
 import 'package:app/widgets/primitives/common/base_text.dart';
 import 'package:app/widgets/primitives/common/overflow_safe_bottom_sheet_modal.dart';
-import 'package:app/widgets/primitives/common/spaced.dart';
 import 'package:app/widgets/primitives/common/variable_editor.dart';
+import 'package:rxdart/rxdart.dart';
 import 'function_letter.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart' as quiver;
 
 class FunctionRow extends StatefulWidget {
   final TargetFunction _targetFunction;
+  final ValueChanged<TargetFunction> _onTargetFunctionChanged;
 
   const FunctionRow({
     Key key,
     @required TargetFunction targetFunction,
+    @required ValueChanged<TargetFunction> onTargetFunctionChanged,
   })  : this._targetFunction = targetFunction,
+        this._onTargetFunctionChanged = onTargetFunctionChanged,
         super(key: key);
 
   @override
-  _FunctionRowState createState() => _FunctionRowState(_targetFunction);
+  _FunctionRowState createState() => _FunctionRowState(
+        _targetFunction,
+        _onTargetFunctionChanged,
+      );
 }
 
 class _FunctionRowState extends State<FunctionRow> {
-  final String functionLetter;
-  final String variableLetter;
+  final ValueChanged<TargetFunction> _onTargetFunctionChanged;
+
+  TargetFunction _targetFunction;
+  BehaviorSubject<List<Variable>> _variablesSubject;
+  StreamSubscription _variablesSubscription;
   List<Variable> _variables;
   Extremum _extremum = Extremum.min;
 
-  _FunctionRowState(TargetFunction targetFunction)
-      : this.functionLetter = targetFunction.functionLetter,
-        this.variableLetter = targetFunction.variableLetter {
+  _FunctionRowState(
+    TargetFunction targetFunction,
+    ValueChanged<TargetFunction> onTargetFunctionChanged,
+  )   : this._targetFunction = targetFunction,
+        this._onTargetFunctionChanged = onTargetFunctionChanged;
+
+  @override
+  void initState() {
     int index = 0;
-    _variables = targetFunction.coefficients
+    _variables = _targetFunction.coefficients
         .map((x) => Variable(
-              name: '$variableLetter${++index}',
+              name: '${_targetFunction.variableLetter}${++index}',
               value: x,
             ))
         .toList();
+
+    _variablesSubject = BehaviorSubject<List<Variable>>();
+    _variablesSubscription = _variablesSubject.stream.listen(
+      _onVariablesChange,
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _variablesSubscription.cancel();
+    super.dispose();
+  }
+
+  void _onVariablesChange(List<Variable> variables) {
+    setState(() {
+      _variables = variables;
+      _targetFunction = _updateFunctionWithVariables(variables);
+      _onTargetFunctionChanged(_targetFunction);
+    });
+  }
+
+  TargetFunction _updateFunctionWithVariables(List<Variable> variables) {
+    return _targetFunction.changeCoefficients(
+      variables.map((x) => x.value).toList(),
+    );
   }
 
   @override
@@ -88,8 +130,8 @@ class _FunctionRowState extends State<FunctionRow> {
     int index = 0;
     return <Widget>[
       FunctionLetter(
-        functionLetter: functionLetter,
-        variableLetter: variableLetter,
+        functionLetter: _targetFunction.functionLetter,
+        variableLetter: _targetFunction.variableLetter,
         onPressed: () => _onFunctionLetterPressed(context),
       ),
       BaseText('='),
@@ -142,27 +184,29 @@ class _FunctionRowState extends State<FunctionRow> {
       return;
     }
 
-    setState(() {
-      if (newValue < _variables.length) {
-        _variables = _variables.take(newValue).toList();
-      } else {
-        int expandSize = newValue - _variables.length;
-        _variables = quiver.concat(
-          [
-            _variables,
-            List.generate(
-              expandSize,
-              (index) {
-                return Variable(
-                  name: '$variableLetter${_variables.length + index + 1}',
-                  value: Fraction.fromNumber(1),
-                );
-              },
-            ),
-          ],
-        ).toList();
-      }
-    });
+    List<Variable> newVariables;
+    if (newValue < _variables.length) {
+      newVariables = _variables.take(newValue).toList();
+    } else {
+      int expandSize = newValue - _variables.length;
+      newVariables = quiver.concat(
+        [
+          _variables,
+          List.generate(
+            expandSize,
+            (index) {
+              int variableIndex = _variables.length + index + 1;
+              return Variable(
+                name: '${_targetFunction.variableLetter}$variableIndex',
+                value: Fraction.fromNumber(1),
+              );
+            },
+          ),
+        ],
+      ).toList();
+    }
+
+    _variablesSubject.add(newVariables);
   }
 
   void _onFunctionVariableChange(Variable variable, Variable newValue) {

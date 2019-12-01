@@ -38,6 +38,7 @@ class _DualSimplexState extends State<DualSimplexMethod> {
             children: [
               FunctionRow(
                 targetFunction: _targetFunction,
+                onTargetFunctionChanged: _onTargetFunctionChange,
               ),
               Divider(),
               ..._restrictions
@@ -92,6 +93,12 @@ class _DualSimplexState extends State<DualSimplexMethod> {
         freeMember: Fraction.fromNumber(-1),
       ),
     ];
+  }
+
+  void _onTargetFunctionChange(TargetFunction newValue) {
+    setState(() {
+      _targetFunction = newValue;
+    });
   }
 }
 
