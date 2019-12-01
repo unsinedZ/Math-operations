@@ -25,6 +25,7 @@ class _FunctionRowState extends State<FunctionRow> {
   final String functionLetter;
   final String variableLetter;
   List<Variable> _variables;
+  Extremum _extremum = Extremum.min;
 
   _FunctionRowState(TargetFunction targetFunction)
       : this.functionLetter = targetFunction.functionLetter,
@@ -64,8 +65,25 @@ class _FunctionRowState extends State<FunctionRow> {
                 variable: x,
                 showSignForPositive: index++ > 0,
               ))
-          .reduce((x, y) => x..addAll(y))
+          .reduce((x, y) => x..addAll(y)),
+      BaseText('→'),
+      DropdownButton(
+        value: _extremum,
+        items: Extremum.values.map(
+          (x) => DropdownMenuItem(
+            value: x,
+            child: BaseText(x.toString().split('.').last),
+          ),
+        ).toList(),
+        onChanged: _onExtremumChange,
+      ),
     ];
+  }
+
+  void _onExtremumChange(Extremum newExtremum) {
+    setState(() {
+      _extremum = newExtremum;
+    });
   }
 
   List<Widget> _createVariable({
@@ -132,4 +150,9 @@ class _FunctionRowState extends State<FunctionRow> {
       }).toList();
     });
   }
+}
+
+enum Extremum {
+  min,
+  max,
 }

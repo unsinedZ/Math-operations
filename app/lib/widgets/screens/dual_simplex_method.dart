@@ -24,6 +24,7 @@ class _DualSimplexState extends State<DualSimplexMethod> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
     return AppLayout(
       title: 'Dual simplex method',
       content: Column(
@@ -42,6 +43,17 @@ class _DualSimplexState extends State<DualSimplexMethod> {
                           variableLetter: _targetFunction.variableLetter,
                         ))
                     .toList(),
+                Divider(),
+                Center(
+                  child: RaisedButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Solve',
+                      style: theme.accentTextTheme.button,
+                    ),
+                    color: theme.accentColor,
+                  ),
+                ),
               ],
             ),
           ),
@@ -98,7 +110,10 @@ class _CardWrapper extends StatelessWidget {
           child: Card(
             margin: EdgeInsets.all(12),
             elevation: 12,
-            child: _child,
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: _child,
+            ),
           ),
         ),
       ],

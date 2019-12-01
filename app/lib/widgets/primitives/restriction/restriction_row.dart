@@ -98,8 +98,9 @@ class _RestrictionRowState extends State<RestrictionRow> {
           items: ExpressionComparison.values
               .map((x) => DropdownMenuItem(
                     value: x,
-                    child:
-                        BaseText(ExpressionComparisonStringifier.stringify(x)),
+                    child: BaseText(
+                      ExpressionComparisonStringifier.stringify(x),
+                    ),
                   ))
               .toList(),
           onChanged: _onComparisonChanged,
