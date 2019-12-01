@@ -1,5 +1,5 @@
 import 'package:app/business/operations/fraction.dart';
-import 'package:app/widgets/primitives/function_button.dart';
+import 'function_button.dart';
 import 'package:flutter/material.dart';
 
 class FunctionVariable extends StatelessWidget {

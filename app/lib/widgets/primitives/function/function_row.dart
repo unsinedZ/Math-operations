@@ -1,9 +1,9 @@
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
-import 'package:app/widgets/primitives/function_letter.dart';
-import 'package:app/widgets/primitives/function_letter_form.dart';
-import 'package:app/widgets/primitives/function_variable_form.dart';
+import 'function_letter.dart';
+import 'function_letter_form.dart';
+import 'function_variable_form.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart' as quiver;
 
