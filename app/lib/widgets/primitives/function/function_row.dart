@@ -41,12 +41,39 @@ class _FunctionRowState extends State<FunctionRow> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(8),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: _createRowContent(context),
-      ),
+    return Row(
+      children: <Widget>[
+        Flexible(
+          flex: 1,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(8),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: _createRowContent(context),
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 0,
+          child: Row(
+            children: <Widget>[
+              BaseText('→'),
+              DropdownButton(
+                value: _extremum,
+                items: Extremum.values
+                    .map(
+                      (x) => DropdownMenuItem(
+                        value: x,
+                        child: BaseText(x.toString().split('.').last),
+                      ),
+                    )
+                    .toList(),
+                onChanged: _onExtremumChange,
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -65,18 +92,9 @@ class _FunctionRowState extends State<FunctionRow> {
                 variable: x,
                 showSignForPositive: index++ > 0,
               ))
-          .reduce((x, y) => x..addAll(y)),
-      BaseText('→'),
-      DropdownButton(
-        value: _extremum,
-        items: Extremum.values.map(
-          (x) => DropdownMenuItem(
-            value: x,
-            child: BaseText(x.toString().split('.').last),
+          .reduce(
+            (x, y) => x..addAll(y),
           ),
-        ).toList(),
-        onChanged: _onExtremumChange,
-      ),
     ];
   }
 

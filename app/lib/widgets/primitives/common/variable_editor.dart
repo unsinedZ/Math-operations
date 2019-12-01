@@ -32,16 +32,38 @@ class _VariableEditorState extends State<VariableEditor> {
   }
 
   void _onFunctionVariablePressed(BuildContext context) {
+    MediaQueryData query = MediaQuery.of(context);
+    bool isScrollControlled = query.orientation == Orientation.landscape;
     showModalBottomSheet(
       context: context,
-      builder: (x) => VariableForm(
-        variable: _variable,
-        onValueChanged: (x) {
-          setState(() {
-            _changeVariable(_variable.changeValue(x));
-          });
-        },
+      isScrollControlled: isScrollControlled,
+      builder: (x) => _makeConstrainted(
+        shouldMake: isScrollControlled,
+        widget: VariableForm(
+          variable: _variable,
+          onValueChanged: (x) {
+            setState(() {
+              _changeVariable(_variable.changeValue(x));
+            });
+          },
+        ),
       ),
+    );
+  }
+
+  Widget _makeConstrainted({
+    Widget widget,
+    bool shouldMake,
+  }) {
+    if (!shouldMake) return widget;
+
+    MediaQueryData query = MediaQuery.of(context);
+    BoxConstraints boxConstraints = BoxConstraints(
+      maxHeight: query.size.height * .9,
+    );
+    return ConstrainedBox(
+      constraints: boxConstraints,
+      child: widget,
     );
   }
 
