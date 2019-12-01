@@ -35,7 +35,7 @@ class _RestrictionRowState extends State<RestrictionRow> {
     int index = 0;
     this._variables = restriction.coefficients
         .map((x) => Variable(
-              name: '$variableLetter${index + 1}',
+              name: '$variableLetter${++index}',
               value: x,
             ))
         .toList();
