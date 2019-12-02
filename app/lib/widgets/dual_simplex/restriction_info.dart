@@ -1,7 +1,7 @@
 import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/variable.dart';
+import 'package:app/widgets/editors/free_member_editor.dart';
 import 'package:app/widgets/editors/variable_editor.dart';
-import 'package:app/widgets/primitives/free_member.dart';
 import 'package:flutter/material.dart';
 
 import 'comparison_info.dart';
@@ -77,8 +77,13 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
                 onChanged: (x) =>
                     widget.onChanged(widget.restriction.changeComparison(x)),
               )),
-          FreeMember(
+          FreeMemberEditor(
             freeMember: widget.restriction.freeMember,
+            onChanged: (x) {
+              widget.onChanged(
+                widget.restriction.changeFreeMember(x),
+              );
+            },
           ),
         ],
       ),

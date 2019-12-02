@@ -10,12 +10,14 @@ class VariableEditor extends StatelessWidget {
   final Variable variable;
   final ValueChanged<Variable> onChanged;
   final bool showSignForPositive;
+  final bool showName;
 
   const VariableEditor({
     Key key,
     @required this.variable,
     @required this.onChanged,
     this.showSignForPositive = false,
+    this.showName = true,
   }) : super(key: key);
 
   @override
@@ -27,7 +29,7 @@ class VariableEditor extends StatelessWidget {
       children: <Widget>[
         BaseText(text),
         VariableInfo(
-          name: variable.name,
+          name: showName ? variable.name : '',
           value: variable.value.abs(),
           onPressed: () => _onPressed(context),
         ),

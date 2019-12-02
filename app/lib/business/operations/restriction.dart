@@ -26,6 +26,14 @@ class Restriction {
       comparison: this.comparison,
     );
   }
+
+  Restriction changeFreeMember(Fraction newFreeMember) {
+    return Restriction(
+      coefficients: this.coefficients,
+      freeMember: newFreeMember,
+      comparison: this.comparison,
+    );
+  }
 }
 
 enum ExpressionComparison {
