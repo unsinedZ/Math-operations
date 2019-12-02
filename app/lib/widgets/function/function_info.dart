@@ -2,11 +2,11 @@ import 'package:app/business/operations/extremum.dart';
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/target_function.dart';
 import 'package:app/business/operations/variable.dart';
-import 'package:app/widgets/primitives/common/base_text.dart';
-import 'package:app/widgets/primitives/common/overflow_safe_bottom_sheet_modal.dart';
-import 'package:app/widgets/primitives/common/scroll_integer_editor.dart';
-import 'package:app/widgets/primitives/common/variable_editor.dart';
-import 'function_letter.dart';
+import 'package:app/widgets/dual_simplex/function_letter.dart';
+import 'package:app/widgets/editors/scroll_integer_editor.dart';
+import 'package:app/widgets/editors/variable_editor.dart';
+import 'package:app/widgets/primitives/base_text.dart';
+import 'package:app/widgets/primitives/overflow_safe_bottom_sheet_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart';
 
