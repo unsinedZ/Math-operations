@@ -29,13 +29,13 @@ class VariableEditor extends StatelessWidget {
         VariableInfo(
           name: variable.name,
           value: variable.value.abs(),
-          onPressed: () => _onFunctionVariablePressed(context),
+          onPressed: () => _onPressed(context),
         ),
       ],
     );
   }
 
-  void _onFunctionVariablePressed(BuildContext context) {
+  void _onPressed(BuildContext context) {
     OverflowSafeBottomSheetModal(
       (_) => VariableForm(
         variable: variable,
