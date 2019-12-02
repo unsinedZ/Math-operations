@@ -1,5 +1,6 @@
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/variable.dart';
+import 'package:app/widgets/primitives/accent_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,9 +11,9 @@ class VariableForm extends StatefulWidget {
   const VariableForm({
     Key key,
     @required Variable variable,
-    @required ValueChanged<Fraction> onValueChanged,
+    @required ValueChanged<Fraction> onChanged,
   })  : this._variable = variable,
-        this.onValueChanged = onValueChanged,
+        this.onValueChanged = onChanged,
         super(key: key);
 
   @override
@@ -77,13 +78,9 @@ class _State extends State<VariableForm> {
                 ),
               ],
             ),
-            RaisedButton(
+            AccentButton(
+              text: 'Save',
               onPressed: _onSave,
-              child: Text(
-                'Save',
-                style: theme.accentTextTheme.button,
-              ),
-              color: theme.accentColor,
             ),
           ],
         ),

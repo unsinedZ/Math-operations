@@ -1,28 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-class ArgumentsCountForm extends StatefulWidget {
-  final ValueChanged<int> onValueChanged;
+class ScrollIntegerEditor extends StatefulWidget {
+  final String text;
   final int initialValue;
+  final ValueChanged<int> onChanged;
+  final int minValue;
+  final int maxValue;
 
-  ArgumentsCountForm({
+  ScrollIntegerEditor({
     Key key,
+    @required this.text,
     @required this.initialValue,
-    @required this.onValueChanged,
+    @required this.onChanged,
+    @required this.minValue,
+    @required this.maxValue,
   }) : super(key: key);
 
   @override
-  _ArgumentsCountFormState createState() =>
-      _ArgumentsCountFormState(initialValue);
+  _ScrollIntegerEditorState createState() => _ScrollIntegerEditorState();
 }
 
-class _ArgumentsCountFormState extends State<ArgumentsCountForm> {
+class _ScrollIntegerEditorState extends State<ScrollIntegerEditor> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   int _argumentsCount;
 
-  _ArgumentsCountFormState(int initialValue)
-      : this._argumentsCount = initialValue;
+  @override
+  void initState() {
+    _argumentsCount = widget.initialValue;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,13 +42,13 @@ class _ArgumentsCountFormState extends State<ArgumentsCountForm> {
         child: Column(
           children: <Widget>[
             Text(
-              'Select number of arguments:',
+              widget.text,
               style: theme.textTheme.title,
             ),
             NumberPicker.integer(
-              initialValue: _argumentsCount ?? 1,
-              minValue: 2,
-              maxValue: 10,
+              initialValue: _argumentsCount,
+              minValue: widget.minValue,
+              maxValue: widget.maxValue,
               onChanged: (num newValue) {
                 setState(() {
                   _argumentsCount = newValue;
@@ -63,8 +71,7 @@ class _ArgumentsCountFormState extends State<ArgumentsCountForm> {
 
   void _onSave() {
     if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      widget.onValueChanged(_argumentsCount);
+      widget.onChanged(_argumentsCount);
       Navigator.of(context).pop();
     }
   }

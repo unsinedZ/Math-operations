@@ -3,7 +3,7 @@ import 'fraction.dart';
 class TargetFunction {
   static const String DEFAULT_FUNCTION_LETTER = 'f';
   static const String DEFAULT_VARIABLE_LETTER = 'x';
-  
+
   final String functionLetter;
   final String variableLetter;
   final List<Fraction> coefficients;
@@ -18,10 +18,19 @@ class TargetFunction {
 
   TargetFunction changeCoefficients(List<Fraction> newCoefficients) {
     return TargetFunction(
-      functionLetter: functionLetter,
-      variableLetter: variableLetter,
+      functionLetter: this.functionLetter,
+      variableLetter: this.variableLetter,
       coefficients: newCoefficients,
-      freeMember: freeMember,
+      freeMember: this.freeMember,
+    );
+  }
+
+  TargetFunction changeVariableLetter(String newLetter) {
+    return TargetFunction(
+      functionLetter: this.functionLetter,
+      variableLetter: newLetter,
+      coefficients: this.coefficients,
+      freeMember: this.freeMember,
     );
   }
 }

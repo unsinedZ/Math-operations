@@ -18,6 +18,14 @@ class Restriction {
       comparison: newComparison,
     );
   }
+
+  Restriction changeCoefficients(List<Fraction> newCoefficients) {
+    return Restriction(
+      coefficients: newCoefficients,
+      freeMember: this.freeMember,
+      comparison: this.comparison,
+    );
+  }
 }
 
 enum ExpressionComparison {
@@ -28,8 +36,7 @@ enum ExpressionComparison {
 
 class ExpressionComparisonStringifier {
   static String stringify(ExpressionComparison comparison) {
-    switch (comparison)
-    {
+    switch (comparison) {
       case ExpressionComparison.Equal:
         return '=';
       case ExpressionComparison.GreaterOrEqual:

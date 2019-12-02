@@ -1,10 +1,13 @@
+import 'package:app/business/operations/extremum.dart';
 import 'package:app/business/operations/fraction.dart';
+import 'package:app/business/operations/linear_task.dart';
 import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/target_function.dart';
+import 'package:app/widgets/dual_simplex/linear_task_info.dart';
 import 'package:app/widgets/layout/app_layout.dart';
-import 'package:app/widgets/primitives/function/function_row.dart';
-import 'package:app/widgets/primitives/restriction/restriction_row.dart';
+import 'package:app/widgets/primitives/base_card.dart';
 import 'package:flutter/material.dart';
+import 'package:quiver/iterables.dart';
 
 class DualSimplexMethod extends StatefulWidget {
   @override
@@ -14,58 +17,20 @@ class DualSimplexMethod extends StatefulWidget {
 }
 
 class _DualSimplexState extends State<DualSimplexMethod> {
-  TargetFunction _targetFunction;
-  List<Restriction> _restrictions;
+  LinearTask _linearTask;
 
-  _DualSimplexState() {
-    this._targetFunction = _createDefaultFunction();
-    this._restrictions = _createDefaultRestrictions();
-  }
+  TargetFunction get _targetFunction => _linearTask.targetFunction;
+  List<Restriction> get _restrictions => _linearTask.restrictions;
 
-  @override
-  Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    return AppLayout(
-      title: 'Dual simplex method',
-      content: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          bottom: 12,
-        ),
-        scrollDirection: Axis.vertical,
-        child: _CardWrapper(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FunctionRow(
-                targetFunction: _targetFunction,
-                onTargetFunctionChanged: _onTargetFunctionChange,
-              ),
-              Divider(),
-              ..._restrictions
-                  .map((x) => RestrictionRow(
-                        restriction: x,
-                        variableLetter: _targetFunction.variableLetter,
-                      ))
-                  .toList(),
-              Divider(),
-              Center(
-                child: RaisedButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Solve',
-                    style: theme.accentTextTheme.button,
-                  ),
-                  color: theme.accentColor,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+  static LinearTask _createDefaultTask() {
+    return LinearTask(
+      targetFunction: _createDefaultFunction(),
+      restrictions: _createDefaultRestrictions(),
+      extremum: Extremum.min,
     );
   }
 
-  TargetFunction _createDefaultFunction() {
+  static TargetFunction _createDefaultFunction() {
     return TargetFunction(
       coefficients: [
         Fraction.fromNumber(1),
@@ -74,11 +39,11 @@ class _DualSimplexState extends State<DualSimplexMethod> {
     );
   }
 
-  List<Restriction> _createDefaultRestrictions() {
+  static List<Restriction> _createDefaultRestrictions() {
     return <Restriction>[
       Restriction(
         coefficients: [
-          Fraction.fromNumber(1),
+          Fraction.fromNumber(-1),
           Fraction.fromNumber(-2),
         ],
         comparison: ExpressionComparison.LowerOrEqual,
@@ -95,37 +60,84 @@ class _DualSimplexState extends State<DualSimplexMethod> {
     ];
   }
 
-  void _onTargetFunctionChange(TargetFunction newValue) {
-    setState(() {
-      _targetFunction = newValue;
-    });
+  @override
+  void initState() {
+    _linearTask = _createDefaultTask();
+    super.initState();
   }
-}
-
-class _CardWrapper extends StatelessWidget {
-  final Widget _child;
-
-  const _CardWrapper({
-    Key key,
-    @required Widget child,
-  })  : this._child = child,
-        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: Card(
-            margin: EdgeInsets.all(12),
-            elevation: 12,
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: _child,
-            ),
+    return AppLayout(
+      title: 'Dual simplex method',
+      content: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: 12,
+        ),
+        scrollDirection: Axis.vertical,
+        child: BaseCard(
+          child: LinearTaskInfo(
+            linearTask: _linearTask,
+            onTargetFunctionChanged: _onTargetFunctionChanged,
+            onRestrictionsChanged: _onRestrictionsChanged,
+            onExtremumChanged: _onExtremumChanged,
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  void _onExtremumChanged(Extremum newExtremum) {
+    setState(() {
+      _linearTask = _linearTask.changeExtremum(newExtremum);
+    });
+  }
+
+  void _onRestrictionsChanged(List<Restriction> newRestrictions) {
+    setState(() {
+      _linearTask = _linearTask.changeRestrictions(newRestrictions);
+    });
+  }
+
+  void _onTargetFunctionChanged(TargetFunction newValue) {
+    setState(() {
+      List<Restriction> newRestrictions = _restrictions;
+      if (_targetFunction.coefficients.length != newValue.coefficients.length) {
+        newRestrictions = _restrictions
+            .map(
+              (x) => _fitRestriction(x, newValue),
+            )
+            .toList();
+      }
+
+      _linearTask = _linearTask
+          .changeTargetFunction(newValue)
+          .changeRestrictions(newRestrictions);
+    });
+  }
+
+  Restriction _fitRestriction(
+    Restriction restriction,
+    TargetFunction targetFunction,
+  ) {
+    int rCoefficients = restriction.coefficients.length;
+    int fCoefficients = targetFunction.coefficients.length;
+    if (rCoefficients > fCoefficients) {
+      return restriction.changeCoefficients(
+        restriction.coefficients.take(fCoefficients).toList(),
+      );
+    }
+
+    return restriction.changeCoefficients(
+      concat(
+        [
+          restriction.coefficients,
+          List.generate(
+            fCoefficients - rCoefficients,
+            (_) => Fraction.fromNumber(1),
+          )
+        ],
+      ).toList(),
     );
   }
 }

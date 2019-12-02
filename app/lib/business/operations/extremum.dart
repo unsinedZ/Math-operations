@@ -1,0 +1,4 @@
+enum Extremum {
+  min,
+  max,
+}

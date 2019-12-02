@@ -1,4 +1,4 @@
-import 'package:app/widgets/primitives/common/base_button.dart';
+import 'package:app/widgets/primitives/base_button.dart';
 import 'package:flutter/material.dart';
 
 class FunctionLetter extends StatelessWidget {

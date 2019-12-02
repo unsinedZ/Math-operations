@@ -4,12 +4,13 @@ class Fraction {
   final int numerator;
   final int denominator;
 
+  String get sign => isNegative() ? '-' : '+';
+
   const Fraction._({
     @required int numerator,
     @required int denominator,
-  })
-    : this.numerator = numerator,
-      this.denominator = denominator;
+  })  : this.numerator = numerator,
+        this.denominator = denominator;
 
   const Fraction.fromNumber(int number)
       : this._(
@@ -37,8 +38,7 @@ class Fraction {
   }
 
   bool isNegative() {
-    return numerator < 0 && denominator > 0
-      || numerator > 0 && denominator < 0;
+    return numerator < 0 && denominator > 0 || numerator > 0 && denominator < 0;
   }
 
   Fraction abs() {
@@ -91,13 +91,15 @@ class Fraction {
   }
 
   bool operator >(Fraction other) {
-    return this.numerator * other.denominator
-      - this.denominator * other.numerator > 0;
+    return this.numerator * other.denominator -
+            this.denominator * other.numerator >
+        0;
   }
 
   bool operator <(Fraction other) {
-    return this.numerator * other.denominator
-      - this.denominator * other.numerator < 0;
+    return this.numerator * other.denominator -
+            this.denominator * other.numerator <
+        0;
   }
 
   bool operator >=(Fraction other) {
@@ -138,12 +140,10 @@ class Fraction {
 
   @override
   String toString() {
-    if (numerator == 0)
-      return '0';
-    
-    if (denominator == 1)
-      return numerator.toString();
-    
+    if (numerator == 0) return '0';
+
+    if (denominator == 1) return numerator.toString();
+
     return '($numerator/$denominator)';
   }
 }

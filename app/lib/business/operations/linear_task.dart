@@ -1,3 +1,4 @@
+import 'extremum.dart';
 import 'target_function.dart';
 import 'restriction.dart';
 
@@ -11,9 +12,28 @@ class LinearTask {
     this.extremum,
     this.restrictions,
   });
-}
 
-enum Extremum {
-  min,
-  max,
+  LinearTask changeTargetFunction(TargetFunction newTargetFunction) {
+    return LinearTask(
+      targetFunction: newTargetFunction,
+      restrictions: this.restrictions,
+      extremum: this.extremum,
+    );
+  }
+
+  LinearTask changeRestrictions(List<Restriction> newRestrictions) {
+    return LinearTask(
+      targetFunction: this.targetFunction,
+      restrictions: newRestrictions,
+      extremum: this.extremum,
+    );
+  }
+  
+  LinearTask changeExtremum(Extremum newExtremum) {
+    return LinearTask(
+      targetFunction: this.targetFunction,
+      restrictions: this.restrictions,
+      extremum: newExtremum,
+    );
+  }
 }

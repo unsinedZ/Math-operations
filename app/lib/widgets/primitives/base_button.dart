@@ -1,7 +1,7 @@
-import 'package:app/widgets/primitives/common/spaced.dart';
 import 'package:flutter/material.dart';
 
 import 'base_text.dart';
+import 'spaced.dart';
 
 class BaseButton extends StatelessWidget {
   final VoidCallback onPressed;
