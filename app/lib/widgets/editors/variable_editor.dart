@@ -39,7 +39,7 @@ class VariableEditor extends StatelessWidget {
     OverflowSafeBottomSheetModal(
       (_) => VariableForm(
         variable: variable,
-        onChanged: (x) => onChanged(variable.changeValue(x)),
+        onChanged: onChanged,
       ),
     ).show(context);
   }

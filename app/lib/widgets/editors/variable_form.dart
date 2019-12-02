@@ -6,14 +6,13 @@ import 'package:flutter/services.dart';
 
 class VariableForm extends StatefulWidget {
   final Variable _variable;
-  final ValueChanged<Fraction> onValueChanged;
+  final ValueChanged<Variable> onChanged;
 
   const VariableForm({
     Key key,
     @required Variable variable,
-    @required ValueChanged<Fraction> onChanged,
+    @required this.onChanged,
   })  : this._variable = variable,
-        this.onValueChanged = onChanged,
         super(key: key);
 
   @override
@@ -90,8 +89,7 @@ class _State extends State<VariableForm> {
 
   void _onSave() {
     if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      widget.onValueChanged(_variable.value);
+      widget.onChanged(_variable);
       Navigator.of(context).pop();
     }
   }
