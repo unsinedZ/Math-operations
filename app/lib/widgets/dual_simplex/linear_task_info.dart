@@ -2,7 +2,9 @@ import 'package:app/business/operations/extremum.dart';
 import 'package:app/business/operations/linear_task.dart';
 import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/target_function.dart';
+import 'package:app/widgets/dual_simplex/greater_zero_message.dart';
 import 'package:app/widgets/primitives/accent_button.dart';
+import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 
 import 'restriction_info.dart';
@@ -56,6 +58,10 @@ class LinearTaskInfo extends StatelessWidget {
               ),
             )
             .toList(),
+        Divider(),
+        GreaterZeroMessage(
+          targetFunction: targetFunction,
+        ),
         Divider(),
         AccentButton(
           text: 'Solve',
