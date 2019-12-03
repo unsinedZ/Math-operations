@@ -21,13 +21,13 @@ class SimplexTableContext {
   }) {
     var basisVariableIndices = simplexTable.rows.map((row) {
       for (int i = 0; i < row.coefficients.length; i++) {
-        Fraction item = row.coefficients[i];
+        Fraction item = row[i];
         if (!item.equalsNumber(1))
           continue;
 
         bool isBasis = simplexTable.rows
           .where((x) => x != row)
-          .every((x) => x.coefficients[i].equalsNumber(0));
+          .every((x) => x[i].equalsNumber(0));
         if (isBasis)
           return i;
       }

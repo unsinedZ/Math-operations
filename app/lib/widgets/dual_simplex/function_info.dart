@@ -109,6 +109,7 @@ class _FunctionInfoState extends State<FunctionInfo> {
                     )
                     .toList(),
                 onChanged: widget.onExtremumChanged,
+                disabledHint: BaseText(widget.extremum.toString().split('.').last),
               ),
             ],
           ),

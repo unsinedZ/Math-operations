@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'extremum.dart';
 import 'target_function.dart';
 import 'restriction.dart';
@@ -8,9 +10,9 @@ class LinearTask {
   final Extremum extremum;
 
   const LinearTask({
-    this.targetFunction,
-    this.extremum,
-    this.restrictions,
+    @required this.targetFunction,
+    @required this.extremum,
+    @required this.restrictions,
   });
 
   LinearTask changeTargetFunction(TargetFunction newTargetFunction) {
@@ -28,7 +30,7 @@ class LinearTask {
       extremum: this.extremum,
     );
   }
-  
+
   LinearTask changeExtremum(Extremum newExtremum) {
     return LinearTask(
       targetFunction: this.targetFunction,
@@ -36,4 +38,19 @@ class LinearTask {
       extremum: newExtremum,
     );
   }
+}
+
+class AdjustedLinearTask extends LinearTask {
+  final String comment;
+
+  const AdjustedLinearTask({
+    @required TargetFunction targetFunction,
+    @required Extremum extremum,
+    @required List<Restriction> restrictions,
+    @required this.comment,
+  }) : super(
+          targetFunction: targetFunction,
+          extremum: extremum,
+          restrictions: restrictions,
+        );
 }

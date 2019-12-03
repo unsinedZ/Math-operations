@@ -27,6 +27,9 @@ class ComparisonInfo extends StatelessWidget {
                 ))
             .toList(),
         onChanged: onChanged,
+        disabledHint: BaseText(
+          ExpressionComparisonStringifier.stringify(comparison),
+        ),
       ),
     );
   }

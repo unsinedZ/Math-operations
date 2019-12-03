@@ -13,15 +13,13 @@ class AccentButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    return Center(
-      child: RaisedButton(
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: theme.accentTextTheme.button,
-        ),
-        color: theme.accentColor,
+    return RaisedButton(
+      onPressed: onPressed,
+      child: Text(
+        text,
+        style: theme.accentTextTheme.button,
       ),
+      color: theme.accentColor,
     );
   }
 }

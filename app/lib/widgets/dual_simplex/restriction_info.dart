@@ -10,12 +10,14 @@ class RestrictionInfo extends StatefulWidget {
   final String variableLetter;
   final Restriction restriction;
   final ValueChanged<Restriction> onChanged;
+  final bool isReadOnly;
 
   const RestrictionInfo({
     Key key,
     @required this.variableLetter,
     @required this.restriction,
     @required this.onChanged,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   @override
@@ -74,8 +76,10 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
               ),
               child: ComparisonInfo(
                 comparison: widget.restriction.comparison,
-                onChanged: (x) =>
-                    widget.onChanged(widget.restriction.changeComparison(x)),
+                onChanged: widget.isReadOnly
+                    ? null
+                    : (x) => widget
+                        .onChanged(widget.restriction.changeComparison(x)),
               )),
           FreeMemberEditor(
             freeMember: widget.restriction.freeMember,

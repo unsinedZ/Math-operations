@@ -1,3 +1,4 @@
+import 'package:app/business/operations/dual_simplex_solver.dart';
 import 'package:app/business/operations/extremum.dart';
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/linear_task.dart';
@@ -8,6 +9,8 @@ import 'package:app/widgets/layout/app_layout.dart';
 import 'package:app/widgets/primitives/base_card.dart';
 import 'package:flutter/material.dart';
 import 'package:quiver/iterables.dart';
+
+import 'simplex_solution.dart';
 
 class DualSimplexMethod extends StatefulWidget {
   @override
@@ -81,7 +84,19 @@ class _DualSimplexState extends State<DualSimplexMethod> {
             onTargetFunctionChanged: _onTargetFunctionChanged,
             onRestrictionsChanged: _onRestrictionsChanged,
             onExtremumChanged: _onExtremumChanged,
+            onSolveClick: _onSolveClick,
           ),
+        ),
+      ),
+    );
+  }
+
+  void _onSolveClick() {
+    DualSimplexSolver solver = DualSimplexSolver();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (c) => SimplexSolution(
+          steps: solver.getSolutionSteps(_linearTask),
         ),
       ),
     );
@@ -101,19 +116,25 @@ class _DualSimplexState extends State<DualSimplexMethod> {
 
   void _onTargetFunctionChanged(TargetFunction newValue) {
     setState(() {
-      List<Restriction> newRestrictions = _restrictions;
-      if (_targetFunction.coefficients.length != newValue.coefficients.length) {
-        newRestrictions = _restrictions
-            .map(
-              (x) => _fitRestriction(x, newValue),
-            )
-            .toList();
-      }
-
-      _linearTask = _linearTask
-          .changeTargetFunction(newValue)
-          .changeRestrictions(newRestrictions);
+      _linearTask = _changeLinearTask(_linearTask, newValue);
     });
+  }
+
+  LinearTask _changeLinearTask(
+      LinearTask linearTask, TargetFunction newFunction) {
+    List<Restriction> newRestrictions = _restrictions;
+    if (_targetFunction.coefficients.length !=
+        newFunction.coefficients.length) {
+      newRestrictions = _restrictions
+          .map(
+            (x) => _fitRestriction(x, newFunction),
+          )
+          .toList();
+    }
+
+    return linearTask
+        .changeTargetFunction(newFunction)
+        .changeRestrictions(newRestrictions);
   }
 
   Restriction _fitRestriction(

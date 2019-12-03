@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'fraction.dart';
 
 class SimplexTable {
@@ -5,8 +7,8 @@ class SimplexTable {
   final SimplexTableEstimations estimations;
 
   const SimplexTable({
-    this.rows,
-    this.estimations,
+    @required this.rows,
+    @required this.estimations,
   });
 }
 
@@ -15,19 +17,20 @@ class SimplexTableRow {
   final Fraction freeMember;
 
   const SimplexTableRow({
-    this.coefficients,
-    this.freeMember,
+    @required this.coefficients,
+    @required this.freeMember,
   });
 
   SimplexTableRow operator /(Fraction value) {
-    var newCoefficients = coefficients
-      .map((x) => x / value);
+    var newCoefficients = coefficients.map((x) => x / value);
     var newFreeMember = freeMember / value;
     return SimplexTableRow(
       coefficients: newCoefficients.toList(),
       freeMember: newFreeMember,
     );
   }
+
+  Fraction operator [](int i) => coefficients[i];
 }
 
 class SimplexTableEstimations {
@@ -35,13 +38,13 @@ class SimplexTableEstimations {
   final Fraction functionValue;
 
   const SimplexTableEstimations({
-    this.variableEstimations,
-    this.functionValue,
+    @required this.variableEstimations,
+    @required this.functionValue,
   });
 
   SimplexTableEstimations.fromRow(SimplexTableRow row)
-    : variableEstimations = row.coefficients,
-      functionValue = row.freeMember;
+      : variableEstimations = row.coefficients,
+        functionValue = row.freeMember;
 
   SimplexTableRow toRow() {
     return SimplexTableRow(

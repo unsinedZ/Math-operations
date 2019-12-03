@@ -79,9 +79,11 @@ class _State extends State<VariableForm> {
                 ),
               ],
             ),
-            AccentButton(
-              text: 'Save',
-              onPressed: _onSave,
+            Center(
+              child: AccentButton(
+                text: 'Save',
+                onPressed: _onSave,
+              ),
             ),
           ],
         ),

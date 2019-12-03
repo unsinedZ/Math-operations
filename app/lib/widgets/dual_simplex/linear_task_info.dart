@@ -20,6 +20,9 @@ class LinearTaskInfo extends StatelessWidget {
   final ValueChanged<TargetFunction> onTargetFunctionChanged;
   final ValueChanged<List<Restriction>> onRestrictionsChanged;
   final ValueChanged<Extremum> onExtremumChanged;
+  final VoidCallback onSolveClick;
+
+  final bool isReadOnly;
 
   const LinearTaskInfo({
     Key key,
@@ -27,10 +30,15 @@ class LinearTaskInfo extends StatelessWidget {
     @required this.onTargetFunctionChanged,
     @required this.onRestrictionsChanged,
     @required this.onExtremumChanged,
+    @required this.onSolveClick,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    String comment = this.linearTask is AdjustedLinearTask
+        ? (this.linearTask as AdjustedLinearTask).comment
+        : null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -62,10 +70,33 @@ class LinearTaskInfo extends StatelessWidget {
         GreaterZeroMessage(
           targetFunction: targetFunction,
         ),
-        Divider(),
-        AccentButton(
-          text: 'Solve',
-          onPressed: () {},
+        Visibility(
+          visible: comment != null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: BaseText(comment),
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: !isReadOnly,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Divider(),
+              Center(
+                child: AccentButton(
+                  text: 'Solve',
+                  onPressed: onSolveClick,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
