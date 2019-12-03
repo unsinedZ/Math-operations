@@ -63,6 +63,7 @@ class LinearTaskInfo extends StatelessWidget {
                     }).toList(),
                   );
                 },
+                isReadOnly: this.isReadOnly,
               ),
             )
             .toList(),

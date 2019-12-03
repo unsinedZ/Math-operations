@@ -66,7 +66,7 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
           ..._variables.map(
             (x) => VariableEditor(
               variable: x,
-              onChanged: (v) => _onVariableChanged(x, v),
+              onChanged: _checkReadOnly((v) => _onVariableChanged(x, v)),
               showSignForPositive: index++ > 0,
             ),
           ),
@@ -76,18 +76,17 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
               ),
               child: ComparisonInfo(
                 comparison: widget.restriction.comparison,
-                onChanged: widget.isReadOnly
-                    ? null
-                    : (x) => widget
-                        .onChanged(widget.restriction.changeComparison(x)),
+                onChanged: _checkReadOnly((x) => widget.onChanged(
+                  widget.restriction.changeComparison(x),
+                )),
               )),
           FreeMemberEditor(
             freeMember: widget.restriction.freeMember,
-            onChanged: (x) {
+            onChanged: _checkReadOnly((x) {
               widget.onChanged(
                 widget.restriction.changeFreeMember(x),
               );
-            },
+            }),
           ),
         ],
       ),
@@ -108,5 +107,11 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
         }).toList(),
       ),
     );
+  }
+
+  T _checkReadOnly<T>(T value) {
+    if (widget.isReadOnly) return null;
+
+    return value;
   }
 }

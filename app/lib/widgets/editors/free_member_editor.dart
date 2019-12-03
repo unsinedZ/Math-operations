@@ -21,7 +21,7 @@ class FreeMemberEditor extends StatelessWidget {
     );
     return VariableEditor(
       variable: variable,
-      onChanged: (x) => onChanged(x.value),
+      onChanged: onChanged == null ? null : (x) => onChanged(x.value),
       showSignForPositive: false,
       showName: false,
     );
