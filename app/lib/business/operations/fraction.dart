@@ -26,11 +26,10 @@ class Fraction {
 
     if (denominator < 0) {
       numerator *= -1;
+      denominator *= -1;
     }
 
-    denominator = denominator.abs();
-
-    int gcd = _greatestCommonDivisor(numerator, denominator);
+    int gcd = _greatestCommonDivisor(numerator.abs(), denominator.abs());
     return Fraction._(
       numerator: numerator ~/ gcd,
       denominator: denominator ~/ gcd,

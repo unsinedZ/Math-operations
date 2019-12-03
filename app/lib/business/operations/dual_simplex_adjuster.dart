@@ -111,7 +111,7 @@ class DualSimplexAdjuster {
                 correspondingRestriction.changeCoefficients(
               correspondingRestriction.coefficients
                   .map(
-                    (x) => x /= item,
+                    (x) => x / item,
                   )
                   .toList(),
             );
@@ -135,8 +135,9 @@ class DualSimplexAdjuster {
         task.changeRestrictions(
           task.restrictions.map(
             (x) {
-              if (indexedChangedRestrictions.containsValue(index))
-                return indexedChangedRestrictions[index];
+              int i = index++;
+              if (indexedChangedRestrictions.containsKey(i))
+                return indexedChangedRestrictions[i];
 
               return x;
             },
