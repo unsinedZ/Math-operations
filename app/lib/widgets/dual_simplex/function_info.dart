@@ -16,6 +16,7 @@ class FunctionInfo extends StatefulWidget {
   final ValueChanged<TargetFunction> onFunctionChanged;
   final Extremum extremum;
   final ValueChanged<Extremum> onExtremumChanged;
+  final bool isReadOnly;
 
   const FunctionInfo({
     Key key,
@@ -23,6 +24,7 @@ class FunctionInfo extends StatefulWidget {
     @required this.onFunctionChanged,
     @required this.onExtremumChanged,
     this.extremum = Extremum.min,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   @override
@@ -79,7 +81,7 @@ class _FunctionInfoState extends State<FunctionInfo> {
                     .map(
                       (x) => VariableEditor(
                         variable: x,
-                        onChanged: (v) => this._onFunctionVariableChanged(x, v),
+                        onChanged: _checkReadOnly((v) => this._onFunctionVariableChanged(x, v)),
                         showSignForPositive: index++ > 0,
                       ),
                     )
@@ -108,8 +110,9 @@ class _FunctionInfoState extends State<FunctionInfo> {
                       ),
                     )
                     .toList(),
-                onChanged: widget.onExtremumChanged,
-                disabledHint: BaseText(widget.extremum.toString().split('.').last),
+                onChanged: _checkReadOnly(widget.onExtremumChanged),
+                disabledHint:
+                    BaseText(widget.extremum.toString().split('.').last),
               ),
             ],
           ),
@@ -119,6 +122,8 @@ class _FunctionInfoState extends State<FunctionInfo> {
   }
 
   void _onFunctionLetterPressed(BuildContext context) {
+    if (widget.isReadOnly) return;
+    
     OverflowSafeBottomSheetModal(
       (x) => ScrollIntegerEditor(
         text: 'Select number of arguments:',
@@ -162,5 +167,11 @@ class _FunctionInfoState extends State<FunctionInfo> {
 
       return v;
     }).toList();
+  }
+
+  T _checkReadOnly<T>(T value) {
+    if (widget.isReadOnly) return null;
+
+    return value;
   }
 }

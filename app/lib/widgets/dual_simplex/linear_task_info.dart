@@ -47,6 +47,7 @@ class LinearTaskInfo extends StatelessWidget {
           onFunctionChanged: onTargetFunctionChanged,
           extremum: extremum,
           onExtremumChanged: onExtremumChanged,
+          isReadOnly: this.isReadOnly,
         ),
         Divider(),
         ...restrictions
