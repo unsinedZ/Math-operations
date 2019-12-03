@@ -184,11 +184,6 @@ class DualSimplexAdjuster {
   }
 
   AdjustedLinearTask _adjusted(LinearTask task, String comment) {
-    return AdjustedLinearTask(
-      comment: comment,
-      targetFunction: task.targetFunction,
-      extremum: task.extremum,
-      restrictions: task.restrictions,
-    );
+    return AdjustedLinearTask.wrap(task, comment);
   }
 }

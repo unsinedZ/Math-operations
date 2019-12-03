@@ -15,7 +15,7 @@ class SimplexTableTransformationContext {
   SimplexTable transform() {
     SimplexTableRow solvingRow = simplexTable.rows[solvingRowIndex];
     var newSolvingRow =
-        solvingRow / solvingRow.coefficients[solvingColumnIndex];
+        solvingRow / solvingRow[solvingColumnIndex];
     var newRows = _transformRows(newSolvingRow);
     var newEstimations = SimplexTableEstimations.fromRow(_transformRow(simplexTable.estimations.toRow(), solvingRow));
     return SimplexTable(
@@ -34,10 +34,10 @@ class SimplexTableTransformationContext {
       SimplexTableRow row, SimplexTableRow solvingRow) {
     if (row == solvingRow) return row;
 
-    Fraction rowMultiplier = -row.coefficients[solvingColumnIndex];
+    Fraction rowMultiplier = row[solvingColumnIndex] * Fraction.fromNumber(-1);
     int index = 0;
     var newCoefficients = row.coefficients
-        .map((x) => solvingRow.coefficients[index++] * rowMultiplier + x)
+        .map((x) => solvingRow[index++] * rowMultiplier + x)
         .toList();
     Fraction newFreeMember =
         solvingRow.freeMember * rowMultiplier + row.freeMember;

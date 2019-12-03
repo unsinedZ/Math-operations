@@ -33,7 +33,7 @@ class SimplexTableContext {
       }
 
       return _NO_BASIS;
-    });
+    }).toList();
 
     var hasBasis = !basisVariableIndices.contains(_NO_BASIS);
     return SimplexTableContext._(

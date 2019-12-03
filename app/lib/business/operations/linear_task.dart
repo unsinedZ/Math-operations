@@ -53,4 +53,13 @@ class AdjustedLinearTask extends LinearTask {
           extremum: extremum,
           restrictions: restrictions,
         );
+
+  static AdjustedLinearTask wrap(LinearTask task, String comment) {
+    return AdjustedLinearTask(
+      comment: comment,
+      targetFunction: task.targetFunction,
+      extremum: task.extremum,
+      restrictions: task.restrictions,
+    );
+  }
 }
