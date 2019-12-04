@@ -102,7 +102,7 @@ class Fraction {
   }
 
   bool operator >=(Fraction other) {
-    return (this < other);
+    return !(this < other);
   }
 
   bool operator <=(Fraction other) {

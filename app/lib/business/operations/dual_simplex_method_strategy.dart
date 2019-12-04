@@ -5,22 +5,23 @@ import 'simplex_table_transformation_context.dart';
 import 'solution_info.dart';
 
 class DualSimplexMethodStrategy {
+  const DualSimplexMethodStrategy();
+
   bool canBeApplied(SimplexTableContext simplexTableContext) {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
 
-    if (!simplexTableContext.hasBasis)
-      return false;
+    if (!simplexTableContext.hasBasis) return false;
 
     Fraction zero = const Fraction.fromNumber(0);
     return simplexTableContext.simplexTable.estimations.variableEstimations
-      .every((x) => x <= zero);
+        .every((x) => x <= zero);
   }
 
   SolutionInfo solve(SimplexTableContext simplexTableContext) {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
-    
+
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
@@ -28,17 +29,18 @@ class DualSimplexMethodStrategy {
     var tableRows = simplexTableContext.simplexTable.rows;
     if (tableRows.every((x) => x.freeMember >= zero))
       return SolutionInfo.hasRoot;
-    
-    if (tableRows.any((x) => x.freeMember < zero && x.coefficients.every((c) => c > zero)))
+
+    if (tableRows.any(
+        (x) => x.freeMember < zero && x.coefficients.every((c) => c > zero)))
       return SolutionInfo.noRoots;
 
-    return SolutionInfo.undefined; 
+    return SolutionInfo.undefined;
   }
 
   SimplexTable getNextTable(SimplexTableContext simplexTableContext) {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
-    
+
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
@@ -50,7 +52,8 @@ class DualSimplexMethodStrategy {
     return new SimplexTableTransformationContext(
       simplexTable: table,
       solvingRowIndex: solvingRowIndex,
-      solvingColumnIndex: _findSolvingColumnIndex(table, table.rows[solvingRowIndex]),
+      solvingColumnIndex:
+          _findSolvingColumnIndex(table, table.rows[solvingRowIndex]),
     ).transform();
   }
 
@@ -69,14 +72,15 @@ class DualSimplexMethodStrategy {
   }
 
   int _findSolvingColumnIndex(SimplexTable table, SimplexTableRow solvingRow) {
+    Fraction _0 = const Fraction.fromNumber(0);
     Fraction minimumQuotient;
     int minimumQuotientIndex = -1;
     for (int i = 0; i < solvingRow.coefficients.length; i++) {
       Fraction coefficient = solvingRow.coefficients[i];
-      if (coefficient >= const Fraction.fromNumber(0))
-        continue;
-      
-      Fraction quotient = table.estimations.variableEstimations[i] / coefficient;
+      if (coefficient >= _0) continue;
+
+      Fraction quotient =
+          table.estimations.variableEstimations[i] / coefficient;
       if (minimumQuotient == null || quotient < minimumQuotient) {
         minimumQuotientIndex = i;
         minimumQuotient = quotient;
