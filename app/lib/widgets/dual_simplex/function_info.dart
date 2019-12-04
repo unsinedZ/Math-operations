@@ -81,7 +81,8 @@ class _FunctionInfoState extends State<FunctionInfo> {
                     .map(
                       (x) => VariableEditor(
                         variable: x,
-                        onChanged: _checkReadOnly((v) => this._onFunctionVariableChanged(x, v)),
+                        onChanged: _checkReadOnly(
+                            (v) => this._onFunctionVariableChanged(x, v)),
                         showSignForPositive: index++ > 0,
                       ),
                     )
@@ -123,7 +124,7 @@ class _FunctionInfoState extends State<FunctionInfo> {
 
   void _onFunctionLetterPressed(BuildContext context) {
     if (widget.isReadOnly) return;
-    
+
     OverflowSafeBottomSheetModal(
       (x) => ScrollIntegerEditor(
         text: 'Select number of arguments:',
@@ -162,11 +163,16 @@ class _FunctionInfoState extends State<FunctionInfo> {
   }
 
   void _onFunctionVariableChanged(Variable variable, Variable newValue) {
-    _variables = _variables.map((v) {
-      if (v == variable) return newValue;
+    setState(() {
+      _variables = _variables.map((v) {
+        if (v == variable) return newValue;
 
-      return v;
-    }).toList();
+        return v;
+      }).toList();
+      widget.onFunctionChanged(widget.targetFunction.changeCoefficients(
+        _variables.map((x) => x.value).toList(),
+      ));
+    });
   }
 
   T _checkReadOnly<T>(T value) {

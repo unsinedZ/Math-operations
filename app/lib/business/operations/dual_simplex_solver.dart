@@ -1,5 +1,6 @@
 import 'package:app/business/operations/dual_simplex_adjuster.dart';
 import 'package:app/business/operations/dual_simplex_method_strategy.dart';
+import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/linear_task.dart';
 import 'package:app/business/operations/simplex_table.dart';
 import 'package:app/business/operations/simplex_table_context.dart';
@@ -16,8 +17,9 @@ class DualSimplexSolver {
     DualSimplexMethodStrategy strategy = DualSimplexMethodStrategy();
     if (!strategy.canBeApplied(context)) {
       return [
+        ...adjusted.take(adjusted.length - 1),
         AdjustedLinearTask.wrap(
-          initialTask,
+          adjusted.last ?? initialTask,
           "Can not be solved using dual simplex method",
         )
       ].toList();
@@ -30,14 +32,20 @@ class DualSimplexSolver {
 
   SimplexTable _createSimplexTable(LinearTask task) {
     return SimplexTable(
-      rows: task.restrictions.map(
-        (x) => SimplexTableRow(
-          coefficients: x.coefficients,
-          freeMember: x.freeMember,
-        ),
-      ).toList(),
+      rows: task.restrictions
+          .map(
+            (x) => SimplexTableRow(
+              coefficients: x.coefficients,
+              freeMember: x.freeMember,
+            ),
+          )
+          .toList(),
       estimations: SimplexTableEstimations(
-        variableEstimations: task.targetFunction.coefficients,
+        variableEstimations: task.targetFunction.coefficients
+            .map(
+              (x) => x * Fraction.fromNumber(-1),
+            )
+            .toList(),
         functionValue: task.targetFunction.freeMember,
       ),
     );
