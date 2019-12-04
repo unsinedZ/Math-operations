@@ -1,13 +1,11 @@
-import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/simplex_table.dart';
 import 'package:app/business/operations/simplex_table_context.dart';
 import 'package:app/business/operations/target_function.dart';
-import 'package:app/business/operations/variable.dart';
-import 'package:app/widgets/editors/variable_editor.dart';
+import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 
+import 'comment_info.dart';
 import 'simplex_table_row_builder.dart';
-import 'simplex_table_value.dart';
 import 'simplex_variables_row_builder.dart';
 
 class SimplexTableInfo extends StatelessWidget {
@@ -25,40 +23,50 @@ class SimplexTableInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String comment = simplexTable is AdjustedSimplexTable
+        ? (simplexTable as AdjustedSimplexTable).comment
+        : null;
     int index = 0;
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Table(
-        border: TableBorder.all(
-          width: 1,
-        ),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        defaultColumnWidth: IntrinsicColumnWidth(
-          flex: 1,
-        ),
-        children: [
-          SimplexVariablesRowBuilder(
-            variableLetter: targetFunction.variableLetter,
-            variablesCount: targetFunction.coefficients.length,
-          ).build(),
-          ...simplexTable.rows.map(
-            (x) {
-              SimplexTableRow row = simplexTable.rows[index];
-              return SimplexTableRowBuilder(
-                basisVariableName:
-                    '$variableLetter${simplexTableContext.basisVariableIndices[index++]}',
-                coefficients: row.coefficients,
-                freeMember: row.freeMember,
-              ).build();
-            },
+    return Column(
+      children: <Widget>[
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Table(
+            border: TableBorder.all(
+              width: 1,
+            ),
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            defaultColumnWidth: IntrinsicColumnWidth(
+              flex: 1,
+            ),
+            children: [
+              SimplexVariablesRowBuilder(
+                variableLetter: targetFunction.variableLetter,
+                variablesCount: targetFunction.coefficients.length,
+              ).build(),
+              ...simplexTable.rows.map(
+                (x) {
+                  SimplexTableRow row = simplexTable.rows[index];
+                  return SimplexTableRowBuilder(
+                    basisVariableName:
+                        '$variableLetter${simplexTableContext.basisVariableIndices[index++]}',
+                    coefficients: row.coefficients,
+                    freeMember: row.freeMember,
+                  ).build();
+                },
+              ),
+              SimplexTableRowBuilder(
+                basisVariableName: targetFunction.functionLetter,
+                coefficients: simplexTable.estimations.variableEstimations,
+                freeMember: simplexTable.estimations.functionValue,
+              ).build(),
+            ],
           ),
-          SimplexTableRowBuilder(
-            basisVariableName: targetFunction.functionLetter,
-            coefficients: simplexTable.estimations.variableEstimations,
-            freeMember: simplexTable.estimations.functionValue,
-          ).build(),
-        ],
-      ),
+        ),
+        CommentInfo(
+          comment: comment,
+        ),
+      ],
     );
   }
 }

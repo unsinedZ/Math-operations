@@ -7,6 +7,7 @@ import 'package:app/widgets/primitives/accent_button.dart';
 import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 
+import 'comment_info.dart';
 import 'restriction_info.dart';
 import 'function_info.dart';
 
@@ -72,18 +73,8 @@ class LinearTaskInfo extends StatelessWidget {
         GreaterZeroMessage(
           targetFunction: targetFunction,
         ),
-        Visibility(
-          visible: comment != null,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: BaseText(comment),
-              ),
-            ],
-          ),
+        CommentInfo(
+          comment: comment,
         ),
         Visibility(
           visible: !isReadOnly,

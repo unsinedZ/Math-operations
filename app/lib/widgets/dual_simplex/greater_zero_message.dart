@@ -1,5 +1,5 @@
 import 'package:app/business/operations/target_function.dart';
-import 'package:app/widgets/primitives/base_text.dart';
+import 'package:app/widgets/dual_simplex/comment_info.dart';
 import 'package:flutter/material.dart';
 
 class GreaterZeroMessage extends StatelessWidget {
@@ -12,15 +12,12 @@ class GreaterZeroMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String indices = List.generate(this.targetFunction.coefficients.length, (i) => i + 1).join(', ');
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: <Widget>[
-          BaseText('xᵢ ≥ 0,'),
-          BaseText('i = $indices')
-        ],
-      ),
+    String indices =
+        List.generate(this.targetFunction.coefficients.length, (i) => i + 1)
+            .join(', ');
+    return CommentInfo(
+      comment: 'xᵢ ≥ 0, i = $indices',
+      addDivider: false,
     );
   }
 }
