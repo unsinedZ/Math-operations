@@ -26,6 +26,7 @@ class VariableEditor extends StatelessWidget {
         ? variable.value.sign
         : '';
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         BaseText(text),
         VariableInfo(

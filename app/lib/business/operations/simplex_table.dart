@@ -53,3 +53,24 @@ class SimplexTableEstimations {
     );
   }
 }
+
+class AdjustedSimplexTable extends SimplexTable {
+  final String comment;
+
+  AdjustedSimplexTable({
+    @required List<SimplexTableRow> rows,
+    @required SimplexTableEstimations estimations,
+    @required this.comment,
+  }) : super(
+          estimations: estimations,
+          rows: rows,
+        );
+
+  static AdjustedSimplexTable wrap(SimplexTable table, String comment) {
+    return AdjustedSimplexTable(
+      comment: comment,
+      estimations: table.estimations,
+      rows: table.rows,
+    );
+  }
+}

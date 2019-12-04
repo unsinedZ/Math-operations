@@ -1,33 +1,28 @@
-import 'package:app/business/operations/dual_simplex_adjuster.dart';
 import 'package:app/business/operations/dual_simplex_method_strategy.dart';
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/linear_task.dart';
 import 'package:app/business/operations/simplex_table.dart';
 import 'package:app/business/operations/simplex_table_context.dart';
-import 'package:quiver/iterables.dart';
 
 class DualSimplexSolver {
-  List<LinearTask> getSolutionSteps(LinearTask initialTask) {
-    DualSimplexAdjuster adjuster = DualSimplexAdjuster();
-    var adjusted = adjuster.getAdjustionSteps(initialTask);
-    SimplexTable table = _createSimplexTable(adjusted.last ?? initialTask);
+  List<SimplexTable> getSolutionSteps(LinearTask adjustedTask) {
+    SimplexTable table = _createSimplexTable(adjustedTask);
     SimplexTableContext context = SimplexTableContext.create(
       simplexTable: table,
     );
     DualSimplexMethodStrategy strategy = DualSimplexMethodStrategy();
     if (!strategy.canBeApplied(context)) {
       return [
-        ...adjusted.take(adjusted.length - 1),
-        AdjustedLinearTask.wrap(
-          adjusted.last ?? initialTask,
+        AdjustedSimplexTable.wrap(
+          table,
           "Can not be solved using dual simplex method",
         )
       ].toList();
     }
 
-    return concat([
-      adjusted,
-    ]).toList();
+    return [
+      table,
+    ].toList();
   }
 
   SimplexTable _createSimplexTable(LinearTask task) {

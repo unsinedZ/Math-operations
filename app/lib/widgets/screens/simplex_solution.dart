@@ -1,15 +1,23 @@
 import 'package:app/business/operations/linear_task.dart';
+import 'package:app/business/operations/simplex_table.dart';
+import 'package:app/business/operations/simplex_table_context.dart';
+import 'package:app/business/operations/target_function.dart';
 import 'package:app/widgets/dual_simplex/linear_task_info.dart';
+import 'package:app/widgets/dual_simplex/simplex_table_info.dart';
 import 'package:app/widgets/layout/app_layout.dart';
 import 'package:app/widgets/primitives/base_card.dart';
 import 'package:flutter/material.dart';
 
 class SimplexSolution extends StatelessWidget {
-  final List<LinearTask> steps;
+  final TargetFunction targetFunction;
+  final List<LinearTask> adjustmentSteps;
+  final List<SimplexTable> solutionSteps;
 
   const SimplexSolution({
     Key key,
-    @required this.steps,
+    @required this.targetFunction,
+    @required this.adjustmentSteps,
+    @required this.solutionSteps,
   }) : super(key: key);
 
   @override
@@ -22,20 +30,34 @@ class SimplexSolution extends StatelessWidget {
         ),
         scrollDirection: Axis.vertical,
         child: Column(
-          children: steps
-              .map(
-                (x) => BaseCard(
-                  child: LinearTaskInfo(
-                    linearTask: x,
-                    onTargetFunctionChanged: null,
-                    onRestrictionsChanged: null,
-                    onExtremumChanged: null,
-                    onSolveClick: null,
-                    isReadOnly: true,
+          children: [
+            ...adjustmentSteps
+                .map(
+                  (x) => BaseCard(
+                    child: LinearTaskInfo(
+                      linearTask: x,
+                      onTargetFunctionChanged: null,
+                      onRestrictionsChanged: null,
+                      onExtremumChanged: null,
+                      onSolveClick: null,
+                      isReadOnly: true,
+                    ),
                   ),
-                ),
-              )
-              .toList(),
+                )
+                .toList(),
+            ...solutionSteps
+                .map(
+                  (x) => BaseCard(
+                    child: SimplexTableInfo(
+                      targetFunction: targetFunction,
+                      simplexTableContext: SimplexTableContext.create(
+                        simplexTable: x,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ],
         ),
       ),
     );

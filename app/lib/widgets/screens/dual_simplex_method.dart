@@ -1,3 +1,4 @@
+import 'package:app/business/operations/dual_simplex_adjuster.dart';
 import 'package:app/business/operations/dual_simplex_solver.dart';
 import 'package:app/business/operations/extremum.dart';
 import 'package:app/business/operations/fraction.dart';
@@ -92,12 +93,20 @@ class _DualSimplexState extends State<DualSimplexMethod> {
   }
 
   void _onSolveClick() {
+    DualSimplexAdjuster adjuster = DualSimplexAdjuster();
     DualSimplexSolver solver = DualSimplexSolver();
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (c) => SimplexSolution(
-          steps: solver.getSolutionSteps(_linearTask),
-        ),
+        builder: (c) {
+          List<LinearTask> adjustmentSteps =
+              adjuster.getAdjustionSteps(_linearTask);
+          LinearTask adjustedTask = adjustmentSteps.last ?? _linearTask;
+          return SimplexSolution(
+            targetFunction: adjustedTask.targetFunction,
+            adjustmentSteps: adjustmentSteps,
+            solutionSteps: solver.getSolutionSteps(adjustedTask),
+          );
+        },
       ),
     );
   }
