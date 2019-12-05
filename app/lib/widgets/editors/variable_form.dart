@@ -1,6 +1,10 @@
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/variable.dart';
+import 'package:app/business/validation/not_zero_validator.dart';
+import 'package:app/business/validation/required_validator.dart';
+import 'package:app/business/validation/validator.dart';
 import 'package:app/widgets/primitives/accent_button.dart';
+import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,8 +28,27 @@ class VariableForm extends StatefulWidget {
 class _State extends State<VariableForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Variable _variable;
+  int _numerator;
+  int _denominator;
 
-  _State(this._variable);
+  Validator _numeratorValidator;
+  Validator _denominatorValidator;
+
+  _State(this._variable)
+      : this._numerator = _variable.value.numerator,
+        this._denominator = _variable.value.denominator;
+
+  @override
+  void initState() {
+    _numeratorValidator = RequiredValidator();
+    _denominatorValidator = Validator.combine(
+      [
+        RequiredValidator(),
+        NotZeroValidator(),
+      ],
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,40 +65,43 @@ class _State extends State<VariableForm> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 _FractionPartInput(
                   label: 'Numerator',
-                  initialValue: _variable.value.numerator,
+                  initialValue: _numerator,
                   onValueChanged: (x) {
-                    if (_formKey.currentState.validate()) {
-                      setState(() {
-                        _variable = _variable.changeValue(Fraction.createConst(
-                          numerator: x,
-                          denominator: _variable.value.denominator,
-                        ));
-                      });
-                    }
+                    setState(() {
+                      _numerator = x;
+                    });
                   },
+                  validator: _numeratorValidator.validate,
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 16,
+                SizedBox(
+                  height: 80,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 16,
+                        ),
+                        child: BaseText('/'),
+                      ),
+                    ],
                   ),
-                  child: Text('/'),
                 ),
                 _FractionPartInput(
                   label: 'Denominator',
-                  initialValue: _variable.value.denominator,
+                  allowZero: false,
+                  initialValue: _denominator,
                   onValueChanged: (x) {
-                    if (_formKey.currentState.validate()) {
-                      setState(() {
-                        _variable = _variable.changeValue(Fraction.createConst(
-                          numerator: _variable.value.numerator,
-                          denominator: x,
-                        ));
-                      });
-                    }
+                    setState(() {
+                      _denominator = x;
+                    });
                   },
+                  validator: _denominatorValidator.validate,
                 ),
               ],
             ),
@@ -93,7 +119,14 @@ class _State extends State<VariableForm> {
 
   void _onSave() {
     if (_formKey.currentState.validate()) {
-      widget.onChanged(_variable);
+      widget.onChanged(
+        _variable = _variable.changeValue(
+          Fraction.createConst(
+            numerator: _numerator,
+            denominator: _denominator,
+          ),
+        ),
+      );
       widget.onSave();
     }
   }
@@ -103,17 +136,21 @@ class _FractionPartInput extends StatelessWidget {
   final String label;
   final int initialValue;
   final ValueChanged<int> onValueChanged;
+  final bool allowZero;
+  final FormFieldValidator<String> validator;
 
   const _FractionPartInput({
     Key key,
     @required this.label,
     @required this.initialValue,
     @required this.onValueChanged,
+    this.allowZero = true,
+    this.validator,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    RegExp numberRegex = RegExp(r'^-?\d*$');
+    RegExp numberRegex = RegExp(r'^-?[0-9]*$');
     return Container(
       width: 100,
       child: TextFormField(
@@ -129,6 +166,7 @@ class _FractionPartInput extends StatelessWidget {
         ),
         initialValue: initialValue.toString(),
         onChanged: (x) => onValueChanged(int.parse(x)),
+        validator: validator,
       ),
     );
   }
