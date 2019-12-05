@@ -19,6 +19,12 @@ class DualSimplexMethodStrategy {
   }
 
   SolutionInfo solve(SimplexTableContext simplexTableContext) {
+    print('solve');
+    print(simplexTableContext.hasBasis);
+    simplexTableContext.simplexTable.rows.forEach(
+        (x) => print(x.coefficients.join(';') + ';' + x.freeMember.toString()));
+    print(simplexTableContext.simplexTable.estimations.variableEstimations
+        .join(';') + ';' + simplexTableContext.simplexTable.estimations.functionValue.toString());
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
 
@@ -72,7 +78,7 @@ class DualSimplexMethodStrategy {
   }
 
   int _findSolvingColumnIndex(SimplexTable table, SimplexTableRow solvingRow) {
-    Fraction _0 = const Fraction.fromNumber(0);
+    const Fraction _0 = const Fraction.fromNumber(0);
     Fraction minimumQuotient;
     int minimumQuotientIndex = -1;
     for (int i = 0; i < solvingRow.coefficients.length; i++) {

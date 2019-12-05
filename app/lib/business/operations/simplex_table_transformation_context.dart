@@ -17,7 +17,7 @@ class SimplexTableTransformationContext {
     var newSolvingRow =
         solvingRow / solvingRow[solvingColumnIndex];
     var newRows = _transformRows(newSolvingRow);
-    var newEstimations = SimplexTableEstimations.fromRow(_transformRow(simplexTable.estimations.toRow(), solvingRow));
+    var newEstimations = SimplexTableEstimations.fromRow(_transformRow(simplexTable.estimations.toRow(), newSolvingRow));
     return SimplexTable(
       rows: newRows,
       estimations: newEstimations,
@@ -25,8 +25,11 @@ class SimplexTableTransformationContext {
   }
 
   List<SimplexTableRow> _transformRows(SimplexTableRow solvingRow) {
+    int index = 0;
     return simplexTable.rows
-      .map((x) => _transformRow(x, solvingRow))
+      .map((x) => index++ == solvingRowIndex
+        ? solvingRow
+        : _transformRow(x, solvingRow))
       .toList();
   }
 
