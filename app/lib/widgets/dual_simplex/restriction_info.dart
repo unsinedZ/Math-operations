@@ -11,6 +11,7 @@ class RestrictionInfo extends StatefulWidget {
   final Restriction restriction;
   final ValueChanged<Restriction> onChanged;
   final bool isReadOnly;
+  final bool hideZeroCoefficients;
 
   const RestrictionInfo({
     Key key,
@@ -18,6 +19,7 @@ class RestrictionInfo extends StatefulWidget {
     @required this.restriction,
     @required this.onChanged,
     this.isReadOnly = false,
+    this.hideZeroCoefficients = true,
   }) : super(key: key);
 
   @override
@@ -63,13 +65,17 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: <Widget>[
-          ..._variables.map(
-            (x) => VariableEditor(
-              variable: x,
-              onChanged: _checkReadOnly((v) => _onVariableChanged(x, v)),
-              showSignForPositive: index++ > 0,
-            ),
-          ),
+          ..._variables
+              .where(
+                (x) => !widget.hideZeroCoefficients || !x.value.equalsNumber(0),
+              )
+              .map(
+                (x) => VariableEditor(
+                  variable: x,
+                  onChanged: _checkReadOnly((v) => _onVariableChanged(x, v)),
+                  showSignForPositive: index++ > 0,
+                ),
+              ),
           Container(
               margin: EdgeInsets.symmetric(
                 horizontal: 4,
@@ -77,8 +83,8 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
               child: ComparisonInfo(
                 comparison: widget.restriction.comparison,
                 onChanged: _checkReadOnly((x) => widget.onChanged(
-                  widget.restriction.changeComparison(x),
-                )),
+                      widget.restriction.changeComparison(x),
+                    )),
               )),
           FreeMemberEditor(
             freeMember: widget.restriction.freeMember,
