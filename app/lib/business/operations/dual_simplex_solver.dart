@@ -3,7 +3,7 @@ import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/linear_task.dart';
 import 'package:app/business/operations/simplex_table.dart';
 import 'package:app/business/operations/simplex_table_context.dart';
-import 'package:app/business/operations/solution_info.dart';
+import 'package:app/business/operations/solution_status.dart';
 
 class DualSimplexSolver {
   static const DualSimplexMethodStrategy _Strategy =
@@ -19,6 +19,7 @@ class DualSimplexSolver {
         AdjustedSimplexTable.wrap(
           table,
           "Can not be solved using dual simplex method",
+          SolutionStatus.undefined,
         )
       ].toList();
     }
@@ -51,15 +52,16 @@ class DualSimplexSolver {
     SimplexTableContext initialContext,
   ) sync* {
     while (true) {
-      SolutionInfo info = _Strategy.solve(initialContext);
+      SolutionStatus info = _Strategy.solve(initialContext);
       SimplexTable table = AdjustedSimplexTable.wrap(
         initialContext.simplexTable,
         _getSolutionMessage(info),
+        info,
       );
 
       yield table;
 
-      if (info != SolutionInfo.undefined) {
+      if (info != SolutionStatus.undefined) {
         break;
       }
 
@@ -69,13 +71,13 @@ class DualSimplexSolver {
     }
   }
 
-  String _getSolutionMessage(SolutionInfo info) {
+  String _getSolutionMessage(SolutionStatus info) {
     switch (info) {
-      case SolutionInfo.hasRoot:
+      case SolutionStatus.hasRoot:
         return 'Found optimal solution';
-      case SolutionInfo.noRoots:
+      case SolutionStatus.noRoots:
         return 'Multiplicity of available solutions is empty';
-      case SolutionInfo.undefined:
+      case SolutionStatus.undefined:
         return 'Solution is not optimal';
       default:
         throw Exception('Not supported');

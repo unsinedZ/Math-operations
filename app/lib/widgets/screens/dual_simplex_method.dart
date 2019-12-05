@@ -102,6 +102,7 @@ class _DualSimplexState extends State<DualSimplexMethod> {
               adjuster.getAdjustionSteps(_linearTask);
           LinearTask adjustedTask = adjustmentSteps.last ?? _linearTask;
           return SimplexSolution(
+            originalTargetFunction: _targetFunction,
             targetFunction: adjustedTask.targetFunction,
             adjustmentSteps: adjustmentSteps,
             solutionSteps: solver.getSolutionSteps(adjustedTask),

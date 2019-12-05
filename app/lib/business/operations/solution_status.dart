@@ -1,4 +1,4 @@
-enum SolutionInfo {
+enum SolutionStatus {
   hasRoot,
   noRoots,
   undefined,

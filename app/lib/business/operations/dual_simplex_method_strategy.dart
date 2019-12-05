@@ -2,7 +2,7 @@ import 'fraction.dart';
 import 'simplex_table.dart';
 import 'simplex_table_context.dart';
 import 'simplex_table_transformation_context.dart';
-import 'solution_info.dart';
+import 'solution_status.dart';
 
 class DualSimplexMethodStrategy {
   const DualSimplexMethodStrategy();
@@ -18,13 +18,7 @@ class DualSimplexMethodStrategy {
         .every((x) => x <= zero);
   }
 
-  SolutionInfo solve(SimplexTableContext simplexTableContext) {
-    print('solve');
-    print(simplexTableContext.hasBasis);
-    simplexTableContext.simplexTable.rows.forEach(
-        (x) => print(x.coefficients.join(';') + ';' + x.freeMember.toString()));
-    print(simplexTableContext.simplexTable.estimations.variableEstimations
-        .join(';') + ';' + simplexTableContext.simplexTable.estimations.functionValue.toString());
+  SolutionStatus solve(SimplexTableContext simplexTableContext) {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
 
@@ -34,13 +28,13 @@ class DualSimplexMethodStrategy {
     Fraction zero = const Fraction.fromNumber(0);
     var tableRows = simplexTableContext.simplexTable.rows;
     if (tableRows.every((x) => x.freeMember >= zero))
-      return SolutionInfo.hasRoot;
+      return SolutionStatus.hasRoot;
 
     if (tableRows.any(
         (x) => x.freeMember < zero && x.coefficients.every((c) => c > zero)))
-      return SolutionInfo.noRoots;
+      return SolutionStatus.noRoots;
 
-    return SolutionInfo.undefined;
+    return SolutionStatus.undefined;
   }
 
   SimplexTable getNextTable(SimplexTableContext simplexTableContext) {
@@ -50,7 +44,7 @@ class DualSimplexMethodStrategy {
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
-    if (solve(simplexTableContext) != SolutionInfo.undefined)
+    if (solve(simplexTableContext) != SolutionStatus.undefined)
       throw Exception('Cannot get next table. The task is solved.');
 
     SimplexTable table = simplexTableContext.simplexTable;

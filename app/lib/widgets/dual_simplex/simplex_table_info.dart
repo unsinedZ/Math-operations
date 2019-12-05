@@ -22,9 +22,10 @@ class SimplexTableInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String comment = simplexTable is AdjustedSimplexTable
-        ? (simplexTable as AdjustedSimplexTable).comment
+    AdjustedSimplexTable adjustedTable = simplexTable is AdjustedSimplexTable
+        ? simplexTable as AdjustedSimplexTable
         : null;
+    String comment = adjustedTable?.comment;
     int index = 0;
     return Column(
       children: <Widget>[

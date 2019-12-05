@@ -1,3 +1,4 @@
+import 'package:app/business/operations/solution_status.dart';
 import 'package:flutter/foundation.dart';
 
 import 'fraction.dart';
@@ -56,21 +57,25 @@ class SimplexTableEstimations {
 
 class AdjustedSimplexTable extends SimplexTable {
   final String comment;
+  final SolutionStatus solutionInfo;
 
   AdjustedSimplexTable({
     @required List<SimplexTableRow> rows,
     @required SimplexTableEstimations estimations,
     @required this.comment,
+    @required this.solutionInfo,
   }) : super(
           estimations: estimations,
           rows: rows,
         );
 
-  static AdjustedSimplexTable wrap(SimplexTable table, String comment) {
+  static AdjustedSimplexTable wrap(
+      SimplexTable table, String comment, SolutionStatus solutionInfo) {
     return AdjustedSimplexTable(
       comment: comment,
       estimations: table.estimations,
       rows: table.rows,
+      solutionInfo: solutionInfo,
     );
   }
 }

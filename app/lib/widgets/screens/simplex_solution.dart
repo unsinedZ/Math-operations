@@ -9,12 +9,14 @@ import 'package:app/widgets/primitives/base_card.dart';
 import 'package:flutter/material.dart';
 
 class SimplexSolution extends StatelessWidget {
+  final TargetFunction originalTargetFunction;
   final TargetFunction targetFunction;
   final List<LinearTask> adjustmentSteps;
   final List<SimplexTable> solutionSteps;
 
   const SimplexSolution({
     Key key,
+    @required this.originalTargetFunction,
     @required this.targetFunction,
     @required this.adjustmentSteps,
     @required this.solutionSteps,
