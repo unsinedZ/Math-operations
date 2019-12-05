@@ -86,10 +86,47 @@ class _DualSimplexState extends State<DualSimplexMethod> {
             onRestrictionsChanged: _onRestrictionsChanged,
             onExtremumChanged: _onExtremumChanged,
             onSolveClick: _onSolveClick,
+            onAddRestriction: _onAddRestriction,
+            onRestrictionRemoved: _onRestrictionRemoved,
           ),
         ),
       ),
     );
+  }
+
+  void _onAddRestriction() {
+    setState(() {
+      Restriction lastRestriction = _restrictions.last;
+      _linearTask = _linearTask.changeRestrictions(
+        concat(
+          [
+            _restrictions,
+            [
+              lastRestriction.changeCoefficients(
+                lastRestriction.coefficients
+                    .map(
+                      (x) => Fraction.fromNumber(1),
+                    )
+                    .toList(),
+              )
+            ],
+          ],
+        ).toList(),
+      );
+    });
+  }
+
+  void _onRestrictionRemoved(Restriction restriction) {
+    setState(() {
+      int index = 0;
+      _linearTask = _linearTask.changeRestrictions(
+        _restrictions
+            .where(
+              (x) => index++ == 0 || x != restriction,
+            )
+            .toList(),
+      );
+    });
   }
 
   void _onSolveClick() {

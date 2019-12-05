@@ -2,6 +2,7 @@ import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/variable.dart';
 import 'package:app/widgets/editors/free_member_editor.dart';
 import 'package:app/widgets/editors/variable_editor.dart';
+import 'package:app/widgets/primitives/base_icon.dart';
 import 'package:flutter/material.dart';
 
 import 'comparison_info.dart';
@@ -12,12 +13,14 @@ class RestrictionInfo extends StatefulWidget {
   final ValueChanged<Restriction> onChanged;
   final bool isReadOnly;
   final bool hideZeroCoefficients;
+  final VoidCallback onRemoveClick;
 
   const RestrictionInfo({
     Key key,
     @required this.variableLetter,
     @required this.restriction,
     @required this.onChanged,
+    @required this.onRemoveClick,
     this.isReadOnly = false,
     this.hideZeroCoefficients = true,
   }) : super(key: key);
@@ -60,42 +63,62 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
   @override
   Widget build(BuildContext context) {
     int index = 0;
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(8),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: <Widget>[
-          ..._variables
-              .where(
-                (x) => !widget.hideZeroCoefficients || !x.value.equalsNumber(0),
-              )
-              .map(
-                (x) => VariableEditor(
-                  variable: x,
-                  onChanged: _checkReadOnly((v) => _onVariableChanged(x, v)),
-                  showSignForPositive: index++ > 0,
-                ),
-              ),
-          Container(
-              margin: EdgeInsets.symmetric(
-                horizontal: 4,
-              ),
-              child: ComparisonInfo(
-                comparison: widget.restriction.comparison,
-                onChanged: _checkReadOnly((x) => widget.onChanged(
-                      widget.restriction.changeComparison(x),
+    return Row(
+      children: <Widget>[
+        Flexible(
+          flex: 1,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(8),
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: <Widget>[
+                ..._variables
+                    .where(
+                      (x) =>
+                          !widget.hideZeroCoefficients ||
+                          !x.value.equalsNumber(0),
+                    )
+                    .map(
+                      (x) => VariableEditor(
+                        variable: x,
+                        onChanged:
+                            _checkReadOnly((v) => _onVariableChanged(x, v)),
+                        showSignForPositive: index++ > 0,
+                      ),
+                    ),
+                Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 4,
+                    ),
+                    child: ComparisonInfo(
+                      comparison: widget.restriction.comparison,
+                      onChanged: _checkReadOnly((x) => widget.onChanged(
+                            widget.restriction.changeComparison(x),
+                          )),
                     )),
-              )),
-          FreeMemberEditor(
-            freeMember: widget.restriction.freeMember,
-            onChanged: _checkReadOnly((x) {
-              widget.onChanged(
-                widget.restriction.changeFreeMember(x),
-              );
-            }),
+                FreeMemberEditor(
+                  freeMember: widget.restriction.freeMember,
+                  onChanged: _checkReadOnly((x) {
+                    widget.onChanged(
+                      widget.restriction.changeFreeMember(x),
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+        Flexible(
+          flex: 0,
+          child: Visibility(
+            visible: widget.onRemoveClick != null,
+            child: BaseIcon(
+              icon: Icons.delete_outline,
+              onPressed: widget.onRemoveClick,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
