@@ -136,7 +136,7 @@ class _DualSimplexState extends State<DualSimplexMethod> {
       MaterialPageRoute(
         builder: (c) {
           List<LinearTask> adjustmentSteps =
-              adjuster.getAdjustionSteps(_linearTask);
+              adjuster.getAdjustmentSteps(_linearTask);
           LinearTask adjustedTask = adjustmentSteps.last ?? _linearTask;
           return SimplexSolution(
             originalTargetFunction: _targetFunction,

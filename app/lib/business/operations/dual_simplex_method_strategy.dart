@@ -11,11 +11,13 @@ class DualSimplexMethodStrategy {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
 
-    if (!simplexTableContext.hasBasis) return false;
-
     Fraction zero = const Fraction.fromNumber(0);
-    return simplexTableContext.simplexTable.estimations.variableEstimations
-        .every((x) => x <= zero);
+    if (!simplexTableContext.simplexTable.estimations.variableEstimations
+        .every((x) => x <= zero)) {
+      return false;
+    }
+
+    return simplexTableContext.hasBasis;
   }
 
   SolutionStatus solve(SimplexTableContext simplexTableContext) {
