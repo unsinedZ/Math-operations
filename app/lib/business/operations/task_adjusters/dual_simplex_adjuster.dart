@@ -6,6 +6,8 @@ import 'package:app/business/operations/task_adjusters/restrictions_to_equalitie
 import 'linear_task_adjuster.dart';
 
 class DualSimplexAdjuster implements LinearTaskAdjuster {
+  const DualSimplexAdjuster();
+  
   List<LinearTaskAdjuster> _getAdjusters() => [
         ExtremumToMinimumAdjuster(),
         RestrictionsToEqualitiesAdjuster(),
