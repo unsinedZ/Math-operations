@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'widgets/screens/dual_simplex_method.dart';
 import 'widgets/screens/task_selector.dart';
 
 void main() => runApp(MmdoZlpApp());
@@ -13,6 +14,9 @@ class MmdoZlpApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: TaskSelector(),
+      routes: <String, WidgetBuilder>{
+        '/DualSimplexMethod': (context) => DualSimplexMethod(),
+      },
     );
   }
 }

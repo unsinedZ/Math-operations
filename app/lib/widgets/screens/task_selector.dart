@@ -1,13 +1,11 @@
+import 'package:app/widgets/layout/app_layout.dart';
 import 'package:flutter/material.dart';
 
 class TaskSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MMDO-ZLP'),
-      ),
-      body: ListView(
+    return AppLayout(
+      content: ListView(
         children: ListTile.divideTiles(
           context: context,
           tiles: [
@@ -15,7 +13,7 @@ class TaskSelector extends StatelessWidget {
               leading: Icon(Icons.table_chart),
               title: Text('Dual simplex method'),
               trailing: Icon(Icons.keyboard_arrow_right),
-              onTap: () => Navigator.pushNamed(context, '/DualSimplex'),
+              onTap: () => Navigator.pushNamed(context, '/DualSimplexMethod'),
               onLongPress: () => {},
             ),
             ListTile(
