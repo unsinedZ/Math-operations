@@ -25,6 +25,8 @@ class TaskSequence extends StatelessWidget {
           onSolveClick: voidStub,
           onTargetFunctionChanged: onChangedStub,
           isReadOnly: true,
+          onAddRestriction: voidStub,
+          onRestrictionRemoved: onChangedStub,
         );
       }).toList(),
     );

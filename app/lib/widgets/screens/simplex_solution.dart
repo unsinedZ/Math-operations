@@ -43,6 +43,8 @@ class SimplexSolution extends StatelessWidget {
                       onExtremumChanged: null,
                       onSolveClick: null,
                       isReadOnly: true,
+                      onAddRestriction: null,
+                      onRestrictionRemoved: null,
                     ),
                   ),
                 )
