@@ -1,20 +1,20 @@
-import 'package:app/business/operations/dual_simplex_method_strategy.dart';
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/linear_task.dart';
 import 'package:app/business/operations/simplex_table.dart';
 import 'package:app/business/operations/simplex_table_context.dart';
+import 'package:app/business/operations/base_simplex_table_solver.dart';
 import 'package:app/business/operations/solution_status.dart';
 
-class DualSimplexSolver {
-  static const DualSimplexMethodStrategy _Strategy =
-      const DualSimplexMethodStrategy();
+import 'base_simplex_method_strategy.dart';
 
-  List<SimplexTable> getSolutionSteps(LinearTask adjustedTask) {
-    SimplexTable table = _createSimplexTable(adjustedTask);
+class SimplexSolver implements BaseSimplexTableSolver {
+  final BaseSimplexMethodStrategy strategy;
+
+  SimplexSolver(this.strategy);
+
+  List<SimplexTable> getSolutionSteps(SimplexTable table) {
     SimplexTableContext context = SimplexTableContext.create(
       simplexTable: table,
     );
-    if (!_Strategy.canBeApplied(context)) {
+    if (!strategy.canBeApplied(context)) {
       return [
         AdjustedSimplexTable.wrap(
           table,
@@ -27,32 +27,11 @@ class DualSimplexSolver {
     return _generateSolutionSteps(context).toList();
   }
 
-  SimplexTable _createSimplexTable(LinearTask task) {
-    return SimplexTable(
-      rows: task.restrictions
-          .map(
-            (x) => SimplexTableRow(
-              coefficients: x.coefficients,
-              freeMember: x.freeMember,
-            ),
-          )
-          .toList(),
-      estimations: SimplexTableEstimations(
-        variableEstimations: task.targetFunction.coefficients
-            .map(
-              (x) => x * Fraction.fromNumber(-1),
-            )
-            .toList(),
-        functionValue: task.targetFunction.freeMember,
-      ),
-    );
-  }
-
   Iterable<SimplexTable> _generateSolutionSteps(
     SimplexTableContext initialContext,
   ) sync* {
     while (true) {
-      SolutionStatus info = _Strategy.solve(initialContext);
+      SolutionStatus info = strategy.solve(initialContext);
       SimplexTable table = AdjustedSimplexTable.wrap(
         initialContext.simplexTable,
         _getSolutionMessage(info),
@@ -66,7 +45,7 @@ class DualSimplexSolver {
       }
 
       initialContext = SimplexTableContext.create(
-        simplexTable: _Strategy.getNextTable(initialContext),
+        simplexTable: strategy.getNextTable(initialContext),
       );
     }
   }

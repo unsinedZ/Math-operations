@@ -22,7 +22,7 @@ class RestrictionInfo extends StatefulWidget {
     @required this.onChanged,
     @required this.onRemoveClick,
     this.isReadOnly = false,
-    this.hideZeroCoefficients = true,
+    this.hideZeroCoefficients = false,
   }) : super(key: key);
 
   @override

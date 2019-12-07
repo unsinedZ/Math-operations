@@ -1,10 +1,17 @@
-import 'package:app/business/operations/dual_simplex_adjuster.dart';
-import 'package:app/business/operations/dual_simplex_solver.dart';
+import 'package:app/business/operations/base_simplex_method_strategy.dart';
 import 'package:app/business/operations/extremum.dart';
 import 'package:app/business/operations/fraction.dart';
 import 'package:app/business/operations/linear_task.dart';
+import 'package:app/business/operations/linear_task_context.dart';
+import 'package:app/business/operations/linear_task_solution.dart';
 import 'package:app/business/operations/restriction.dart';
+import 'package:app/business/operations/simplex_solver.dart';
+import 'package:app/business/operations/simplex_table.dart';
+import 'package:app/business/operations/simplex_table_builder.dart';
+import 'package:app/business/operations/simplex_table_context.dart';
+import 'package:app/business/operations/solution_status.dart';
 import 'package:app/business/operations/target_function.dart';
+import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart';
 import 'package:app/widgets/dual_simplex/linear_task_info.dart';
 import 'package:app/widgets/layout/app_layout.dart';
 import 'package:app/widgets/primitives/base_card.dart';
@@ -13,14 +20,23 @@ import 'package:quiver/iterables.dart';
 
 import 'simplex_solution.dart';
 
-class DualSimplexMethod extends StatefulWidget {
+class SimplexMethod extends StatefulWidget {
+  final LinearTaskAdjuster taskAdjuster;
+  final BaseSimplexMethodStrategy simplexMethodStrategy;
+
+  const SimplexMethod({
+    Key key,
+    @required this.taskAdjuster,
+    @required this.simplexMethodStrategy,
+  }) : super(key: key);
+
   @override
   State<StatefulWidget> createState() {
     return _DualSimplexState();
   }
 }
 
-class _DualSimplexState extends State<DualSimplexMethod> {
+class _DualSimplexState extends State<SimplexMethod> {
   LinearTask _linearTask;
 
   TargetFunction get _targetFunction => _linearTask.targetFunction;
@@ -130,23 +146,67 @@ class _DualSimplexState extends State<DualSimplexMethod> {
   }
 
   void _onSolveClick() {
-    DualSimplexAdjuster adjuster = DualSimplexAdjuster();
-    DualSimplexSolver solver = DualSimplexSolver();
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
-          List<LinearTask> adjustmentSteps =
-              adjuster.getAdjustmentSteps(_linearTask);
-          LinearTask adjustedTask = adjustmentSteps.last ?? _linearTask;
+          List<LinearTaskContext> adjustmentSteps =
+              widget.taskAdjuster.getAdjustmentSteps(
+            LinearTaskContext(
+              linearTask: _linearTask,
+            ),
+          );
+          LinearTaskContext adjustedTask = adjustmentSteps.last ?? _linearTask;
+          SimplexTable simplexTable =
+              SimplexTableBuilder().createSimplexTable(adjustedTask.linearTask);
+          List<SimplexTable> solutionSteps =
+              new SimplexSolver(widget.simplexMethodStrategy)
+                  .getSolutionSteps(simplexTable);
+          SimplexTableContext finalContext =
+              SimplexTableContext.create(simplexTable: solutionSteps.last);
           return SimplexSolution(
-            originalTargetFunction: _targetFunction,
-            targetFunction: adjustedTask.targetFunction,
+            solution: _getSolution(finalContext, adjustedTask),
+            targetFunction: adjustedTask.linearTask.targetFunction,
             adjustmentSteps: adjustmentSteps,
-            solutionSteps: solver.getSolutionSteps(adjustedTask),
+            solutionSteps: solutionSteps,
           );
         },
       ),
     );
+  }
+
+  LinearTaskSolution _getSolution(
+      SimplexTableContext context, LinearTaskContext taskContext) {
+    SolutionStatus status = widget.simplexMethodStrategy.canBeApplied(context)
+        ? widget.simplexMethodStrategy.solve(context)
+        : SolutionStatus.undefined;
+    LinearTaskSolution solution = LinearTaskSolution.create(
+      status,
+      _targetFunction,
+      SimplexTableContext.create(
+        simplexTable: context.simplexTable,
+      ),
+    );
+
+    if (status == SolutionStatus.hasRoot &&
+        taskContext.artificialVariableIndices.isNotEmpty) {
+      const Fraction _0 = Fraction.fromNumber(0);
+      bool hasNonZeroArtificialCoefficient = false;
+      for (int index in taskContext.artificialVariableIndices) {
+        if (solution.variableCoefficients[index] != _0) {
+          hasNonZeroArtificialCoefficient = true;
+          break;
+        }
+      }
+
+      if (hasNonZeroArtificialCoefficient) {
+        return LinearTaskSolution.message(
+          status: SolutionStatus.noRoots,
+          customMessage: 'Artificial coefficient equals 0.',
+        );
+      }
+    }
+
+    return solution.shortenTo(_targetFunction.coefficients.length);
   }
 
   void _onExtremumChanged(Extremum newExtremum) {

@@ -49,7 +49,7 @@ class SimplexTableInfo extends StatelessWidget {
                   SimplexTableRow row = simplexTable.rows[index];
                   return SimplexTableRowBuilder(
                     basisVariableName:
-                        '$variableLetter${simplexTableContext.basisVariableIndices[index++]}',
+                        '$variableLetter${simplexTableContext.basisVariableIndices[index++] + 1}',
                     coefficients: row.coefficients,
                     freeMember: row.freeMember,
                   ).build();

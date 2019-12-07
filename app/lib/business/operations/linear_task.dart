@@ -42,24 +42,30 @@ class LinearTask {
 
 class AdjustedLinearTask extends LinearTask {
   final String comment;
+  final List<int> artificialVariableIndices;
 
   const AdjustedLinearTask({
     @required TargetFunction targetFunction,
     @required Extremum extremum,
     @required List<Restriction> restrictions,
     @required this.comment,
+    this.artificialVariableIndices,
   }) : super(
           targetFunction: targetFunction,
           extremum: extremum,
           restrictions: restrictions,
         );
 
-  static AdjustedLinearTask wrap(LinearTask task, String comment) {
+  static AdjustedLinearTask wrap(LinearTask task, String comment, [List<int> artificialVariableIndices]) {
+    List<int> artificialVariableIndices = task is AdjustedLinearTask
+      ? task.artificialVariableIndices
+      : null;
     return AdjustedLinearTask(
       comment: comment,
       targetFunction: task.targetFunction,
       extremum: task.extremum,
       restrictions: task.restrictions,
+      artificialVariableIndices: artificialVariableIndices,
     );
   }
 }

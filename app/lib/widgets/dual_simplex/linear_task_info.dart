@@ -74,6 +74,7 @@ class LinearTaskInfo extends StatelessWidget {
                 onRemoveClick: isReadOnly || index++ == 0
                     ? null
                     : () => onRestrictionRemoved(x),
+                hideZeroCoefficients: isReadOnly,
               ),
             )
             .toList(),

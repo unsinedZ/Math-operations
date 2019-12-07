@@ -1,10 +1,11 @@
 import 'fraction.dart';
+import 'base_simplex_method_strategy.dart';
 import 'simplex_table.dart';
 import 'simplex_table_context.dart';
 import 'simplex_table_transformation_context.dart';
 import 'solution_status.dart';
 
-class DualSimplexMethodStrategy {
+class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
   const DualSimplexMethodStrategy();
 
   bool canBeApplied(SimplexTableContext simplexTableContext) {
@@ -33,7 +34,7 @@ class DualSimplexMethodStrategy {
       return SolutionStatus.hasRoot;
 
     if (tableRows.any(
-        (x) => x.freeMember < zero && x.coefficients.every((c) => c > zero)))
+        (x) => x.freeMember < zero && x.coefficients.every((c) => c >= zero)))
       return SolutionStatus.noRoots;
 
     return SolutionStatus.undefined;
