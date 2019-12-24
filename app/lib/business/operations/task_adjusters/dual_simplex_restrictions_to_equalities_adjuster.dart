@@ -7,11 +7,14 @@ import 'package:quiver/iterables.dart';
 
 typedef bool _HasAdditionalVariable(int index);
 
-class RestrictionsToEqualitiesAdjuster implements LinearTaskAdjuster {
+class DualSimplexRestrictionsToEqualitiesAdjuster
+    implements LinearTaskAdjuster {
+  const DualSimplexRestrictionsToEqualitiesAdjuster();
+
   @override
   List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext context) {
-    if (!context.linearTask.restrictions
-        .any((x) => x.comparison != ExpressionComparison.Equal)) {
+    if (context.linearTask.restrictions
+        .every((x) => x.comparison == ExpressionComparison.Equal)) {
       return [];
     }
 

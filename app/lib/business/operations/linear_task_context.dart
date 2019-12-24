@@ -8,8 +8,8 @@ class LinearTaskContext {
 
   LinearTaskContext({
     @required this.linearTask,
-    this.additionalVariableIndices,
-    this.artificialVariableIndices,
+    this.additionalVariableIndices = const <int>[],
+    this.artificialVariableIndices = const <int>[],
   });
 
   LinearTaskContext changeLinearTask(LinearTask newTask) {

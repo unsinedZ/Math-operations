@@ -6,6 +6,8 @@ import 'package:app/business/operations/linear_task_context.dart';
 import 'linear_task_adjuster.dart';
 
 class ExtremumToMinimumAdjuster implements LinearTaskAdjuster {
+  const ExtremumToMinimumAdjuster();
+  
   @override
   List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext context) {
     if (context.linearTask.extremum == Extremum.min) {

@@ -8,6 +8,8 @@ import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart
 import 'package:quiver/iterables.dart';
 
 class DualSimplexBasisCreator implements LinearTaskAdjuster {
+  const DualSimplexBasisCreator();
+  
   @override
   List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext task) {
     return _generateSteps(task).toList();

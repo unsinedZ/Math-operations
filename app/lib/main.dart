@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'business/operations/dual_simplex_method_strategy.dart';
+import 'business/operations/simplex_method_strategy.dart';
 import 'business/operations/task_adjusters/dual_simplex_adjuster.dart';
 import 'widgets/screens/simplex_method.dart';
 import 'widgets/screens/task_selector.dart';
@@ -17,13 +18,13 @@ class MmdoZlpApp extends StatelessWidget {
       ),
       home: TaskSelector(),
       routes: <String, WidgetBuilder>{
-        // '/SimplexMethod': (context) => SimplexMethod(
-        //       taskAdjuster: SimplexAdjuster(),
-        //       simplexMethodStrategy: SimplexMethodStrategy(),
-        //     ),
+        '/SimplexMethod': (context) => SimplexMethod(
+              taskAdjuster: SimplexAdjuster(),
+              simplexMethodStrategy: const SimplexMethodStrategy(),
+            ),
         '/DualSimplexMethod': (context) => SimplexMethod(
-              taskAdjuster: DualSimplexAdjuster(),
-              simplexMethodStrategy: DualSimplexMethodStrategy(),
+              taskAdjuster: const DualSimplexAdjuster(),
+              simplexMethodStrategy: const DualSimplexMethodStrategy(),
             ),
       },
     );
