@@ -4,8 +4,8 @@ import 'package:app/business/operations/linear_task_context.dart';
 import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart';
 import 'package:app/business/operations/restriction.dart';
 
-class SimplexRestrictionsFreeMemberAdjuster implements LinearTaskAdjuster {
-  const SimplexRestrictionsFreeMemberAdjuster();
+class PositiveFreeMemberAdjuster implements LinearTaskAdjuster {
+  const PositiveFreeMemberAdjuster();
 
   @override
   List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext context) {
