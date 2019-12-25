@@ -14,7 +14,8 @@ class CompositeAdjuster implements LinearTaskAdjuster {
     LinearTaskContext task,
   ) sync* {
     for (LinearTaskAdjuster adjuster in _adjusters) {
-      List<LinearTaskContext> adjusted = adjuster.getAdjustmentSteps(task);
+      var adjusted = adjuster.getAdjustmentSteps(task);
+      task = adjusted.isEmpty ? task : adjusted.last;
       for (LinearTaskContext adjustedTask in adjusted) {
         yield adjustedTask;
       }

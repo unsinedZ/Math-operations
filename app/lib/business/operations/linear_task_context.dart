@@ -1,10 +1,15 @@
 import 'package:app/business/operations/linear_task.dart';
+import 'package:app/business/operations/restriction.dart';
+import 'package:app/business/operations/target_function.dart';
 import 'package:flutter/foundation.dart';
 
 class LinearTaskContext {
   final LinearTask linearTask;
   final List<int> additionalVariableIndices;
   final List<int> artificialVariableIndices;
+
+  TargetFunction get targetFunction => linearTask.targetFunction;
+  List<Restriction> get restrictions => linearTask.restrictions;
 
   LinearTaskContext({
     @required this.linearTask,

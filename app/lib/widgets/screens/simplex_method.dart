@@ -63,7 +63,7 @@ class _DualSimplexState extends State<SimplexMethod> {
     return <Restriction>[
       Restriction(
         coefficients: [
-          Fraction.fromNumber(-1),
+          Fraction.fromNumber(1),
           Fraction.fromNumber(-2),
         ],
         comparison: ExpressionComparison.LowerOrEqual,
