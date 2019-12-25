@@ -4,6 +4,8 @@ import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart
 import 'package:app/business/operations/restriction.dart';
 
 class SimplexRestrictionsFreeMemberAdjuster implements LinearTaskAdjuster {
+  const SimplexRestrictionsFreeMemberAdjuster();
+  
   @override
   List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext context) {
     Fraction zero = const Fraction.fromNumber(0);
