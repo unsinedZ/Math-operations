@@ -20,10 +20,12 @@ class MmdoZlpApp extends StatelessWidget {
       home: TaskSelector(),
       routes: <String, WidgetBuilder>{
         '/SimplexMethod': (context) => SimplexMethod(
+              title: "Simplex method",
               taskAdjuster: SimplexAdjuster(),
               simplexMethodStrategy: const SimplexMethodStrategy(),
             ),
         '/DualSimplexMethod': (context) => SimplexMethod(
+              title: "Dual simplex method",
               taskAdjuster: const DualSimplexAdjuster(),
               simplexMethodStrategy: const DualSimplexMethodStrategy(),
             ),

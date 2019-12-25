@@ -6,7 +6,6 @@ import 'package:app/business/operations/linear_task_context.dart';
 import 'package:app/business/operations/linear_task_solution.dart';
 import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/simplex_solver.dart';
-import 'package:app/business/operations/simplex_table.dart';
 import 'package:app/business/operations/simplex_table_builder.dart';
 import 'package:app/business/operations/simplex_table_context.dart';
 import 'package:app/business/operations/solution_status.dart';
@@ -21,11 +20,13 @@ import 'package:quiver/iterables.dart';
 import 'simplex_solution.dart';
 
 class SimplexMethod extends StatefulWidget {
+  final String title;
   final LinearTaskAdjuster taskAdjuster;
   final BaseSimplexMethodStrategy simplexMethodStrategy;
 
   const SimplexMethod({
     Key key,
+    @required this.title,
     @required this.taskAdjuster,
     @required this.simplexMethodStrategy,
   }) : super(key: key);
@@ -89,7 +90,7 @@ class _DualSimplexState extends State<SimplexMethod> {
   @override
   Widget build(BuildContext context) {
     return AppLayout(
-      title: 'Dual simplex method',
+      title: widget.title,
       content: SingleChildScrollView(
         padding: EdgeInsets.only(
           bottom: 12,
