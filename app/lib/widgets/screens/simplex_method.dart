@@ -149,19 +149,24 @@ class _DualSimplexState extends State<SimplexMethod> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
-          List<LinearTaskContext> adjustmentSteps =
-              widget.taskAdjuster.getAdjustmentSteps(
-            LinearTaskContext(
-              linearTask: _linearTask,
+          var taskContext = LinearTaskContext(
+            linearTask: AdjustedLinearTask.wrap(
+              _linearTask,
+              "Initial task.",
             ),
           );
-          LinearTaskContext adjustedTask = adjustmentSteps.last ?? _linearTask;
-          SimplexTable simplexTable =
+          var adjustmentSteps =
+              widget.taskAdjuster.getAdjustmentSteps(taskContext)
+                ..insert(
+                  0,
+                  taskContext,
+                );
+          var adjustedTask = adjustmentSteps.last;
+          var simplexTable =
               SimplexTableBuilder().createSimplexTable(adjustedTask.linearTask);
-          List<SimplexTable> solutionSteps =
-              new SimplexSolver(widget.simplexMethodStrategy)
-                  .getSolutionSteps(simplexTable);
-          SimplexTableContext finalContext =
+          var solutionSteps = new SimplexSolver(widget.simplexMethodStrategy)
+              .getSolutionSteps(simplexTable);
+          var finalContext =
               SimplexTableContext.create(simplexTable: solutionSteps.last);
           return SimplexSolution(
             solution: _getSolution(finalContext, adjustedTask),
