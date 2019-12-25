@@ -22,13 +22,13 @@ class ComparisonInfo extends StatelessWidget {
             .map((x) => DropdownMenuItem(
                   value: x,
                   child: BaseText(
-                    ExpressionComparisonStringifier.stringify(x),
+                    x.stringify(),
                   ),
                 ))
             .toList(),
         onChanged: onChanged,
         disabledHint: BaseText(
-          ExpressionComparisonStringifier.stringify(comparison),
+          comparison.stringify(),
         ),
       ),
     );
