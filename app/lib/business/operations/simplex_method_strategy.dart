@@ -12,10 +12,9 @@ class SimplexMethodStrategy implements BaseSimplexMethodStrategy {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
 
-    Fraction zero = const Fraction.fromNumber(0);
     if (simplexTableContext.simplexTable.rows
         .map((x) => x.freeMember)
-        .any((x) => x < zero)) {
+        .any((x) => x.isNegative())) {
       return false;
     }
 
@@ -29,20 +28,21 @@ class SimplexMethodStrategy implements BaseSimplexMethodStrategy {
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
-    Fraction zero = const Fraction.fromNumber(0);
     List<Fraction> estimations =
         simplexTableContext.simplexTable.estimations.variableEstimations;
-    if (estimations.every((x) => x <= zero)) return SolutionStatus.hasRoot;
+    if (estimations.every((x) => !x.isPositive())) {
+      return SolutionStatus.hasRoot;
+    }
 
     for (int i = 0; i < estimations.length; i++) {
       Fraction value = estimations[i];
-      if (value <= zero) {
+      if (!value.isPositive()) {
         continue;
       }
 
       if (simplexTableContext.simplexTable.rows
           .map((x) => x[i])
-          .every((x) => x <= zero)) return SolutionStatus.noRoots;
+          .every((x) => !x.isPositive())) return SolutionStatus.noRoots;
     }
 
     return SolutionStatus.undefined;

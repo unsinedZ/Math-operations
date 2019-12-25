@@ -40,6 +40,10 @@ class Fraction {
     return numerator < 0 && denominator > 0 || numerator > 0 && denominator < 0;
   }
 
+  bool isPositive() {
+    return numerator < 0 && denominator < 0 || numerator > 0 && denominator > 0;
+  }
+
   Fraction abs() {
     return Fraction._(
       numerator: numerator.abs(),

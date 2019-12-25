@@ -5,14 +5,15 @@ import 'package:app/business/operations/restriction.dart';
 
 class SimplexRestrictionsFreeMemberAdjuster implements LinearTaskAdjuster {
   const SimplexRestrictionsFreeMemberAdjuster();
-  
+
   @override
   List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext context) {
-    Fraction zero = const Fraction.fromNumber(0);
     Fraction minusOne = const Fraction.fromNumber(-1);
 
     var restrictions = context.linearTask.restrictions;
-    if (restrictions.every((x) => x.freeMember >= zero)) return [];
+    if (restrictions.every((x) => !x.freeMember.isNegative())) {
+      return [];
+    }
 
     var adjustedTask = context.linearTask.changeRestrictions(
       context.linearTask.restrictions.map(

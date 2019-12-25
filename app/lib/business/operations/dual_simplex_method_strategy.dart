@@ -12,9 +12,8 @@ class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
 
-    Fraction zero = const Fraction.fromNumber(0);
-    if (!simplexTableContext.simplexTable.estimations.variableEstimations
-        .every((x) => x <= zero)) {
+    if (simplexTableContext.simplexTable.estimations.variableEstimations
+        .any((x) => x.isPositive())) {
       return false;
     }
 
@@ -28,13 +27,13 @@ class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
-    Fraction zero = const Fraction.fromNumber(0);
     var tableRows = simplexTableContext.simplexTable.rows;
-    if (tableRows.every((x) => x.freeMember >= zero))
+    if (tableRows.every((x) => !x.freeMember.isNegative()))
       return SolutionStatus.hasRoot;
 
-    if (tableRows.any(
-        (x) => x.freeMember < zero && x.coefficients.every((c) => c >= zero)))
+    if (tableRows.any((x) =>
+        x.freeMember.isNegative() &&
+        x.coefficients.every((c) => !c.isNegative())))
       return SolutionStatus.noRoots;
 
     return SolutionStatus.undefined;
