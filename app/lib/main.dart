@@ -1,3 +1,4 @@
+import 'package:app/business/operations/task_adjusters/simplex_adjuster.dart';
 import 'package:flutter/material.dart';
 
 import 'business/operations/dual_simplex_method_strategy.dart';

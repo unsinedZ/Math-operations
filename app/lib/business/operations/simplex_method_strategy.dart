@@ -29,20 +29,20 @@ class SimplexMethodStrategy implements BaseSimplexMethodStrategy {
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
-    Fraction _0 = const Fraction.fromNumber(0);
+    Fraction zero = const Fraction.fromNumber(0);
     List<Fraction> estimations =
         simplexTableContext.simplexTable.estimations.variableEstimations;
-    if (estimations.every((x) => x <= _0)) return SolutionStatus.hasRoot;
+    if (estimations.every((x) => x <= zero)) return SolutionStatus.hasRoot;
 
     for (int i = 0; i < estimations.length; i++) {
       Fraction value = estimations[i];
-      if (value <= _0) {
+      if (value <= zero) {
         continue;
       }
 
       if (simplexTableContext.simplexTable.rows
           .map((x) => x[i])
-          .every((x) => x <= _0)) return SolutionStatus.noRoots;
+          .every((x) => x <= zero)) return SolutionStatus.noRoots;
     }
 
     return SolutionStatus.undefined;

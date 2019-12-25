@@ -31,9 +31,9 @@ class SimplexRestrictionsToEqualitiesAdjuster implements LinearTaskAdjuster {
   }
 
   LinearTaskContext _adjustGreaterEqualRestrictions(LinearTaskContext context) {
-    #error TODO: Fraction expressions for artificial variable estimations
-    TODO: >= and (>= + = restrictions)
-    return null;
+    // #error TODO: Fraction expressions for artificial variable estimations
+    // TODO: >= and (>= + = restrictions)
+    return context;
   }
 
   LinearTaskContext _adjustLowerEqualRestrictions(LinearTaskContext context) {

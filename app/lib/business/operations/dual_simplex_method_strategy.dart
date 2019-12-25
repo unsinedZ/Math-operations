@@ -28,13 +28,13 @@ class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
-    Fraction _0 = const Fraction.fromNumber(0);
+    Fraction zero = const Fraction.fromNumber(0);
     var tableRows = simplexTableContext.simplexTable.rows;
-    if (tableRows.every((x) => x.freeMember >= _0))
+    if (tableRows.every((x) => x.freeMember >= zero))
       return SolutionStatus.hasRoot;
 
     if (tableRows.any(
-        (x) => x.freeMember < _0 && x.coefficients.every((c) => c >= _0)))
+        (x) => x.freeMember < zero && x.coefficients.every((c) => c >= zero)))
       return SolutionStatus.noRoots;
 
     return SolutionStatus.undefined;
