@@ -1,9 +1,10 @@
-import 'fraction.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
+import 'package:app/business/operations/entities/solution_status.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_transformation_context.dart';
+
 import 'base_simplex_method_strategy.dart';
-import 'simplex_table.dart';
-import 'simplex_table_context.dart';
-import 'simplex_table_transformation_context.dart';
-import 'solution_status.dart';
 
 class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
   const DualSimplexMethodStrategy();
@@ -33,8 +34,9 @@ class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
 
     if (tableRows.any((x) =>
         x.freeMember.isNegative() &&
-        x.coefficients.every((c) => !c.isNegative())))
+        x.coefficients.every((c) => !c.isNegative()))) {
       return SolutionStatus.noRoots;
+    }
 
     return SolutionStatus.undefined;
   }
@@ -74,12 +76,13 @@ class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
   }
 
   int _findSolvingColumnIndex(SimplexTable table, SimplexTableRow solvingRow) {
-    const Fraction _0 = const Fraction.fromNumber(0);
     Fraction minimumQuotient;
     int minimumQuotientIndex = -1;
     for (int i = 0; i < solvingRow.coefficients.length; i++) {
       Fraction coefficient = solvingRow.coefficients[i];
-      if (coefficient >= _0) continue;
+      if (!coefficient.isNegative()) {
+        continue;
+      }
 
       Fraction quotient =
           table.estimations.variableEstimations[i] / coefficient;

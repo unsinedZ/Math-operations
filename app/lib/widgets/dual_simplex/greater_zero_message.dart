@@ -1,4 +1,4 @@
-import 'package:app/business/operations/target_function.dart';
+import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/widgets/dual_simplex/comment_info.dart';
 import 'package:flutter/material.dart';
 

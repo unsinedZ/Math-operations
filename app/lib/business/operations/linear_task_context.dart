@@ -1,7 +1,8 @@
-import 'package:app/business/operations/linear_task.dart';
-import 'package:app/business/operations/restriction.dart';
-import 'package:app/business/operations/target_function.dart';
 import 'package:flutter/foundation.dart';
+
+import 'entities/linear_task.dart';
+import 'entities/restriction.dart';
+import 'entities/target_function.dart';
 
 class LinearTaskContext {
   final LinearTask linearTask;

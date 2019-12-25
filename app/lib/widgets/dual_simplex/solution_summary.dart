@@ -1,5 +1,5 @@
+import 'package:app/business/operations/entities/solution_status.dart';
 import 'package:app/business/operations/linear_task_solution.dart';
-import 'package:app/business/operations/solution_status.dart';
 import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 

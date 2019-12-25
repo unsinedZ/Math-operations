@@ -1,15 +1,15 @@
-import 'package:app/business/operations/base_simplex_method_strategy.dart';
-import 'package:app/business/operations/extremum.dart';
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/linear_task.dart';
+import 'package:app/business/operations/entities/extremum.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/linear_task.dart';
+import 'package:app/business/operations/entities/restriction.dart';
+import 'package:app/business/operations/entities/solution_status.dart';
+import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/business/operations/linear_task_context.dart';
 import 'package:app/business/operations/linear_task_solution.dart';
-import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/simplex_solver.dart';
-import 'package:app/business/operations/simplex_table_builder.dart';
-import 'package:app/business/operations/simplex_table_context.dart';
-import 'package:app/business/operations/solution_status.dart';
-import 'package:app/business/operations/target_function.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_builder.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
+import 'package:app/business/operations/strategies/base_simplex_method_strategy.dart';
 import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart';
 import 'package:app/widgets/dual_simplex/linear_task_info.dart';
 import 'package:app/widgets/layout/app_layout.dart';
@@ -195,10 +195,9 @@ class _DualSimplexState extends State<SimplexMethod> {
 
     if (status == SolutionStatus.hasRoot &&
         taskContext.artificialVariableIndices.isNotEmpty) {
-      const Fraction _0 = Fraction.fromNumber(0);
       bool hasNonZeroArtificialCoefficient = false;
       for (int index in taskContext.artificialVariableIndices) {
-        if (solution.variableCoefficients[index] != _0) {
+        if (!solution.variableCoefficients[index].equalsNumber(0)) {
           hasNonZeroArtificialCoefficient = true;
           break;
         }

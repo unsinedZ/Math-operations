@@ -1,4 +1,4 @@
-import 'package:app/business/operations/fraction.dart';
+import 'fraction.dart';
 import 'package:flutter/foundation.dart';
 
 class Variable {

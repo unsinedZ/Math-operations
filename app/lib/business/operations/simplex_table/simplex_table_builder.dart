@@ -1,6 +1,6 @@
-import 'fraction.dart';
-import 'linear_task.dart';
-import 'simplex_table.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/linear_task.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
 
 class SimplexTableBuilder {
   SimplexTable createSimplexTable(LinearTask task) {

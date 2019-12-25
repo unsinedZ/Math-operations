@@ -1,6 +1,6 @@
-import 'package:app/business/operations/simplex_table.dart';
-import 'package:app/business/operations/simplex_table_context.dart';
-import 'package:app/business/operations/target_function.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
+import 'package:app/business/operations/entities/target_function.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
 import 'package:flutter/material.dart';
 
 import 'comment_info.dart';

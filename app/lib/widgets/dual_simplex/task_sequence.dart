@@ -1,4 +1,4 @@
-import 'package:app/business/operations/linear_task.dart';
+import 'package:app/business/operations/entities/linear_task.dart';
 import 'package:app/widgets/dual_simplex/linear_task_info.dart';
 import 'package:flutter/material.dart';
 

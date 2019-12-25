@@ -1,9 +1,9 @@
-import 'package:app/business/operations/task_adjusters/simplex_adjuster.dart';
 import 'package:flutter/material.dart';
 
-import 'business/operations/dual_simplex_method_strategy.dart';
-import 'business/operations/simplex_method_strategy.dart';
+import 'business/operations/strategies/dual_simplex_method_strategy.dart';
+import 'business/operations/strategies/simplex_method_strategy.dart';
 import 'business/operations/task_adjusters/dual_simplex_adjuster.dart';
+import 'business/operations/task_adjusters/simplex_adjuster.dart';
 import 'widgets/screens/simplex_method.dart';
 import 'widgets/screens/task_selector.dart';
 

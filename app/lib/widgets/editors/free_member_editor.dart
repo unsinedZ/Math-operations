@@ -1,5 +1,5 @@
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/variable.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/widgets/editors/variable_editor.dart';
 import 'package:flutter/material.dart';
 

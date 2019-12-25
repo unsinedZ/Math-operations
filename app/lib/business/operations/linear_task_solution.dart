@@ -1,10 +1,10 @@
-import 'package:app/business/operations/simplex_table_solution_extractor.dart';
-import 'package:app/business/operations/solution_status.dart';
-import 'package:app/business/operations/target_function.dart';
 import 'package:flutter/foundation.dart';
 
-import 'fraction.dart';
-import 'simplex_table_context.dart';
+import 'entities/fraction.dart';
+import 'entities/solution_status.dart';
+import 'entities/target_function.dart';
+import 'simplex_table/simplex_table_context.dart';
+import 'simplex_table/simplex_table_solution_extractor.dart';
 
 class LinearTaskSolution {
   final SolutionStatus status;

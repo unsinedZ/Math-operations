@@ -1,7 +1,7 @@
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/linear_task.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/linear_task.dart';
+import 'package:app/business/operations/entities/restriction.dart';
 import 'package:app/business/operations/linear_task_context.dart';
-import 'package:app/business/operations/restriction.dart';
 import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart';
 import 'package:quiver/iterables.dart';
 
@@ -39,11 +39,14 @@ class DualSimplexRestrictionsToEqualitiesAdjuster
                   .changeRestrictions(newRestrictions)
                   .changeTargetFunction(
                     context.linearTask.targetFunction.changeCoefficients(
-                      concat([
-                        context.linearTask.targetFunction.coefficients,
-                        additionalVariableIndices
-                            .map((x) => Fraction.fromNumber(0)),
-                      ]).toList(),
+                      concat(
+                        [
+                          context.linearTask.targetFunction.coefficients,
+                          additionalVariableIndices.map(
+                            (x) => Fraction.fromNumber(0),
+                          ),
+                        ],
+                      ).toList(),
                     ),
                   ),
               "All restrictions became equalities",

@@ -1,8 +1,8 @@
+import 'package:app/business/operations/entities/simplex_table.dart';
+import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/business/operations/linear_task_context.dart';
 import 'package:app/business/operations/linear_task_solution.dart';
-import 'package:app/business/operations/simplex_table.dart';
-import 'package:app/business/operations/simplex_table_context.dart';
-import 'package:app/business/operations/target_function.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
 import 'package:app/widgets/dual_simplex/linear_task_info.dart';
 import 'package:app/widgets/dual_simplex/simplex_table_info.dart';
 import 'package:app/widgets/dual_simplex/solution_summary.dart';

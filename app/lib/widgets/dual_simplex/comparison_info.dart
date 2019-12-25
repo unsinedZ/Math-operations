@@ -1,4 +1,4 @@
-import 'package:app/business/operations/restriction.dart';
+import 'package:app/business/operations/entities/restriction.dart';
 import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 

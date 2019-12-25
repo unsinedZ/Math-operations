@@ -1,4 +1,4 @@
-import 'package:app/business/operations/fraction.dart';
+import 'package:app/business/operations/entities/fraction.dart';
 import 'package:app/widgets/primitives/base_button.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,6 @@ class VariableInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String valueText = name.isNotEmpty && value.equalsNumber(1) ? '' : '$value';
-    // String signText = name.isNotEmpty && valueText.isNotEmpty ? '*' : '';
     return BaseButton(
       text: valueText + name,
       onPressed: onPressed,

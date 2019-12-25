@@ -1,14 +1,13 @@
-import 'package:app/business/operations/simplex_table.dart';
-import 'package:app/business/operations/simplex_table_context.dart';
-import 'package:app/business/operations/base_simplex_table_solver.dart';
-import 'package:app/business/operations/solution_status.dart';
-
-import 'base_simplex_method_strategy.dart';
+import 'base_simplex_table_solver.dart';
+import 'entities/simplex_table.dart';
+import 'entities/solution_status.dart';
+import 'simplex_table/simplex_table_context.dart';
+import 'strategies/base_simplex_method_strategy.dart';
 
 class SimplexSolver implements BaseSimplexTableSolver {
   final BaseSimplexMethodStrategy strategy;
 
-  SimplexSolver(this.strategy);
+  const SimplexSolver(this.strategy);
 
   List<SimplexTable> getSolutionSteps(SimplexTable table) {
     SimplexTableContext context = SimplexTableContext.create(

@@ -1,9 +1,10 @@
-import 'fraction.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
+import 'package:app/business/operations/entities/solution_status.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_transformation_context.dart';
+
 import 'base_simplex_method_strategy.dart';
-import 'simplex_table.dart';
-import 'simplex_table_context.dart';
-import 'simplex_table_transformation_context.dart';
-import 'solution_status.dart';
 
 class SimplexMethodStrategy implements BaseSimplexMethodStrategy {
   const SimplexMethodStrategy();
@@ -68,13 +69,14 @@ class SimplexMethodStrategy implements BaseSimplexMethodStrategy {
   }
 
   int _findSolvingRowIndex(SimplexTable table, int solvingColumnIndex) {
-    const Fraction _0 = const Fraction.fromNumber(0);
     List<Fraction> solvingColumn = table.rows.map((x) => x[solvingColumnIndex]);
     Fraction minimumQuotient;
     int minimumQuotientIndex = -1;
     for (int i = 1; i < solvingColumn.length; i++) {
       Fraction coefficient = solvingColumn[i];
-      if (coefficient <= _0) continue;
+      if (!coefficient.isPositive()) {
+        continue;
+      }
 
       Fraction quotient = table.rows[i].freeMember / coefficient;
       if (minimumQuotient == null || quotient < minimumQuotient) {

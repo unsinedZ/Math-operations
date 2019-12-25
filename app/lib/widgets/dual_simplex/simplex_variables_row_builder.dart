@@ -1,13 +1,11 @@
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/variable.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/widgets/editors/variable_editor.dart';
 import 'package:flutter/material.dart';
 
 import 'empty_table_cell.dart';
 
 class SimplexVariablesRowBuilder {
-  static const Fraction _1 = const Fraction.fromNumber(1);
-
   final int variablesCount;
   final String variableLetter;
 
@@ -26,7 +24,7 @@ class SimplexVariablesRowBuilder {
             child: VariableEditor(
               variable: Variable(
                 name: '$variableLetter${++index}',
-                value: _1,
+                value: const Fraction.fromNumber(1),
               ),
               onChanged: null,
             ),
