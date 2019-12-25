@@ -23,11 +23,6 @@ class TaskSelector extends StatelessWidget {
               onTap: () => Navigator.pushNamed(context, '/DualSimplexMethod'),
               onLongPress: () => {},
             ),
-            ListTile(
-              leading: Icon(Icons.arrow_downward),
-              title: Text('Yet not implemented...'),
-              trailing: Icon(Icons.keyboard_arrow_right),
-            ),
           ],
         ).toList(),
       ),
