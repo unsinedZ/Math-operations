@@ -40,13 +40,9 @@ class SimplexSolution extends StatelessWidget {
                   (x) => BaseCard(
                     child: LinearTaskInfo(
                       linearTask: x.linearTask,
-                      onTargetFunctionChanged: null,
-                      onRestrictionsChanged: null,
-                      onExtremumChanged: null,
+                      onTaskChanged: null,
                       onSolveClick: null,
                       isReadOnly: true,
-                      onAddRestriction: null,
-                      onRestrictionRemoved: null,
                     ),
                   ),
                 )

@@ -14,6 +14,7 @@ class RestrictionInfo extends StatefulWidget {
   final bool isReadOnly;
   final bool hideZeroCoefficients;
   final VoidCallback onRemoveClick;
+  final bool isRemovable;
 
   const RestrictionInfo({
     Key key,
@@ -21,6 +22,7 @@ class RestrictionInfo extends StatefulWidget {
     @required this.restriction,
     @required this.onChanged,
     @required this.onRemoveClick,
+    this.isRemovable = true,
     this.isReadOnly = false,
     this.hideZeroCoefficients = false,
   }) : super(key: key);

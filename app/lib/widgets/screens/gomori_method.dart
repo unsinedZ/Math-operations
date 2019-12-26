@@ -8,7 +8,6 @@ import 'package:app/widgets/dual_simplex/discrete_task_info.dart';
 import 'package:app/widgets/layout/app_layout.dart';
 import 'package:app/widgets/primitives/base_card.dart';
 import 'package:flutter/material.dart';
-import 'package:quiver/iterables.dart';
 
 class GomoriMethod extends StatefulWidget {
   final String title;
@@ -21,30 +20,12 @@ class GomoriMethod extends StatefulWidget {
 
 class _GomoriMethodState extends State<GomoriMethod> {
   DiscreteTask _discreteTask;
-  Map<String, bool> _variableSelection;
-
-  TargetFunction get _targetFunction => _discreteTask.targetFunction;
-  Set<String> get _integerVariableNames => _discreteTask.integerVariableNames;
 
   @override
   void initState() {
     _discreteTask = _createDefaultTask();
-    _initVariables();
 
     super.initState();
-  }
-
-  void _initVariables() {
-    int index = 0;
-    _variableSelection = Map.fromIterable(
-      _targetFunction.coefficients.map(
-        (x) => Variable.wrapVariableName(
-          '${_targetFunction.variableLetter}${++index}',
-        ),
-      ),
-      key: (x) => x,
-      value: (x) => _integerVariableNames.contains(x),
-    );
   }
 
   @override
@@ -58,40 +39,13 @@ class _GomoriMethodState extends State<GomoriMethod> {
         scrollDirection: Axis.vertical,
         child: BaseCard(
           child: DiscreteTaskInfo(
-            variableSelection: _variableSelection,
-            onChangeSelection: (variableName, newSelection) {
-              Set<String> newIntegers;
-
-              bool shouldRemove = !newSelection &&
-                  _discreteTask.integerVariableNames.contains(variableName);
-              if (shouldRemove) {
-                newIntegers = _discreteTask.integerVariableNames
-                    .where(
-                      (x) => x != variableName,
-                    )
-                    .toSet();
-              }
-
-              bool shouldAdd = newSelection &&
-                  !_discreteTask.integerVariableNames.contains(variableName);
-              if (shouldAdd) {
-                newIntegers = concat(
-                  [
-                    _discreteTask.integerVariableNames,
-                    [variableName],
-                  ],
-                ).toSet();
-              }
-
-              if (newIntegers != null) {
-                setState(() {
-                  _discreteTask = _discreteTask.changeIntegerVariables(
-                    newIntegers,
-                  );
-                  _initVariables();
-                });
-              }
+            discreteTask: _discreteTask,
+            onTaskChanged: (newTask) {
+              setState(() {
+                _discreteTask = newTask;
+              });
             },
+            onSolveClick: () {},
           ),
         ),
       ),

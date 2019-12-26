@@ -20,13 +20,9 @@ class TaskSequence extends StatelessWidget {
       children: derivativeTasks.map((x) {
         return LinearTaskInfo(
           linearTask: x,
-          onExtremumChanged: onChangedStub,
-          onRestrictionsChanged: onChangedStub,
+          onTaskChanged: onChangedStub,
           onSolveClick: voidStub,
-          onTargetFunctionChanged: onChangedStub,
           isReadOnly: true,
-          onAddRestriction: voidStub,
-          onRestrictionRemoved: onChangedStub,
         );
       }).toList(),
     );

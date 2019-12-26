@@ -16,7 +16,7 @@ class GreaterZeroMessage extends StatelessWidget {
         List.generate(this.targetFunction.coefficients.length, (i) => i + 1)
             .join(', ');
     return CommentInfo(
-      comment: 'xᵢ ≥ 0, i = $indices',
+      comment: 'xᵢ ≥ 0, i = $indices.',
       addDivider: false,
     );
   }
