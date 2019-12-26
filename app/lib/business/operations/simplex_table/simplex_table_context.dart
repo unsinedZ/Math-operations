@@ -1,11 +1,10 @@
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
 import 'package:flutter/foundation.dart';
-
-import 'fraction.dart';
-import 'simplex_table.dart';
 
 class SimplexTableContext {
   static const int _NO_BASIS = -1;
-  
+
   final SimplexTable simplexTable;
   final List<int> basisVariableIndices;
   final bool hasBasis;
@@ -22,14 +21,16 @@ class SimplexTableContext {
     var basisVariableIndices = simplexTable.rows.map((row) {
       for (int i = 0; i < row.coefficients.length; i++) {
         Fraction item = row[i];
-        if (!item.equalsNumber(1))
+        if (!item.equalsNumber(1)) {
           continue;
+        }
 
         bool isBasis = simplexTable.rows
-          .where((x) => x != row)
-          .every((x) => x[i].equalsNumber(0));
-        if (isBasis)
+            .where((x) => x != row)
+            .every((x) => x[i].equalsNumber(0));
+        if (isBasis) {
           return i;
+        }
       }
 
       return _NO_BASIS;

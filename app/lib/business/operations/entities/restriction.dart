@@ -42,9 +42,9 @@ enum ExpressionComparison {
   Equal,
 }
 
-class ExpressionComparisonStringifier {
-  static String stringify(ExpressionComparison comparison) {
-    switch (comparison) {
+extension ExpressionComparisonExtension on ExpressionComparison {
+  stringify() {
+    switch (this) {
       case ExpressionComparison.Equal:
         return '=';
       case ExpressionComparison.GreaterOrEqual:
@@ -54,5 +54,15 @@ class ExpressionComparisonStringifier {
       default:
         throw Exception('Not supported.');
     }
+  }
+
+  invert() {
+    if (this == ExpressionComparison.GreaterOrEqual)
+      return ExpressionComparison.LowerOrEqual;
+
+    if (this == ExpressionComparison.LowerOrEqual)
+      return ExpressionComparison.GreaterOrEqual;
+
+    return this;
   }
 }

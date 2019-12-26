@@ -1,19 +1,20 @@
-import 'fraction.dart';
-import 'simplex_table.dart';
-import 'simplex_table_context.dart';
-import 'simplex_table_transformation_context.dart';
-import 'solution_status.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
+import 'package:app/business/operations/entities/solution_status.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_transformation_context.dart';
 
-class DualSimplexMethodStrategy {
+import 'base_simplex_method_strategy.dart';
+
+class DualSimplexMethodStrategy implements BaseSimplexMethodStrategy {
   const DualSimplexMethodStrategy();
 
   bool canBeApplied(SimplexTableContext simplexTableContext) {
     if (simplexTableContext == null)
       throw Exception('Context can not be null.');
 
-    Fraction zero = const Fraction.fromNumber(0);
-    if (!simplexTableContext.simplexTable.estimations.variableEstimations
-        .every((x) => x <= zero)) {
+    if (simplexTableContext.simplexTable.estimations.variableEstimations
+        .any((x) => x.isPositive())) {
       return false;
     }
 
@@ -27,14 +28,15 @@ class DualSimplexMethodStrategy {
     if (!canBeApplied(simplexTableContext))
       throw Exception('Strategy can not be applied for context.');
 
-    Fraction zero = const Fraction.fromNumber(0);
     var tableRows = simplexTableContext.simplexTable.rows;
-    if (tableRows.every((x) => x.freeMember >= zero))
+    if (tableRows.every((x) => !x.freeMember.isNegative()))
       return SolutionStatus.hasRoot;
 
-    if (tableRows.any(
-        (x) => x.freeMember < zero && x.coefficients.every((c) => c > zero)))
+    if (tableRows.any((x) =>
+        x.freeMember.isNegative() &&
+        x.coefficients.every((c) => !c.isNegative()))) {
       return SolutionStatus.noRoots;
+    }
 
     return SolutionStatus.undefined;
   }
@@ -74,12 +76,13 @@ class DualSimplexMethodStrategy {
   }
 
   int _findSolvingColumnIndex(SimplexTable table, SimplexTableRow solvingRow) {
-    const Fraction _0 = const Fraction.fromNumber(0);
     Fraction minimumQuotient;
     int minimumQuotientIndex = -1;
     for (int i = 0; i < solvingRow.coefficients.length; i++) {
       Fraction coefficient = solvingRow.coefficients[i];
-      if (coefficient >= _0) continue;
+      if (!coefficient.isNegative()) {
+        continue;
+      }
 
       Fraction quotient =
           table.estimations.variableEstimations[i] / coefficient;

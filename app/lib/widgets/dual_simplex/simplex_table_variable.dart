@@ -1,11 +1,9 @@
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/variable.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/widgets/editors/variable_editor.dart';
 import 'package:flutter/material.dart';
 
 class SimplexTableVariable extends StatelessWidget {
-  static const Fraction _1 = const Fraction.fromNumber(1);
-
   final String name;
 
   const SimplexTableVariable({
@@ -19,7 +17,7 @@ class SimplexTableVariable extends StatelessWidget {
       child: VariableEditor(
         variable: Variable(
           name: name,
-          value: _1,
+          value: const Fraction.fromNumber(1),
         ),
         onChanged: null,
       ),

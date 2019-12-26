@@ -1,7 +1,7 @@
-import 'package:app/business/operations/extremum.dart';
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/target_function.dart';
-import 'package:app/business/operations/variable.dart';
+import 'package:app/business/operations/entities/extremum.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/target_function.dart';
+import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/widgets/dual_simplex/function_letter.dart';
 import 'package:app/widgets/editors/scroll_integer_editor.dart';
 import 'package:app/widgets/editors/variable_editor.dart';
@@ -145,7 +145,9 @@ class _FunctionInfoState extends State<FunctionInfo> {
 
   void _onFunctionVariableChanged(Variable variable, Variable newValue) {
     _variables = _variables.map((v) {
-      if (v == variable) return newValue;
+      if (v == variable) {
+        return newValue;
+      }
 
       return v;
     }).toList();

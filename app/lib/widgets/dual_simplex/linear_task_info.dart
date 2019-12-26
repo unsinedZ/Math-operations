@@ -1,7 +1,7 @@
-import 'package:app/business/operations/extremum.dart';
-import 'package:app/business/operations/linear_task.dart';
-import 'package:app/business/operations/restriction.dart';
-import 'package:app/business/operations/target_function.dart';
+import 'package:app/business/operations/entities/extremum.dart';
+import 'package:app/business/operations/entities/linear_task.dart';
+import 'package:app/business/operations/entities/restriction.dart';
+import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/widgets/dual_simplex/greater_zero_message.dart';
 import 'package:app/widgets/primitives/accent_button.dart';
 import 'package:app/widgets/primitives/base_icon.dart';
@@ -74,6 +74,7 @@ class LinearTaskInfo extends StatelessWidget {
                 onRemoveClick: isReadOnly || index++ == 0
                     ? null
                     : () => onRestrictionRemoved(x),
+                hideZeroCoefficients: isReadOnly,
               ),
             )
             .toList(),

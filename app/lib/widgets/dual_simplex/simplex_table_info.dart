@@ -1,6 +1,6 @@
-import 'package:app/business/operations/simplex_table.dart';
-import 'package:app/business/operations/simplex_table_context.dart';
-import 'package:app/business/operations/target_function.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
+import 'package:app/business/operations/entities/target_function.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
 import 'package:flutter/material.dart';
 
 import 'comment_info.dart';
@@ -49,7 +49,7 @@ class SimplexTableInfo extends StatelessWidget {
                   SimplexTableRow row = simplexTable.rows[index];
                   return SimplexTableRowBuilder(
                     basisVariableName:
-                        '$variableLetter${simplexTableContext.basisVariableIndices[index++]}',
+                        '$variableLetter${simplexTableContext.basisVariableIndices[index++] + 1}',
                     coefficients: row.coefficients,
                     freeMember: row.freeMember,
                   ).build();

@@ -1,4 +1,4 @@
-import 'package:app/business/operations/restriction.dart';
+import 'package:app/business/operations/entities/restriction.dart';
 import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 
@@ -22,13 +22,13 @@ class ComparisonInfo extends StatelessWidget {
             .map((x) => DropdownMenuItem(
                   value: x,
                   child: BaseText(
-                    ExpressionComparisonStringifier.stringify(x),
+                    x.stringify(),
                   ),
                 ))
             .toList(),
         onChanged: onChanged,
         disabledHint: BaseText(
-          ExpressionComparisonStringifier.stringify(comparison),
+          comparison.stringify(),
         ),
       ),
     );

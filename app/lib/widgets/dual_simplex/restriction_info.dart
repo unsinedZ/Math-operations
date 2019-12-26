@@ -1,5 +1,5 @@
-import 'package:app/business/operations/restriction.dart';
-import 'package:app/business/operations/variable.dart';
+import 'package:app/business/operations/entities/restriction.dart';
+import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/widgets/editors/free_member_editor.dart';
 import 'package:app/widgets/editors/variable_editor.dart';
 import 'package:app/widgets/primitives/base_icon.dart';
@@ -22,7 +22,7 @@ class RestrictionInfo extends StatefulWidget {
     @required this.onChanged,
     @required this.onRemoveClick,
     this.isReadOnly = false,
-    this.hideZeroCoefficients = true,
+    this.hideZeroCoefficients = false,
   }) : super(key: key);
 
   @override

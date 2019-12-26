@@ -1,5 +1,5 @@
-import 'package:app/business/operations/fraction.dart';
-import 'package:app/business/operations/variable.dart';
+import 'package:app/business/operations/entities/fraction.dart';
+import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/business/validation/not_zero_validator.dart';
 import 'package:app/business/validation/required_validator.dart';
 import 'package:app/business/validation/validator.dart';

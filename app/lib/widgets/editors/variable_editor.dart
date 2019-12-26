@@ -1,4 +1,4 @@
-import 'package:app/business/operations/variable.dart';
+import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/widgets/dual_simplex/variable_info.dart';
 import 'package:app/widgets/primitives/base_text.dart';
 import 'package:app/widgets/primitives/overflow_safe_bottom_sheet_modal.dart';

@@ -1,7 +1,7 @@
-import 'package:app/business/operations/solution_status.dart';
 import 'package:flutter/foundation.dart';
 
 import 'fraction.dart';
+import 'solution_status.dart';
 
 class SimplexTable {
   final List<SimplexTableRow> rows;

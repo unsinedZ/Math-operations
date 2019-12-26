@@ -1,4 +1,4 @@
-import 'package:app/business/operations/fraction.dart';
+import 'package:app/business/operations/entities/fraction.dart';
 import 'package:flutter/material.dart';
 
 import 'simplex_table_value.dart';

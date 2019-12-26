@@ -11,15 +11,17 @@ class TaskSelector extends StatelessWidget {
           tiles: [
             ListTile(
               leading: Icon(Icons.table_chart),
+              title: Text('Simplex method'),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              onTap: () => Navigator.pushNamed(context, '/SimplexMethod'),
+              onLongPress: () => {},
+            ),
+            ListTile(
+              leading: Icon(Icons.table_chart),
               title: Text('Dual simplex method'),
               trailing: Icon(Icons.keyboard_arrow_right),
               onTap: () => Navigator.pushNamed(context, '/DualSimplexMethod'),
               onLongPress: () => {},
-            ),
-            ListTile(
-              leading: Icon(Icons.arrow_downward),
-              title: Text('Yet not implemented...'),
-              trailing: Icon(Icons.keyboard_arrow_right),
             ),
           ],
         ).toList(),
