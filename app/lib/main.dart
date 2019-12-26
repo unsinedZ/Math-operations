@@ -1,3 +1,4 @@
+import 'package:app/widgets/screens/gomori_method.dart';
 import 'package:flutter/material.dart';
 
 import 'business/operations/strategies/dual_simplex_method_strategy.dart';
@@ -28,6 +29,9 @@ class MmdoZlpApp extends StatelessWidget {
               title: "Dual simplex method",
               taskAdjuster: const DualSimplexAdjuster(),
               simplexMethodStrategy: const DualSimplexMethodStrategy(),
+            ),
+        '/FirstGomoriMethod': (context) => GomoriMethod(
+              title: 'Gomori method #1',
             ),
       },
     );
