@@ -48,9 +48,9 @@ extension ExpressionComparisonExtension on ExpressionComparison {
       case ExpressionComparison.Equal:
         return '=';
       case ExpressionComparison.GreaterOrEqual:
-        return '>=';
+        return '≥';
       case ExpressionComparison.LowerOrEqual:
-        return '<=';
+        return '≤';
       default:
         throw Exception('Not supported.');
     }
