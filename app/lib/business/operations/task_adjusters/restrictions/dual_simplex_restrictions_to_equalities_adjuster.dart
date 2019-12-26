@@ -77,7 +77,11 @@ class DualSimplexRestrictionsToEqualitiesAdjuster
 
     return restriction
         .changeCoefficients(newCoefficients)
-        .changeComparison(ExpressionComparison.Equal);
+        .changeComparison(ExpressionComparison.Equal)
+        .changeFreeMember(
+          restriction.freeMember *
+              Fraction.fromNumber(shouldInvertSign ? -1 : 1),
+        );
   }
 
   List<int> _getAdditionalVariableIndices(List<Restriction> restrictions) {

@@ -54,8 +54,8 @@ class _DualSimplexState extends State<SimplexMethod> {
   static TargetFunction _createDefaultFunction() {
     return TargetFunction(
       coefficients: [
-        Fraction.fromNumber(1),
-        Fraction.fromNumber(1),
+        Fraction.fromNumber(2),
+        Fraction.fromNumber(3),
       ],
     );
   }
@@ -65,18 +65,26 @@ class _DualSimplexState extends State<SimplexMethod> {
       Restriction(
         coefficients: [
           Fraction.fromNumber(1),
-          Fraction.fromNumber(-2),
-        ],
-        comparison: ExpressionComparison.LowerOrEqual,
-        freeMember: Fraction.fromNumber(4),
-      ),
-      Restriction(
-        coefficients: [
-          Fraction.fromNumber(3),
           Fraction.fromNumber(-1),
         ],
         comparison: ExpressionComparison.LowerOrEqual,
-        freeMember: Fraction.fromNumber(-1),
+        freeMember: Fraction.fromNumber(2),
+      ),
+      Restriction(
+        coefficients: [
+          Fraction.fromNumber(2),
+          Fraction.fromNumber(3),
+        ],
+        comparison: ExpressionComparison.GreaterOrEqual,
+        freeMember: Fraction.fromNumber(5),
+      ),
+      Restriction(
+        coefficients: [
+          Fraction.fromNumber(-4),
+          Fraction.fromNumber(2),
+        ],
+        comparison: ExpressionComparison.LowerOrEqual,
+        freeMember: Fraction.fromNumber(-3),
       ),
     ];
   }
