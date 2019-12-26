@@ -1,11 +1,10 @@
-import 'package:app/business/operations/entities/variable.dart';
 import 'package:app/widgets/primitives/base_text.dart';
 import 'package:flutter/material.dart';
 
 class VariablesSelector extends StatelessWidget {
   final String title;
-  final Map<Variable, bool> variableSelection;
-  final void Function(Variable, bool) onChangeSelection; 
+  final Map<String, bool> variableSelection;
+  final void Function(String, bool) onChangeSelection;
 
   const VariablesSelector({
     Key key,
@@ -17,7 +16,9 @@ class VariablesSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Padding(
@@ -25,11 +26,14 @@ class VariablesSelector extends StatelessWidget {
             child: BaseText(title),
           ),
           ...variableSelection.keys.map(
-            (variable) {
+            (variableName) {
               return _VariableRow(
-                variable: variable,
-                isSelected: variableSelection[variable],
-                onChanged: (newSelection) => onChangeSelection(variable, newSelection),
+                variableName: variableName,
+                isSelected: variableSelection[variableName],
+                onChanged: (newSelection) => onChangeSelection(
+                  variableName,
+                  newSelection,
+                ),
               );
             },
           ),
@@ -40,13 +44,13 @@ class VariablesSelector extends StatelessWidget {
 }
 
 class _VariableRow extends StatelessWidget {
-  final Variable variable;
+  final String variableName;
   final bool isSelected;
   final ValueChanged<bool> onChanged;
 
   const _VariableRow({
     Key key,
-    @required this.variable,
+    @required this.variableName,
     @required this.isSelected,
     @required this.onChanged,
   }) : super(key: key);
@@ -54,7 +58,7 @@ class _VariableRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      title: Text(variable.name),
+      title: Text(variableName),
       value: isSelected,
       onChanged: onChanged,
     );

@@ -21,7 +21,7 @@ class Variable {
   Variable({
     @required String name,
     @required Fraction value,
-  })  : this.name = _transformName(name),
+  })  : this.name = wrapVariableName(name),
         this.value = value;
 
   Variable changeValue(Fraction newValue) {
@@ -31,7 +31,7 @@ class Variable {
     );
   }
 
-  static String _transformName(String name) {
+  static String wrapVariableName(String name) {
     StringBuffer sb = new StringBuffer();
     name.runes.forEach((int rune) {
       String char = String.fromCharCode(rune);
@@ -39,6 +39,21 @@ class Variable {
         sb.write(_subScript[char]);
       else
         sb.write(char);
+    });
+
+    return sb.toString();
+  }
+
+  static String unwrapVariableName(String name) {
+    StringBuffer sb = new StringBuffer();
+    name.runes.forEach((int rune) {
+      String char = String.fromCharCode(rune);
+      sb.write(
+        _subScript.keys.firstWhere(
+          (x) => _subScript[x] == char,
+          orElse: () => char,
+        ),
+      );
     });
 
     return sb.toString();
