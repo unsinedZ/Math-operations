@@ -32,10 +32,7 @@ class PositiveFreeMemberAdjuster implements LinearTaskAdjuster {
     );
     return [
       context.changeLinearTask(
-        AdjustedLinearTask.wrap(
-          adjustedTask,
-          "Adjusted free members.",
-        ),
+        adjustedTask.makeAdjusted("Adjusted free members."),
       ),
     ];
   }

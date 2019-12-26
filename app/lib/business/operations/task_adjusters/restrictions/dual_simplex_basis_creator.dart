@@ -57,19 +57,18 @@ class DualSimplexBasisCreator implements LinearTaskAdjuster {
     // restrictions with basis not equal to 1
     if (changedRestrictions.isNotEmpty) {
       yield context = context.changeLinearTask(
-        AdjustedLinearTask.wrap(
-          context.linearTask.changeRestrictions(
-            context.linearTask.restrictions.map(
-              (x) {
-                if (changedRestrictions.containsKey(x))
-                  return changedRestrictions[x];
+        context.linearTask
+            .changeRestrictions(
+              context.linearTask.restrictions.map(
+                (x) {
+                  if (changedRestrictions.containsKey(x))
+                    return changedRestrictions[x];
 
-                return x;
-              },
-            ).toList(),
-          ),
-          "Restrictions with basis ≠ 1 were normalized",
-        ),
+                  return x;
+                },
+              ).toList(),
+            )
+            .makeAdjusted("Restrictions with basis ≠ 1 were normalized"),
       );
     }
 
@@ -77,41 +76,41 @@ class DualSimplexBasisCreator implements LinearTaskAdjuster {
     if (artificialVariableIndices.isNotEmpty) {
       int index = 0;
       yield context = context.changeLinearTask(
-        AdjustedLinearTask.wrap(
-          context.linearTask
-              .changeRestrictions(
-                context.linearTask.restrictions.map(
-                  (x) {
-                    int restrictionIndex = index++;
-                    return x.changeCoefficients(
-                      concat(
-                        [
-                          x.coefficients,
-                          artificialVariableIndices.map(
-                            (z) => Fraction.fromNumber(
-                                z == restrictionIndex ? 1 : 0),
-                          ),
-                        ],
-                      ).toList(),
-                    );
-                  },
+        context.linearTask
+            .changeRestrictions(
+              context.linearTask.restrictions.map(
+                (x) {
+                  int restrictionIndex = index++;
+                  return x.changeCoefficients(
+                    concat(
+                      [
+                        x.coefficients,
+                        artificialVariableIndices.map(
+                          (z) => Fraction.fromNumber(
+                              z == restrictionIndex ? 1 : 0),
+                        ),
+                      ],
+                    ).toList(),
+                  );
+                },
+              ).toList(),
+            )
+            .changeTargetFunction(
+              context.linearTask.targetFunction.changeCoefficients(
+                concat(
+                  [
+                    context.linearTask.targetFunction.coefficients,
+                    artificialVariableIndices.map(
+                      (x) => Fraction.fromNumber(0),
+                    ),
+                  ],
                 ).toList(),
-              )
-              .changeTargetFunction(
-                context.linearTask.targetFunction.changeCoefficients(
-                  concat(
-                    [
-                      context.linearTask.targetFunction.coefficients,
-                      artificialVariableIndices.map(
-                        (x) => Fraction.fromNumber(0),
-                      ),
-                    ],
-                  ).toList(),
-                ),
               ),
-          "Added artificial variables",
-          artificialVariableIndices,
-        ),
+            )
+            .makeAdjusted(
+              "Added artificial variables",
+              artificialVariableIndices,
+            ),
       );
     }
   }

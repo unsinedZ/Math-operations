@@ -34,23 +34,21 @@ class DualSimplexRestrictionsToEqualitiesAdjuster
     return [
       context
           .changeLinearTask(
-            AdjustedLinearTask.wrap(
-              context.linearTask
-                  .changeRestrictions(newRestrictions)
-                  .changeTargetFunction(
-                    context.linearTask.targetFunction.changeCoefficients(
-                      concat(
-                        [
-                          context.linearTask.targetFunction.coefficients,
-                          additionalVariableIndices.map(
-                            (x) => Fraction.fromNumber(0),
-                          ),
-                        ],
-                      ).toList(),
-                    ),
+            context.linearTask
+                .changeRestrictions(newRestrictions)
+                .changeTargetFunction(
+                  context.linearTask.targetFunction.changeCoefficients(
+                    concat(
+                      [
+                        context.linearTask.targetFunction.coefficients,
+                        additionalVariableIndices.map(
+                          (x) => Fraction.fromNumber(0),
+                        ),
+                      ],
+                    ).toList(),
                   ),
-              "All restrictions became equalities",
-            ),
+                )
+                .makeAdjusted("All restrictions became equalities"),
           )
           .changeAdditionalVariableIndexes(additionalVariableIndices),
     ];

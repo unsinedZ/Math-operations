@@ -159,10 +159,7 @@ class _DualSimplexState extends State<SimplexMethod> {
       MaterialPageRoute(
         builder: (c) {
           var taskContext = LinearTaskContext(
-            linearTask: AdjustedLinearTask.wrap(
-              _linearTask,
-              "Initial task.",
-            ),
+            linearTask: _linearTask.makeAdjusted("Initial task."),
           );
           var adjustmentSteps =
               widget.taskAdjuster.getAdjustmentSteps(taskContext)

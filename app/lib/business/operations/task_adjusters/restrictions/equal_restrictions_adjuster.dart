@@ -9,7 +9,11 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
   const EqualRestrictionsAdjuster();
 
   @override
-  List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext context) {
+  List<LinearTaskContext> getAdjustmentSteps(LinearTaskContext context) =>
+      _generateAdjustmentSteps(context).toList();
+
+  Iterable<LinearTaskContext> _generateAdjustmentSteps(
+      LinearTaskContext context) sync* {
     var uniqueCandidateIndices = List.generate(
       context.linearTask.targetFunction.coefficients.length,
       (x) => x,
@@ -26,15 +30,22 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
       int cIndex = candidate[1];
 
       bool rowPresent = adjustedCandidateCoords.containsKey(restriction);
-      bool shouldSetValue = !rowPresent ||
-          (restriction.coefficients[adjustedCandidateCoords[restriction]]
-                  .isNegative() &&
-              restriction.coefficients[cIndex].isPositive());
-      // if not present in adjusted or the one, that is present, is negative, and current is positive
+      bool shouldSetValue = !rowPresent;
+      if (!shouldSetValue) {
+        var present =
+            restriction.coefficients[adjustedCandidateCoords[restriction]];
+        var current = restriction.coefficients[cIndex];
+        shouldSetValue = (present.isNegative() && current.isPositive()) ||
+            (!present.equalsNumber(1) && current.equalsNumber(1));
+      }
+
       if (shouldSetValue) {
         adjustedCandidateCoords[restriction] = cIndex;
       }
     }
+
+    Restriction maxNegative;
+    Fraction maxFreeMemberOfNegative;
 
     List<Restriction> artificialVariableRestrictions = <Restriction>[];
     List<Restriction> negativeCandidateRestrictions = <Restriction>[];
@@ -50,73 +61,127 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
         if (coefficient.equalsNumber(1)) {
           adjustedCandidateCoords.remove(x);
         } else if (coefficient.isNegative()) {
-          artificialVariableRestrictions.add(x);
           negativeCandidateRestrictions.add(x);
+          if (maxNegative == null || x.freeMember > maxFreeMemberOfNegative) {
+            maxFreeMemberOfNegative = x.freeMember;
+            maxNegative = x;
+          }
         }
       },
     );
 
     if (artificialVariableRestrictions.isEmpty &&
         adjustedCandidateCoords.isEmpty) {
-      return [];
+      return;
     }
 
-    var restrictionChanges = <Restriction, Restriction Function(Restriction)>{};
-    Restriction max;
-    Fraction maxFreeMember;
-    context.restrictions
-        .where(
-      (x) => adjustedCandidateCoords.containsKey(x),
-    )
-        .forEach(
+    var changedRestrictions = <Restriction, Restriction>{};
+    context.restrictions.forEach(
       (x) {
-        restrictionChanges[x] = (x) => x;
-        if ((max == null || x.freeMember > maxFreeMember) &&
-            negativeCandidateRestrictions.contains(x)) {
-          maxFreeMember = x.freeMember;
-          max = x;
-        }
+        changedRestrictions[x] = artificialVariableRestrictions.isEmpty
+            ? x
+            : x.changeCoefficients(
+                concat(
+                  [
+                    x.coefficients,
+                    artificialVariableRestrictions.map(
+                      (z) => Fraction.fromNumber(z == x ? 1 : 0),
+                    ),
+                  ],
+                ).toList(),
+              );
       },
     );
 
-    restrictionChanges.keys.forEach(
+    if (artificialVariableRestrictions.isNotEmpty) {
+      yield context.changeLinearTask(
+        context.linearTask
+            .changeRestrictions(
+              changedRestrictions.values.toList(),
+            )
+            .makeAdjusted(
+              "Added artificial variables for `=` restrictions.",
+            ),
+      );
+    }
+
+    if (adjustedCandidateCoords.containsKey(maxNegative)) {
+      var divideBy = changedRestrictions[maxNegative]
+          .coefficients[adjustedCandidateCoords[maxNegative]]
+          .abs();
+      if (!divideBy.equalsNumber(1)) {
+        changedRestrictions[maxNegative] = _divideByValue(
+          changedRestrictions[maxNegative],
+          divideBy,
+        );
+
+        yield context.changeLinearTask(
+          context.linearTask
+              .changeRestrictions(
+                changedRestrictions.values.toList(),
+              )
+              .makeAdjusted(
+                "Adjusted incomplete `=` restriction with max free member.",
+              ),
+        );
+      }
+    }
+
+    bool negativesWereAdjusted = false;
+    changedRestrictions.keys.forEach(
       (x) {
-        if (x == max) {
+        if (x == maxNegative) {
           return;
         }
 
-        var adjustedRestriction = restrictionChanges[x];
+        var changed = changedRestrictions[x];
         if (negativeCandidateRestrictions.contains(x)) {
-          var nested = adjustedRestriction;
-          adjustedRestriction = (z) => _substract(max, nested(z));
+          changed = _substract(
+            changedRestrictions[maxNegative],
+            changed,
+          );
         }
 
-        restrictionChanges[x] = (z) => _divideByValue(
-              adjustedRestriction(z),
-              x.coefficients[adjustedCandidateCoords[x]],
-            );
+        if (adjustedCandidateCoords.containsKey(x)) {
+          changed = _divideByValue(
+            changed,
+            changed.coefficients[adjustedCandidateCoords[x]].abs(),
+          );
+        }
+
+        negativesWereAdjusted = changedRestrictions[x] != changed;
+        changedRestrictions[x] = changed;
       },
     );
 
-    var adjustedRestrictions = context.restrictions.map(
+    if (negativesWereAdjusted) {
+      yield context.changeLinearTask(
+        context.linearTask
+            .changeRestrictions(
+              changedRestrictions.values.toList(),
+            )
+            .makeAdjusted(
+              "Adjusted some incomplete `=` restrictions.",
+            ),
+      );
+    }
+
+    artificialVariableRestrictions.add(maxNegative);
+    changedRestrictions.keys.forEach(
       (x) {
-        var adjustedRestriction = x.changeCoefficients(
+        var restriction = changedRestrictions[x];
+        changedRestrictions[x] = restriction.changeCoefficients(
           concat(
             [
-              x.coefficients,
-              artificialVariableRestrictions.map(
-                (z) => Fraction.fromNumber(z == x ? 1 : 0),
-              ),
+              restriction.coefficients,
+              [Fraction.fromNumber(x == maxNegative ? 1 : 0)],
             ],
           ).toList(),
         );
-        if (restrictionChanges.containsKey(x)) {
-          adjustedRestriction = restrictionChanges[x](adjustedRestriction);
-        }
-
-        return adjustedRestriction;
       },
-    ).toList();
+    );
+
+    var adjustedRestrictions = changedRestrictions.values.toList();
     var adjustedFunction = context.targetFunction.changeCoefficients(
       concat(
         [
@@ -127,7 +192,7 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
     );
     var adjustedArtificialIndices = concat(
       [
-        context.additionalVariableIndices,
+        context.artificialVariableIndices,
         List.generate(
           artificialVariableRestrictions.length,
           (x) => x + context.targetFunction.coefficients.length,
@@ -137,14 +202,12 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
     var adjustedContext = context
         .changeArtificialVariableIndexes(adjustedArtificialIndices)
         .changeLinearTask(
-          AdjustedLinearTask.wrap(
-            context.linearTask
-                .changeRestrictions(adjustedRestrictions)
-                .changeTargetFunction(adjustedFunction),
-            "Adjusted `=` restrictions.",
-          ),
+          context.linearTask
+              .changeRestrictions(adjustedRestrictions)
+              .changeTargetFunction(adjustedFunction)
+              .makeAdjusted("Adjusted `=` restrictions."),
         );
-    return [adjustedContext];
+    yield adjustedContext;
   }
 
   Restriction _getUniqueCandidateRestriction(

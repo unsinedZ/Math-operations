@@ -85,9 +85,12 @@ class AdjustedLinearTask extends LinearTask {
           extremum: extremum,
           restrictions: restrictions,
         );
+}
 
-  static AdjustedLinearTask wrap(LinearTask task, String comment,
+extension Comment on LinearTask {
+  AdjustedLinearTask makeAdjusted(String comment,
       [List<int> artificialVariableIndices]) {
+    var task = this;
     List<int> artificialVariableIndices =
         task is AdjustedLinearTask ? task.artificialVariableIndices : null;
     return AdjustedLinearTask(

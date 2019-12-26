@@ -11,9 +11,9 @@ class SimplexAdjuster extends CompositeAdjuster {
           const [
             ExtremumToMinimumAdjuster(),
             PositiveFreeMemberAdjuster(),
+            LowerEqualRestrictionsAdjuster(),
             GreaterEqualRestrictionsAdjuster(),
             EqualRestrictionsAdjuster(),
-            LowerEqualRestrictionsAdjuster(),
           ],
         );
 }
