@@ -2,13 +2,27 @@ import 'package:app/business/operations/entities/discrete_task.dart';
 import 'package:app/business/operations/entities/extremum.dart';
 import 'package:app/business/operations/entities/fraction.dart';
 import 'package:app/business/operations/entities/restriction.dart';
+import 'package:app/business/operations/entities/solution_status.dart';
 import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/business/operations/entities/variable.dart';
+import 'package:app/business/operations/linear_task_context.dart';
+import 'package:app/business/operations/simplex_solver.dart';
+import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
+import 'package:app/business/operations/stepped_solution_creator.dart';
 import 'package:app/business/operations/strategies/base_clipping_method_strategy.dart';
+import 'package:app/business/operations/strategies/base_simplex_method_strategy.dart';
+import 'package:app/business/operations/strategies/dual_simplex_method_strategy.dart';
+import 'package:app/business/operations/strategies/simplex_method_strategy.dart';
+import 'package:app/business/operations/task_adjusters/dual_simplex_adjuster.dart';
+import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart';
+import 'package:app/business/operations/task_adjusters/simplex_adjuster.dart';
+import 'package:app/business/operations/variables_adapter.dart';
 import 'package:app/widgets/dual_simplex/discrete_task_info.dart';
 import 'package:app/widgets/layout/app_layout.dart';
 import 'package:app/widgets/primitives/base_card.dart';
 import 'package:flutter/material.dart';
+
+import 'simplex_solution.dart';
 
 class GomoriMethod extends StatefulWidget {
   final String title;
@@ -51,7 +65,7 @@ class _GomoriMethodState extends State<GomoriMethod> {
                 _discreteTask = newTask;
               });
             },
-            onSolveClick: () {},
+            onSolveClick: _onSolveClicked,
             lockIntegers: widget.strategy.requiresAllIntegers,
           ),
         ),
@@ -63,27 +77,27 @@ class _GomoriMethodState extends State<GomoriMethod> {
     return DiscreteTask(
       targetFunction: TargetFunction(
         coefficients: [
-          Fraction.fromNumber(3),
           Fraction.fromNumber(1),
+          Fraction.fromNumber(2),
         ],
       ),
-      extremum: Extremum.min,
+      extremum: Extremum.max,
       restrictions: [
         Restriction(
           coefficients: [
-            Fraction.fromNumber(1),
-            Fraction.fromNumber(3),
+            Fraction.fromNumber(5),
+            Fraction.fromNumber(7),
           ],
           comparison: ExpressionComparison.LowerOrEqual,
-          freeMember: Fraction.fromNumber(5),
+          freeMember: Fraction.fromNumber(21),
         ),
         Restriction(
           coefficients: [
+            Fraction.fromNumber(-1),
             Fraction.fromNumber(3),
-            Fraction.fromNumber(-2),
           ],
           comparison: ExpressionComparison.LowerOrEqual,
-          freeMember: Fraction.fromNumber(6),
+          freeMember: Fraction.fromNumber(8),
         ),
       ],
       integerVariableNames: [
@@ -91,5 +105,94 @@ class _GomoriMethodState extends State<GomoriMethod> {
         'x2',
       ].map(Variable.wrapVariableName).toSet(),
     );
+  }
+
+  void _onSolveClicked() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (c) {
+          // do not kill for this line
+          var task = _discreteTask;
+          bool isDualApplicable = _canUseDualSimplex();
+          LinearTaskAdjuster supportAdjuster;
+          BaseSimplexMethodStrategy supportStratery;
+          if (isDualApplicable) {
+            supportAdjuster = DualSimplexAdjuster();
+            supportStratery = DualSimplexMethodStrategy();
+          } else {
+            supportAdjuster = SimplexAdjuster();
+            supportStratery = SimplexMethodStrategy();
+          }
+
+          var s = SteppedSolutionCreator(
+            adjuster: supportAdjuster,
+            strategy: supportStratery,
+          ).solveTask(task);
+          if (s.solution.status == SolutionStatus.hasRoot) {
+            var context = SimplexTableContext.create(
+              simplexTable: s.solutionSteps.last,
+              integerVariableIndices: VariablesAdapter().adaptNamesIntoIndices(
+                task.integerVariableNames.toList(),
+              ),
+            );
+
+            var lastTask = s.adjustmentSteps.last;
+            var iTask = lastTask.linearTask;
+
+            var sc = SteppedSolutionCreator(
+              adjuster: null,
+              strategy: DualSimplexMethodStrategy(),
+            );
+            int counter = 0;
+            do {
+              var solutionStatus = widget.strategy.solve(context);
+              if (solutionStatus != SolutionStatus.undefined) {
+                break;
+              }
+
+              context = widget.strategy.addClipping(context);
+
+              var solution = SimplexSolver(DualSimplexMethodStrategy())
+                  .getSolutionSteps(context.simplexTable);
+              // TODO: add variable to function and check invalid row length in Table
+              lastTask = lastTask.changeLinearTask(
+                lastTask.linearTask.changeTargetFunction(
+                  lastTask.linearTask.targetFunction.changeCoefficients(
+                    List.from(lastTask.targetFunction.coefficients)
+                      ..add(
+                        Fraction.fromNumber(0),
+                      ),
+                  ),
+                ),
+              );
+              s = s.addSolutionSteps(solution).changeSolution(
+                    sc.createSolution(
+                      iTask,
+                      context,
+                      lastTask,
+                    ),
+                  );
+            } while (counter++ < 0);
+          }
+
+          return SimplexSolution(
+            solution: s.solution,
+            targetFunction: s.adjustmentSteps.last.targetFunction,
+            adjustmentSteps: s.adjustmentSteps,
+            solutionSteps: s.solutionSteps,
+          );
+        },
+      ),
+    );
+  }
+
+  bool _canUseDualSimplex() {
+    if (_discreteTask.extremum == Extremum.max) {
+      return _discreteTask.targetFunction.coefficients
+          .every((x) => !x.isPositive());
+    }
+
+    return _discreteTask.targetFunction.coefficients
+        .every((x) => !x.isNegative());
   }
 }

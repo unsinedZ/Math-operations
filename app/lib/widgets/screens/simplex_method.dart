@@ -2,13 +2,8 @@ import 'package:app/business/operations/entities/extremum.dart';
 import 'package:app/business/operations/entities/fraction.dart';
 import 'package:app/business/operations/entities/linear_task.dart';
 import 'package:app/business/operations/entities/restriction.dart';
-import 'package:app/business/operations/entities/solution_status.dart';
 import 'package:app/business/operations/entities/target_function.dart';
-import 'package:app/business/operations/linear_task_context.dart';
-import 'package:app/business/operations/linear_task_solution.dart';
-import 'package:app/business/operations/simplex_solver.dart';
-import 'package:app/business/operations/simplex_table/simplex_table_builder.dart';
-import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
+import 'package:app/business/operations/stepped_solution_creator.dart';
 import 'package:app/business/operations/strategies/base_simplex_method_strategy.dart';
 import 'package:app/business/operations/task_adjusters/linear_task_adjuster.dart';
 import 'package:app/widgets/dual_simplex/linear_task_info.dart';
@@ -38,8 +33,6 @@ class SimplexMethod extends StatefulWidget {
 
 class _DualSimplexState extends State<SimplexMethod> {
   LinearTask _linearTask;
-
-  TargetFunction get _targetFunction => _linearTask.targetFunction;
 
   static LinearTask _createDefaultTask() {
     return LinearTask(
@@ -110,75 +103,29 @@ class _DualSimplexState extends State<SimplexMethod> {
                 _linearTask = newTask;
               });
             },
-            onSolveClick: _onSolveClick,
+            onSolveClick: _onSolveClicked,
           ),
         ),
       ),
     );
   }
 
-  void _onSolveClick() {
+  void _onSolveClicked() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (c) {
-          var taskContext = LinearTaskContext(
-            linearTask: _linearTask.makeAdjusted("Initial task."),
-          );
-          var adjustmentSteps =
-              widget.taskAdjuster.getAdjustmentSteps(taskContext)
-                ..insert(
-                  0,
-                  taskContext,
-                );
-          var adjustedTask = adjustmentSteps.last;
-          var simplexTable =
-              SimplexTableBuilder().createSimplexTable(adjustedTask.linearTask);
-          var solutionSteps = new SimplexSolver(widget.simplexMethodStrategy)
-              .getSolutionSteps(simplexTable);
-          var finalContext =
-              SimplexTableContext.create(simplexTable: solutionSteps.last);
+          var s = SteppedSolutionCreator(
+            adjuster: widget.taskAdjuster,
+            strategy: widget.simplexMethodStrategy,
+          ).solveTask(_linearTask);
           return SimplexSolution(
-            solution: _getSolution(finalContext, adjustedTask),
-            targetFunction: adjustedTask.linearTask.targetFunction,
-            adjustmentSteps: adjustmentSteps,
-            solutionSteps: solutionSteps,
+            solution: s.solution,
+            targetFunction: s.adjustmentSteps.last.targetFunction,
+            adjustmentSteps: s.adjustmentSteps,
+            solutionSteps: s.solutionSteps,
           );
         },
       ),
     );
-  }
-
-  LinearTaskSolution _getSolution(
-      SimplexTableContext context, LinearTaskContext taskContext) {
-    SolutionStatus status = widget.simplexMethodStrategy.canBeApplied(context)
-        ? widget.simplexMethodStrategy.solve(context)
-        : SolutionStatus.undefined;
-    LinearTaskSolution solution = LinearTaskSolution.create(
-      status,
-      _targetFunction,
-      SimplexTableContext.create(
-        simplexTable: context.simplexTable,
-      ),
-    );
-
-    if (status == SolutionStatus.hasRoot &&
-        taskContext.artificialVariableIndices.isNotEmpty) {
-      bool hasNonZeroArtificialCoefficient = false;
-      for (int index in taskContext.artificialVariableIndices) {
-        if (!solution.variableCoefficients[index].equalsNumber(0)) {
-          hasNonZeroArtificialCoefficient = true;
-          break;
-        }
-      }
-
-      if (hasNonZeroArtificialCoefficient) {
-        return LinearTaskSolution.message(
-          status: SolutionStatus.noRoots,
-          customMessage: 'Artificial coefficient equals 0.',
-        );
-      }
-    }
-
-    return solution.shortenTo(_targetFunction.coefficients.length);
   }
 }

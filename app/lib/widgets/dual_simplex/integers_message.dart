@@ -1,5 +1,6 @@
 import 'package:app/business/operations/entities/discrete_task.dart';
 import 'package:app/business/operations/entities/variable.dart';
+import 'package:app/business/operations/variables_adapter.dart';
 import 'package:app/widgets/editors/integers_form.dart';
 import 'package:app/widgets/primitives/base_button.dart';
 import 'package:app/widgets/primitives/base_text.dart';
@@ -20,14 +21,12 @@ class IntegersMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var sortedVariables = discreteTask.integerVariableNames.toList()
+    var sortedVariables = discreteTask.integerVariableNames.toList();
+    var adapted = VariablesAdapter().adaptNamesIntoIndices(sortedVariables);
+    int index = 0;
+    sortedVariables = sortedVariables
       ..sort(
-        (x, y) {
-          var nonNumRegex = RegExp(r"[^\d]");
-          x = Variable.unwrapVariableName(x).replaceAll(nonNumRegex, '');
-          y = Variable.unwrapVariableName(y).replaceAll(nonNumRegex, '');
-          return int.parse(x).compareTo(int.parse(y));
-        },
+        (x, y) => adapted[index].compareTo(adapted[++index]),
       );
     var variables = '${sortedVariables.join(', ')}';
     return Row(

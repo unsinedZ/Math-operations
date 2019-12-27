@@ -22,28 +22,32 @@ class GomoriFirstStrategy extends BaseGomoriStrategy {
     }
 
     List<int> matchingIndices = <int>[];
-    checkIndices.reduce(
-      (x, y) {
-        if (matchingIndices.isEmpty) {
-          matchingIndices.add(x);
-        }
+    if (checkIndices.length > 1) {
+      checkIndices.reduce(
+        (x, y) {
+          if (matchingIndices.isEmpty) {
+            matchingIndices.add(x);
+          }
 
-        var current = solution[matchingIndices[0]].fractionalPart();
-        var candidate = solution[y].fractionalPart();
-        if (candidate > current) {
-          matchingIndices.clear();
-          matchingIndices.add(y);
-          return y;
-        }
+          var current = solution[matchingIndices[0]].fractionalPart();
+          var candidate = solution[y].fractionalPart();
+          if (candidate > current) {
+            matchingIndices.clear();
+            matchingIndices.add(y);
+            return y;
+          }
 
-        if (candidate == current) {
-          matchingIndices.add(y);
-          return y;
-        }
+          if (candidate == current) {
+            matchingIndices.add(y);
+            return y;
+          }
 
-        return x;
-      },
-    );
+          return x;
+        },
+      );
+    } else {
+      matchingIndices = checkIndices;
+    }
 
     if (matchingIndices.length == 0) {
       throw Exception('Tanos - nevozmozhno!');
@@ -102,7 +106,7 @@ class GomoriFirstStrategy extends BaseGomoriStrategy {
           )
           .toList()
             ..add(
-              Fraction.fromNumber(0),
+              Fraction.fromNumber(1),
             ),
     );
   }

@@ -46,12 +46,11 @@ class SimplexTableInfo extends StatelessWidget {
               ).build(),
               ...simplexTable.rows.map(
                 (x) {
-                  SimplexTableRow row = simplexTable.rows[index];
                   return SimplexTableRowBuilder(
                     basisVariableName:
                         '$variableLetter${simplexTableContext.basisVariableIndices[index++] + 1}',
-                    coefficients: row.coefficients,
-                    freeMember: row.freeMember,
+                    coefficients: x.coefficients,
+                    freeMember: x.freeMember,
                   ).build();
                 },
               ),

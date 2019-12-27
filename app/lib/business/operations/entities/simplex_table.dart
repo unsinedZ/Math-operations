@@ -91,13 +91,14 @@ class AdjustedSimplexTable extends SimplexTable {
           estimations: estimations,
           rows: rows,
         );
+}
 
-  static AdjustedSimplexTable wrap(
-      SimplexTable table, String comment, SolutionStatus solutionInfo) {
+extension SimplextableExtensions on SimplexTable {
+  AdjustedSimplexTable makeAdjusted(String comment, SolutionStatus solutionInfo) {
     return AdjustedSimplexTable(
       comment: comment,
-      estimations: table.estimations,
-      rows: table.rows,
+      estimations: this.estimations,
+      rows: this.rows,
       solutionInfo: solutionInfo,
     );
   }
