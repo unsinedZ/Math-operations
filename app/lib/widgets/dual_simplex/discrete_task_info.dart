@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'integers_message.dart';
 
 class DiscreteTaskInfo extends LinearTaskInfo {
+  final bool lockIntegers;
+  
   DiscreteTask get discreteTask => linearTask as DiscreteTask;
 
   DiscreteTaskInfo({
@@ -13,6 +15,7 @@ class DiscreteTaskInfo extends LinearTaskInfo {
     @required ValueChanged<DiscreteTask> onTaskChanged,
     @required VoidCallback onSolveClick,
     bool isReadOnly = false,
+    this.lockIntegers = false,
   }) : super(
           key: key,
           linearTask: discreteTask,
@@ -30,6 +33,7 @@ class DiscreteTaskInfo extends LinearTaskInfo {
     yield IntegersMessage(
       discreteTask: discreteTask,
       onTaskChanged: onTaskChanged,
+      isReadOnly: isReadOnly || lockIntegers,
     );
   }
 }

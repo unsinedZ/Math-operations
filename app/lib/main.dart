@@ -1,3 +1,4 @@
+import 'package:app/business/operations/strategies/gomory_first_strategy.dart';
 import 'package:app/widgets/screens/gomori_method.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +33,7 @@ class MmdoZlpApp extends StatelessWidget {
             ),
         '/FirstGomoriMethod': (context) => GomoriMethod(
               title: 'Gomori method #1',
+              strategy: const GomoriFirstStrategy(),
             ),
       },
     );

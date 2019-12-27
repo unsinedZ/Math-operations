@@ -4,6 +4,7 @@ import 'package:app/business/operations/entities/fraction.dart';
 import 'package:app/business/operations/entities/restriction.dart';
 import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/business/operations/entities/variable.dart';
+import 'package:app/business/operations/strategies/base_clipping_method_strategy.dart';
 import 'package:app/widgets/dual_simplex/discrete_task_info.dart';
 import 'package:app/widgets/layout/app_layout.dart';
 import 'package:app/widgets/primitives/base_card.dart';
@@ -11,8 +12,13 @@ import 'package:flutter/material.dart';
 
 class GomoriMethod extends StatefulWidget {
   final String title;
+  final BaseClippingMethodStrategy strategy;
 
-  const GomoriMethod({Key key, this.title}) : super(key: key);
+  const GomoriMethod({
+    Key key,
+    @required this.title,
+    @required this.strategy,
+  }) : super(key: key);
 
   @override
   _GomoriMethodState createState() => _GomoriMethodState();
@@ -46,6 +52,7 @@ class _GomoriMethodState extends State<GomoriMethod> {
               });
             },
             onSolveClick: () {},
+            lockIntegers: widget.strategy.requiresAllIntegers,
           ),
         ),
       ),
