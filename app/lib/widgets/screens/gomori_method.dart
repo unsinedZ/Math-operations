@@ -183,8 +183,9 @@ class _GomoriMethodState extends State<GomoriMethod> {
             } while (++counter < _MAX_CLIPPINGS);
           }
 
+          var finalSolution = s.solution;
           return SimplexSolution(
-            solution: s.solution,
+            solution: finalSolution,
             targetFunction: lastFunction,
             adjustmentSteps: s.adjustmentSteps,
             solutionSteps: s.solutionSteps,
