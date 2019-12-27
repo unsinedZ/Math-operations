@@ -39,6 +39,8 @@ class GomoriMethod extends StatefulWidget {
 }
 
 class _GomoriMethodState extends State<GomoriMethod> {
+  static const int _MAX_CLIPPINGS = 5;
+
   DiscreteTask _discreteTask;
 
   @override
@@ -128,56 +130,54 @@ class _GomoriMethodState extends State<GomoriMethod> {
             adjuster: supportAdjuster,
             strategy: supportStratery,
           ).solveTask(task);
+          var lastFunction = s.adjustmentSteps.last.targetFunction;
           if (s.solution.status == SolutionStatus.hasRoot) {
-            var context = SimplexTableContext.create(
-              simplexTable: s.solutionSteps.last,
-              integerVariableIndices: VariablesAdapter().adaptNamesIntoIndices(
-                task.integerVariableNames.toList(),
-              ),
-            );
+            var integerVars = VariablesAdapter()
+                .adaptNamesIntoIndices(
+                  task.integerVariableNames.toList(),
+                )
+                .map((x) => x - 1)
+                .toList();
 
-            var lastTask = s.adjustmentSteps.last;
-            var iTask = lastTask.linearTask;
-
-            var sc = SteppedSolutionCreator(
-              adjuster: null,
-              strategy: DualSimplexMethodStrategy(),
-            );
+            var iTask = s.adjustmentSteps.first;
             int counter = 0;
+            var dualStrategy = SimplexSolver(DualSimplexMethodStrategy());
+            var gomoriStrategy = widget.strategy;
             do {
-              var solutionStatus = widget.strategy.solve(context);
+              var simplexTableContext = SimplexTableContext.create(
+                simplexTable: s.solutionSteps.last,
+                integerVariableIndices: integerVars,
+              );
+              var solutionStatus = gomoriStrategy.solve(simplexTableContext);
               if (solutionStatus != SolutionStatus.undefined) {
                 break;
               }
 
-              context = widget.strategy.addClipping(context);
-
-              var solution = SimplexSolver(DualSimplexMethodStrategy())
-                  .getSolutionSteps(context.simplexTable);
-              // TODO: add variable to function and check invalid row length in Table
-              lastTask = lastTask.changeLinearTask(
-                lastTask.linearTask.changeTargetFunction(
-                  lastTask.linearTask.targetFunction.changeCoefficients(
-                    List.from(lastTask.targetFunction.coefficients)
-                      ..add(
-                        Fraction.fromNumber(0),
-                      ),
-                  ),
-                ),
+              var newSteps = dualStrategy.getSolutionSteps(
+                gomoriStrategy.addClipping(simplexTableContext).simplexTable,
               );
-              s = s.addSolutionSteps(solution).changeSolution(
-                    sc.createSolution(
+
+              s = s.addSolutionSteps(newSteps).changeSolution(
+                    SteppedSolutionCreator.createSolution(
+                      gomoriStrategy,
+                      iTask.linearTask,
+                      simplexTableContext,
                       iTask,
-                      context,
-                      lastTask,
                     ),
                   );
-            } while (counter++ < 0);
+
+              lastFunction = lastFunction.changeCoefficients(
+                List.from(lastFunction.coefficients)
+                  ..add(
+                    Fraction.fromNumber(0),
+                  ),
+              );
+            } while (++counter < _MAX_CLIPPINGS);
           }
 
           return SimplexSolution(
             solution: s.solution,
-            targetFunction: s.adjustmentSteps.last.targetFunction,
+            targetFunction: lastFunction,
             adjustmentSteps: s.adjustmentSteps,
             solutionSteps: s.solutionSteps,
           );

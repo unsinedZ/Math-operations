@@ -2,10 +2,15 @@ import 'package:app/business/operations/entities/solution_status.dart';
 import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
 import 'package:app/business/operations/simplex_table/simplex_table_solution_extractor.dart';
 
-abstract class BaseClippingMethodStrategy {
+import 'isolver.dart';
+
+abstract class BaseClippingMethodStrategy implements ISolver<SimplexTableContext> {
   const BaseClippingMethodStrategy();
 
   bool get requiresAllIntegers;
+
+  @override
+  bool canBeApplied(SimplexTableContext context) => true;
 
   SimplexTableContext addClipping(SimplexTableContext context);
 

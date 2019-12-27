@@ -10,6 +10,7 @@ import 'linear_task_solution.dart';
 import 'simplex_solver.dart';
 import 'simplex_table/simplex_table_builder.dart';
 import 'simplex_table/simplex_table_context.dart';
+import 'strategies/isolver.dart';
 
 class SteppedSolutionCreator {
   final LinearTaskAdjuster adjuster;
@@ -35,7 +36,12 @@ class SteppedSolutionCreator {
     var solutionSteps = SimplexSolver(strategy).getSolutionSteps(simplexTable);
     var finalContext =
         SimplexTableContext.create(simplexTable: solutionSteps.last);
-    var solution = createSolution(linearTask, finalContext, adjustedTask);
+    var solution = createSolution(
+      strategy,
+      linearTask,
+      finalContext,
+      adjustedTask,
+    );
     return SteppedSolution(
       adjustmentSteps: adjustmentSteps,
       solutionSteps: solutionSteps,
@@ -43,13 +49,14 @@ class SteppedSolutionCreator {
     );
   }
 
-  LinearTaskSolution createSolution(
+  static LinearTaskSolution createSolution(
+    ISolver<SimplexTableContext> solver,
     LinearTask initialTask,
     SimplexTableContext context,
     LinearTaskContext taskContext,
   ) {
-    SolutionStatus status = strategy.canBeApplied(context)
-        ? strategy.solve(context)
+    SolutionStatus status = solver.canBeApplied(context)
+        ? solver.solve(context)
         : SolutionStatus.undefined;
     LinearTaskSolution solution = LinearTaskSolution.create(
       status,

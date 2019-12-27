@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app/business/operations/entities/simplex_table.dart';
 import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
@@ -42,7 +44,10 @@ class SimplexTableInfo extends StatelessWidget {
             children: [
               SimplexVariablesRowBuilder(
                 variableLetter: targetFunction.variableLetter,
-                variablesCount: targetFunction.coefficients.length,
+                variablesCount: min(
+                  targetFunction.coefficients.length,
+                  simplexTable.rows[0].coefficients.length,
+                ),
               ).build(),
               ...simplexTable.rows.map(
                 (x) {
