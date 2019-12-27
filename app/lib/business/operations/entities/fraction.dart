@@ -54,11 +54,11 @@ class Fraction {
 
   Fraction fractionalPart() {
     Fraction result = this - Fraction.fromNumber(integerPart());
-    if (result.isNegative()) {
-      result = Fraction.fromNumber(1) - result;
+    if (!this.isNegative()) {
+      return result;
     }
 
-    return result;
+    return Fraction.fromNumber(1) - result.abs();
   }
 
   Fraction abs() {

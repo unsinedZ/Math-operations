@@ -5,7 +5,8 @@ import 'package:app/business/operations/simplex_table/simplex_table_solution_ext
 import 'base_gomory_strategy.dart';
 import 'isolver.dart';
 
-class GomoriFirstStrategy extends BaseGomoriStrategy implements ISolver<SimplexTableContext> {
+class GomoriFirstStrategy extends BaseGomoriStrategy
+    implements ISolver<SimplexTableContext> {
   const GomoriFirstStrategy();
 
   @override

@@ -2,6 +2,7 @@ import 'package:app/business/operations/entities/discrete_task.dart';
 import 'package:app/business/operations/entities/extremum.dart';
 import 'package:app/business/operations/entities/fraction.dart';
 import 'package:app/business/operations/entities/restriction.dart';
+import 'package:app/business/operations/entities/simplex_table.dart';
 import 'package:app/business/operations/entities/solution_status.dart';
 import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/business/operations/entities/variable.dart';
@@ -153,9 +154,14 @@ class _GomoriMethodState extends State<GomoriMethod> {
                 break;
               }
 
-              var newSteps = dualStrategy.getSolutionSteps(
-                gomoriStrategy.addClipping(simplexTableContext).simplexTable,
-              );
+              var clippedTable = gomoriStrategy
+                  .addClipping(simplexTableContext)
+                  .simplexTable
+                  .makeAdjusted(
+                    "Added clipping ${counter + 1}.",
+                    solutionStatus,
+                  );
+              var newSteps = dualStrategy.getSolutionSteps(clippedTable);
 
               s = s.addSolutionSteps(newSteps).changeSolution(
                     SteppedSolutionCreator.createSolution(
