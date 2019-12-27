@@ -6,7 +6,6 @@ import 'package:app/business/operations/entities/simplex_table.dart';
 import 'package:app/business/operations/entities/solution_status.dart';
 import 'package:app/business/operations/entities/target_function.dart';
 import 'package:app/business/operations/entities/variable.dart';
-import 'package:app/business/operations/linear_task_context.dart';
 import 'package:app/business/operations/simplex_solver.dart';
 import 'package:app/business/operations/simplex_table/simplex_table_context.dart';
 import 'package:app/business/operations/stepped_solution_creator.dart';
@@ -167,7 +166,10 @@ class _GomoriMethodState extends State<GomoriMethod> {
                     SteppedSolutionCreator.createSolution(
                       gomoriStrategy,
                       iTask.linearTask,
-                      simplexTableContext,
+                      SimplexTableContext.create(
+                        simplexTable: newSteps.last,
+                        integerVariableIndices: integerVars,
+                      ),
                       iTask,
                     ),
                   );
