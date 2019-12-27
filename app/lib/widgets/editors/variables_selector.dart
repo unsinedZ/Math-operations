@@ -57,8 +57,8 @@ class _VariableRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(variableName),
+    return SwitchListTile(
+      title: BaseText(variableName),
       value: isSelected,
       onChanged: onChanged,
     );

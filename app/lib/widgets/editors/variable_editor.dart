@@ -39,7 +39,9 @@ class VariableEditor extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    if (onChanged == null) return;
+    if (onChanged == null) {
+      return;
+    }
 
     OverflowSafeBottomSheetModal(
       (c) => VariableForm(
