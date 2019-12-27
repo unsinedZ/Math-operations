@@ -69,10 +69,10 @@ class SimplexMethodStrategy implements BaseSimplexMethodStrategy {
   }
 
   int _findSolvingRowIndex(SimplexTable table, int solvingColumnIndex) {
-    List<Fraction> solvingColumn = table.rows.map((x) => x[solvingColumnIndex]);
+    List<Fraction> solvingColumn = table.rows.map((x) => x[solvingColumnIndex]).toList();
     Fraction minimumQuotient;
     int minimumQuotientIndex = -1;
-    for (int i = 1; i < solvingColumn.length; i++) {
+    for (int i = 0; i < solvingColumn.length; i++) {
       Fraction coefficient = solvingColumn[i];
       if (!coefficient.isPositive()) {
         continue;
