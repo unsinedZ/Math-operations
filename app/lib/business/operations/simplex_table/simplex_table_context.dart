@@ -7,16 +7,19 @@ class SimplexTableContext {
 
   final SimplexTable simplexTable;
   final List<int> basisVariableIndices;
+  final List<int> integerVariableIndices;
   final bool hasBasis;
 
   const SimplexTableContext._({
     this.simplexTable,
     this.basisVariableIndices,
+    this.integerVariableIndices,
     this.hasBasis,
   });
 
   static SimplexTableContext create({
     @required SimplexTable simplexTable,
+    List<int> integerVariableIndices = const <int>[],
   }) {
     var basisVariableIndices = simplexTable.rows.map((row) {
       for (int i = 0; i < row.coefficients.length; i++) {
@@ -40,6 +43,7 @@ class SimplexTableContext {
     return SimplexTableContext._(
       simplexTable: simplexTable,
       basisVariableIndices: basisVariableIndices,
+      integerVariableIndices: integerVariableIndices,
       hasBasis: hasBasis,
     );
   }
