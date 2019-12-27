@@ -37,12 +37,15 @@ class _FunctionInfoState extends State<FunctionInfo> {
   @override
   void initState() {
     _init();
+
     super.initState();
   }
 
   @override
   void didUpdateWidget(FunctionInfo oldWidget) {
-    if (oldWidget.targetFunction != widget.targetFunction) _init();
+    if (oldWidget.targetFunction != widget.targetFunction) {
+      _init();
+    }
 
     super.didUpdateWidget(oldWidget);
   }
@@ -63,9 +66,11 @@ class _FunctionInfoState extends State<FunctionInfo> {
   Widget build(BuildContext context) {
     int index = 0;
     return Row(
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Flexible(
           flex: 1,
+          fit: FlexFit.tight,
           child: SingleChildScrollView(
             padding: EdgeInsets.all(8),
             scrollDirection: Axis.horizontal,
@@ -82,7 +87,8 @@ class _FunctionInfoState extends State<FunctionInfo> {
                       (x) => VariableEditor(
                         variable: x,
                         onChanged: _checkReadOnly(
-                            (v) => this._onFunctionVariableChanged(x, v)),
+                          (v) => this._onFunctionVariableChanged(x, v),
+                        ),
                         showSignForPositive: index++ > 0,
                       ),
                     )
@@ -123,7 +129,9 @@ class _FunctionInfoState extends State<FunctionInfo> {
   }
 
   void _onFunctionLetterPressed(BuildContext context) {
-    if (widget.isReadOnly) return;
+    if (widget.isReadOnly) {
+      return;
+    }
 
     OverflowSafeBottomSheetModal(
       (x) => ScrollIntegerEditor(
@@ -165,7 +173,9 @@ class _FunctionInfoState extends State<FunctionInfo> {
   void _onFunctionVariableChanged(Variable variable, Variable newValue) {
     setState(() {
       _variables = _variables.map((v) {
-        if (v == variable) return newValue;
+        if (v == variable) {
+          return newValue;
+        }
 
         return v;
       }).toList();
@@ -176,7 +186,9 @@ class _FunctionInfoState extends State<FunctionInfo> {
   }
 
   T _checkReadOnly<T>(T value) {
-    if (widget.isReadOnly) return null;
+    if (widget.isReadOnly) {
+      return null;
+    }
 
     return value;
   }

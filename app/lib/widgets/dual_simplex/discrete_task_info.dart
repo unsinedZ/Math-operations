@@ -46,6 +46,19 @@ class DiscreteTaskInfo extends LinearTaskInfo {
     // );
   }
 
+  Map<String, bool> _getVariableSelection() {
+    int index = 0;
+    return Map.fromIterable(
+      targetFunction.coefficients.map(
+        (x) => Variable.wrapVariableName(
+          '${targetFunction.variableLetter}${++index}',
+        ),
+      ),
+      key: (x) => x,
+      value: (x) => integerVariableNames.contains(x),
+    );
+  }
+
   void _onChangeSelection(String variableName, bool newSelection) {
     Set<String> newIntegers;
 
@@ -77,18 +90,5 @@ class DiscreteTaskInfo extends LinearTaskInfo {
         ),
       );
     }
-  }
-
-  Map<String, bool> _getVariableSelection() {
-    int index = 0;
-    return Map.fromIterable(
-      targetFunction.coefficients.map(
-        (x) => Variable.wrapVariableName(
-          '${targetFunction.variableLetter}${++index}',
-        ),
-      ),
-      key: (x) => x,
-      value: (x) => integerVariableNames.contains(x),
-    );
   }
 }
