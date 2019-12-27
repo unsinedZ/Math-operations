@@ -30,8 +30,13 @@ class SimplexSolver implements BaseSimplexTableSolver {
   ) sync* {
     while (true) {
       SolutionStatus info = strategy.solve(initialContext);
+      String previousComment = '';
+      if (initialContext.simplexTable is AdjustedSimplexTable) {
+        previousComment = (initialContext.simplexTable as AdjustedSimplexTable).comment + ' ';
+      }
+
       SimplexTable table = initialContext.simplexTable.makeAdjusted(
-        _getSolutionMessage(info),
+        previousComment + _getSolutionMessage(info),
         info,
       );
 
