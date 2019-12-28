@@ -16,7 +16,7 @@ class VariableInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String valueText = name.isNotEmpty && value.equalsNumber(1) ? '' : '$value';
+    String valueText = name.isNotEmpty && value.equalsNumber(1) ? '' : '${value.toString()}';
     return BaseButton(
       text: valueText + name,
       onPressed: onPressed,

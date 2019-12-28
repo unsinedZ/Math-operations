@@ -44,6 +44,17 @@ class Fraction {
     );
   }
 
+  static Fraction undefined(Fraction coefficient, [int cIndex = 0]) {
+    return Fraction.createConst(
+      numerator: 0,
+      denominator: 1,
+      indefiniteNumberCoefficients: List.generate(
+        cIndex + 1,
+        (x) => x == cIndex ? coefficient : Fraction.fromNumber(0),
+      ),
+    );
+  }
+
   bool isDefined() =>
       indefiniteNumberCoefficients.every((x) => x.equalsNumber(0));
 
@@ -92,9 +103,12 @@ class Fraction {
     return Fraction._(
       numerator: numerator.abs(),
       denominator: denominator.abs(),
-      indefiniteNumberCoefficients: this.indefiniteNumberCoefficients.map(
+      indefiniteNumberCoefficients: this
+          .indefiniteNumberCoefficients
+          .map(
             (x) => x.abs(),
-          ),
+          )
+          .toList(),
     );
   }
 

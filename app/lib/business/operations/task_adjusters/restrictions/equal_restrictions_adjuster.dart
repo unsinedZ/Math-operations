@@ -174,7 +174,9 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
           concat(
             [
               restriction.coefficients,
-              [Fraction.fromNumber(x == maxNegative ? 1 : 0)],
+              [
+                Fraction.fromNumber(x == maxNegative ? 1 : 0),
+              ],
             ],
           ).toList(),
         );
@@ -186,7 +188,11 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
       concat(
         [
           context.targetFunction.coefficients,
-          artificialVariableRestrictions.map((_) => Fraction.fromNumber(0)),
+          artificialVariableRestrictions.map(
+            (_) => Fraction.undefined(
+              Fraction.fromNumber(1),
+            ),
+          ),
         ],
       ).toList(),
     );

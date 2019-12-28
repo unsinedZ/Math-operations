@@ -16,7 +16,7 @@ class SimplexSolver implements BaseSimplexTableSolver {
     if (!strategy.canBeApplied(context)) {
       return [
         table.makeAdjusted(
-          "Can not be solved using dual simplex method",
+          "Can not be solved simplex method",
           SolutionStatus.undefined,
         )
       ].toList();
