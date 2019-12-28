@@ -25,10 +25,7 @@ class ExtremumToMinimumAdjuster implements LinearTaskAdjuster {
             );
     return [
       context.changeLinearTask(
-        AdjustedLinearTask.wrap(
-          adjusted,
-          "Changed extremum to minimum",
-        ),
+        adjusted.makeAdjusted("Changed extremum to minimum"),
       ),
     ];
   }

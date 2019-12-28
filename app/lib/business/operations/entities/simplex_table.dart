@@ -7,10 +7,26 @@ class SimplexTable {
   final List<SimplexTableRow> rows;
   final SimplexTableEstimations estimations;
 
+  List<Fraction> get freeMembers => rows.map((x) => x.freeMember).toList();
+
   const SimplexTable({
     @required this.rows,
     @required this.estimations,
   });
+
+  SimplexTable changeRows(List<SimplexTableRow> newRows) {
+    return SimplexTable(
+      estimations: this.estimations,
+      rows: newRows,
+    );
+  }
+
+  SimplexTable changeEstimations(SimplexTableEstimations newEstimations) {
+    return SimplexTable(
+      estimations: newEstimations,
+      rows: this.rows,
+    );
+  }
 }
 
 class SimplexTableRow {
@@ -28,6 +44,13 @@ class SimplexTableRow {
     return SimplexTableRow(
       coefficients: newCoefficients.toList(),
       freeMember: newFreeMember,
+    );
+  }
+
+  SimplexTableRow changeCoefficients(List<Fraction> newCoefficients) {
+    return SimplexTableRow(
+      freeMember: this.freeMember,
+      coefficients: newCoefficients,
     );
   }
 
@@ -68,13 +91,14 @@ class AdjustedSimplexTable extends SimplexTable {
           estimations: estimations,
           rows: rows,
         );
+}
 
-  static AdjustedSimplexTable wrap(
-      SimplexTable table, String comment, SolutionStatus solutionInfo) {
+extension SimplextableExtensions on SimplexTable {
+  AdjustedSimplexTable makeAdjusted(String comment, SolutionStatus solutionInfo) {
     return AdjustedSimplexTable(
       comment: comment,
-      estimations: table.estimations,
-      rows: table.rows,
+      estimations: this.estimations,
+      rows: this.rows,
       solutionInfo: solutionInfo,
     );
   }

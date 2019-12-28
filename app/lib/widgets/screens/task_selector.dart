@@ -17,10 +17,17 @@ class TaskSelector extends StatelessWidget {
               onLongPress: () => {},
             ),
             ListTile(
-              leading: Icon(Icons.table_chart),
+              leading: Icon(Icons.pie_chart),
               title: Text('Dual simplex method'),
               trailing: Icon(Icons.keyboard_arrow_right),
               onTap: () => Navigator.pushNamed(context, '/DualSimplexMethod'),
+              onLongPress: () => {},
+            ),
+            ListTile(
+              leading: Icon(Icons.bubble_chart),
+              title: Text('Gomori method #1'),
+              trailing: Icon(Icons.keyboard_arrow_right),
+              onTap: () => Navigator.pushNamed(context, '/FirstGomoriMethod'),
               onLongPress: () => {},
             ),
           ],

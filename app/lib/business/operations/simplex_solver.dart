@@ -15,8 +15,7 @@ class SimplexSolver implements BaseSimplexTableSolver {
     );
     if (!strategy.canBeApplied(context)) {
       return [
-        AdjustedSimplexTable.wrap(
-          table,
+        table.makeAdjusted(
           "Can not be solved using dual simplex method",
           SolutionStatus.undefined,
         )
@@ -31,9 +30,13 @@ class SimplexSolver implements BaseSimplexTableSolver {
   ) sync* {
     while (true) {
       SolutionStatus info = strategy.solve(initialContext);
-      SimplexTable table = AdjustedSimplexTable.wrap(
-        initialContext.simplexTable,
-        _getSolutionMessage(info),
+      String previousComment = '';
+      if (initialContext.simplexTable is AdjustedSimplexTable) {
+        previousComment = (initialContext.simplexTable as AdjustedSimplexTable).comment + ' ';
+      }
+
+      SimplexTable table = initialContext.simplexTable.makeAdjusted(
+        previousComment + _getSolutionMessage(info),
         info,
       );
 

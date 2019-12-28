@@ -14,6 +14,7 @@ class RestrictionInfo extends StatefulWidget {
   final bool isReadOnly;
   final bool hideZeroCoefficients;
   final VoidCallback onRemoveClick;
+  final bool isRemovable;
 
   const RestrictionInfo({
     Key key,
@@ -21,6 +22,7 @@ class RestrictionInfo extends StatefulWidget {
     @required this.restriction,
     @required this.onChanged,
     @required this.onRemoveClick,
+    this.isRemovable = true,
     this.isReadOnly = false,
     this.hideZeroCoefficients = false,
   }) : super(key: key);
@@ -64,9 +66,11 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
   Widget build(BuildContext context) {
     int index = 0;
     return Row(
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Flexible(
           flex: 1,
+          fit: FlexFit.tight,
           child: SingleChildScrollView(
             padding: EdgeInsets.all(8),
             scrollDirection: Axis.horizontal,
@@ -81,8 +85,9 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
                     .map(
                       (x) => VariableEditor(
                         variable: x,
-                        onChanged:
-                            _checkReadOnly((v) => _onVariableChanged(x, v)),
+                        onChanged: _checkReadOnly(
+                          (v) => _onVariableChanged(x, v),
+                        ),
                         showSignForPositive: index++ > 0,
                       ),
                     ),
@@ -111,7 +116,7 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
         Flexible(
           flex: 0,
           child: Visibility(
-            visible: widget.onRemoveClick != null,
+            visible: widget.isRemovable,
             child: BaseIcon(
               icon: Icons.delete_outline,
               onPressed: widget.onRemoveClick,
@@ -139,7 +144,9 @@ class _RestrictionInfoState extends State<RestrictionInfo> {
   }
 
   T _checkReadOnly<T>(T value) {
-    if (widget.isReadOnly) return null;
+    if (widget.isReadOnly) {
+      return null;
+    }
 
     return value;
   }

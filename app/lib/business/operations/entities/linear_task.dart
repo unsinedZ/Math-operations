@@ -16,26 +16,56 @@ class LinearTask {
   });
 
   LinearTask changeTargetFunction(TargetFunction newTargetFunction) {
-    return LinearTask(
-      targetFunction: newTargetFunction,
-      restrictions: this.restrictions,
-      extremum: this.extremum,
-    );
+    return getBuilder()
+        .addPrototype(this)
+        .change((x) => x.targetFunction = newTargetFunction)
+        .build();
   }
 
   LinearTask changeRestrictions(List<Restriction> newRestrictions) {
-    return LinearTask(
-      targetFunction: this.targetFunction,
-      restrictions: newRestrictions,
-      extremum: this.extremum,
-    );
+    return getBuilder()
+        .addPrototype(this)
+        .change((x) => x.restrictions = newRestrictions)
+        .build();
   }
 
   LinearTask changeExtremum(Extremum newExtremum) {
+    return getBuilder()
+        .addPrototype(this)
+        .change((x) => x.extremum = newExtremum)
+        .build();
+  }
+
+  LinearTaskBuilder getBuilder() => LinearTaskBuilder();
+}
+
+class LinearTaskBuilder {
+  @protected
+  TargetFunction targetFunction;
+
+  @protected
+  List<Restriction> restrictions;
+
+  @protected
+  Extremum extremum;
+
+  LinearTaskBuilder addPrototype(LinearTask prototype) {
+    this.targetFunction = prototype.targetFunction;
+    this.extremum = prototype.extremum;
+    this.restrictions = prototype.restrictions;
+    return this;
+  }
+
+  LinearTaskBuilder change(void Function(LinearTaskBuilder) makeChange) {
+    makeChange(this);
+    return this;
+  }
+
+  LinearTask build() {
     return LinearTask(
       targetFunction: this.targetFunction,
+      extremum: this.extremum,
       restrictions: this.restrictions,
-      extremum: newExtremum,
     );
   }
 }
@@ -55,11 +85,14 @@ class AdjustedLinearTask extends LinearTask {
           extremum: extremum,
           restrictions: restrictions,
         );
+}
 
-  static AdjustedLinearTask wrap(LinearTask task, String comment, [List<int> artificialVariableIndices]) {
-    List<int> artificialVariableIndices = task is AdjustedLinearTask
-      ? task.artificialVariableIndices
-      : null;
+extension Comment on LinearTask {
+  AdjustedLinearTask makeAdjusted(String comment,
+      [List<int> artificialVariableIndices]) {
+    var task = this;
+    List<int> artificialVariableIndices =
+        task is AdjustedLinearTask ? task.artificialVariableIndices : null;
     return AdjustedLinearTask(
       comment: comment,
       targetFunction: task.targetFunction,

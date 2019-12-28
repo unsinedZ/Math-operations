@@ -28,6 +28,7 @@ class GreaterEqualRestrictionsAdjuster implements LinearTaskAdjuster {
     index = 0;
     var adjustedRestrictions = context.restrictions.map(
       (x) {
+        bool adjusted = false;
         int i = index++;
         return x
             .changeCoefficients(
@@ -35,12 +36,14 @@ class GreaterEqualRestrictionsAdjuster implements LinearTaskAdjuster {
                 [
                   x.coefficients,
                   additionalVariableRestrictionIndices.map(
-                    (z) => Fraction.fromNumber(z == i ? -1 : 0),
+                    (z) => Fraction.fromNumber(
+                        z == i && (adjusted = true) ? -1 : 0),
                   ),
                 ],
               ).toList(),
             )
-            .changeComparison(ExpressionComparison.Equal);
+            .changeComparison(
+                adjusted ? ExpressionComparison.Equal : x.comparison);
       },
     ).toList();
 
@@ -68,12 +71,10 @@ class GreaterEqualRestrictionsAdjuster implements LinearTaskAdjuster {
     var adjustedContext = context
         .changeAdditionalVariableIndexes(adjustedAdditionalVariableIndices)
         .changeLinearTask(
-          AdjustedLinearTask.wrap(
-            context.linearTask
-                .changeTargetFunction(adjustedFunction)
-                .changeRestrictions(adjustedRestrictions),
-            "Adjusted `≥` restrictions.",
-          ),
+          context.linearTask
+              .changeTargetFunction(adjustedFunction)
+              .changeRestrictions(adjustedRestrictions)
+              .makeAdjusted("Adjusted `≥` restrictions."),
         );
     return [adjustedContext];
   }

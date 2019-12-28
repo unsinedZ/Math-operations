@@ -57,4 +57,15 @@ class LinearTaskSolution {
       functionValue: this.functionValue,
     );
   }
+
+  LinearTaskSolution changeFunctionValue(Fraction newValue) {
+    return LinearTaskSolution._(
+      status: this.status,
+      functionName: this.functionName,
+      variableName: this.variableName,
+      variableCoefficients: this.variableCoefficients,
+      functionValue: newValue,
+      customMessage: this.customMessage,
+    );
+  }
 }

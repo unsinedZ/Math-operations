@@ -22,13 +22,13 @@ class VariableEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String text = showSignForPositive || variable.value.isNegative()
-        ? variable.value.sign
-        : '';
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        BaseText(text),
+        Visibility(
+          visible: showSignForPositive || variable.value.isNegative(),
+          child: BaseText(variable.value.sign),
+        ),
         VariableInfo(
           name: showName ? variable.name : '',
           value: variable.value.abs(),
@@ -39,7 +39,9 @@ class VariableEditor extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    if (onChanged == null) return;
+    if (onChanged == null) {
+      return;
+    }
 
     OverflowSafeBottomSheetModal(
       (c) => VariableForm(

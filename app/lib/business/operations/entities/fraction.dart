@@ -44,6 +44,23 @@ class Fraction {
     return numerator < 0 && denominator < 0 || numerator > 0 && denominator > 0;
   }
 
+  bool isInteger() {
+    return denominator == 1;
+  }
+
+  int integerPart() {
+    return numerator ~/ denominator;
+  }
+
+  Fraction fractionalPart() {
+    Fraction result = this - Fraction.fromNumber(integerPart());
+    if (!this.isNegative()) {
+      return result;
+    }
+
+    return Fraction.fromNumber(1) - result.abs();
+  }
+
   Fraction abs() {
     return Fraction._(
       numerator: numerator.abs(),
