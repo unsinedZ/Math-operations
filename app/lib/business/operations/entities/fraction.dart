@@ -40,6 +40,7 @@ class Fraction {
     return Fraction._(
       numerator: numerator ~/ gcd,
       denominator: denominator ~/ gcd,
+      indefiniteNumberCoefficients: indefiniteNumberCoefficients,
     );
   }
 
@@ -237,21 +238,54 @@ class Fraction {
 
   @override
   String toString() {
+    String indefinitePrefix = '';
+    if (!this.isDefined()) {
+      int mi = 1;
+      indefinitePrefix = this
+          .indefiniteNumberCoefficients
+          .map(
+            (x) {
+              int i = mi++;
+              if (x.equalsNumber(0)) {
+                return '';
+              }
+
+              String c = x.equalsNumber(1) ? '' : x.toString();
+              return '${c}M$i';
+            },
+          )
+          .where((x) => x.isNotEmpty)
+          .join(' + ');
+    }
+
     if (numerator == 0) {
-      return '0';
+      return indefinitePrefix.isEmpty ? '0' : indefinitePrefix;
     }
 
     if (denominator == 1) {
-      return numerator.toString();
+      if (indefinitePrefix.isEmpty) {
+        return numerator.toString();
+      }
+
+      if (numerator == 0) {
+        return indefinitePrefix;
+      }
+
+      return '$indefinitePrefix + ${numerator.toString()}';
     }
 
-    return '($numerator/$denominator)';
+    String s = '($numerator/$denominator)';
+    if (indefinitePrefix.isEmpty) {
+      return s;
+    }
+
+    return '$indefinitePrefix + $s';
   }
 }
 
 extension SafeExtensions on List<Fraction> {
   safeAt(int index) {
-    if (this.length < index) {
+    if (this.length > index) {
       return this[index];
     }
 
