@@ -19,6 +19,12 @@ class SimplexTableBuilder {
       variableEstimations.add(initial);
     }
 
+    var functionValue = task.targetFunction.freeMember * minusOne;
+    for (int i = 0; i < task.restrictions.length; i++) {
+      functionValue += task.restrictions[i].freeMember *
+          task.targetFunction.coefficients[basisIndices[i]];
+    }
+
     return SimplexTable(
       rows: task.restrictions
           .map(
@@ -30,7 +36,7 @@ class SimplexTableBuilder {
           .toList(),
       estimations: SimplexTableEstimations(
         variableEstimations: variableEstimations,
-        functionValue: task.targetFunction.freeMember,
+        functionValue: functionValue,
       ),
     );
   }
