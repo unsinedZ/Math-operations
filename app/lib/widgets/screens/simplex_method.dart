@@ -118,6 +118,15 @@ class _DualSimplexState extends State<SimplexMethod> {
             adjuster: widget.taskAdjuster,
             strategy: widget.simplexMethodStrategy,
           ).solveTask(_linearTask);
+          if (s.adjustmentSteps.isNotEmpty &&
+              s.adjustmentSteps.last.linearTask.extremum !=
+                  _linearTask.extremum) {
+            s = s.changeSolution(
+              s.solution.changeFunctionValue(
+                s.solution.functionValue * Fraction.fromNumber(-1),
+              ),
+            );
+          }
           return SimplexSolution(
             solution: s.solution,
             targetFunction: s.adjustmentSteps.last.targetFunction,

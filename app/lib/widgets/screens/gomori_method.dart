@@ -183,6 +183,16 @@ class _GomoriMethodState extends State<GomoriMethod> {
             } while (++counter < _MAX_CLIPPINGS);
           }
 
+          if (s.adjustmentSteps.isNotEmpty &&
+              s.adjustmentSteps.last.linearTask.extremum !=
+                  _discreteTask.extremum) {
+            s = s.changeSolution(
+              s.solution.changeFunctionValue(
+                s.solution.functionValue * Fraction.fromNumber(-1),
+              ),
+            );
+          }
+
           var finalSolution = s.solution;
           return SimplexSolution(
             solution: finalSolution,
