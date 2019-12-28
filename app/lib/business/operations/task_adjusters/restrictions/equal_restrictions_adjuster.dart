@@ -47,8 +47,8 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
     Restriction maxNegative;
     Fraction maxFreeMemberOfNegative;
 
-    List<Restriction> artificialVariableRestrictions = <Restriction>[];
-    List<Restriction> negativeCandidateRestrictions = <Restriction>[];
+    Set<Restriction> artificialVariableRestrictions = <Restriction>{};
+    Set<Restriction> negativeCandidateRestrictions = <Restriction>{};
     context.restrictions.forEach(
       (x) {
         if (!adjustedCandidateCoords.containsKey(x)) {
@@ -184,6 +184,7 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
     );
 
     var adjustedRestrictions = changedRestrictions.values.toList();
+    int ai = context.artificialVariableIndices.length;
     var adjustedFunction = context.targetFunction.changeCoefficients(
       concat(
         [
@@ -191,6 +192,7 @@ class EqualRestrictionsAdjuster implements LinearTaskAdjuster {
           artificialVariableRestrictions.map(
             (_) => Fraction.undefined(
               Fraction.fromNumber(1),
+              ai++,
             ),
           ),
         ],
