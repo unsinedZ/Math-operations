@@ -285,7 +285,8 @@ class Fraction {
         return indefinitePrefix;
       }
 
-      return '$indefinitePrefix + ${numerator.toString()}';
+      String sign = numerator.isNegative ? '-' : '+';
+      return '$indefinitePrefix $sign ${numerator.abs().toString()}';
     }
 
     String s = '($numerator/$denominator)';
@@ -293,7 +294,8 @@ class Fraction {
       return s;
     }
 
-    return '$indefinitePrefix + $s';
+    String sign = numerator.isNegative ? '-' : '+';
+    return '$indefinitePrefix $sign ${s.replaceAll(RegExp('[-]'), '')}';
   }
 }
 
